@@ -291,7 +291,7 @@ void CTFDiscordRPC::UpdateServerInfo()
 			pszGameTypeShort = "pass";
 			break;
 		default:
-			pszGameType = "Find out yourself, fuck you.";
+			pszGameType = "Unknown Gamemode.";
 			pszGameTypeShort = "unknown";
 			break;
 		}
@@ -343,7 +343,7 @@ void CTFDiscordRPC::Reset()
 	m_pRpc.endTimestamp;
 
 	Discord_UpdatePresence(&m_pRpc);
-	DISCORD_LOG_MSG("Rich presence resetted.\n");
+	DISCORD_LOG_MSG("Rich presence Refreshed.\n");
 }
 
 #include "tier0/valve_minmax_on.h"
@@ -377,7 +377,7 @@ void CTFDiscordRPC::LevelShutdownPreEntity()
 void CTFDiscordRPC::DiscordReady(const DiscordUser* connectedBastard)
 {
 	DISCORD_LOG_MSG("Ready!\n");
-	DISCORD_LOG_MSG("The dastard's user ID: %s\n", connectedBastard->userId);
+	DISCORD_LOG_MSG("The discord user ID: %s\n", connectedBastard->userId);
 
 	GetDiscordRPC()->Reset();
 }
@@ -387,7 +387,7 @@ void CTFDiscordRPC::DiscordReady(const DiscordUser* connectedBastard)
 //-----------------------------------------------------------------------------
 void CTFDiscordRPC::DiscordDisconnected(int code, const char* message)
 {
-	DISCORD_LOG_MSG("Disconnected from Discord, too bad! - %s\n", message);
+	DISCORD_LOG_MSG("Disconnected from Discord - %s\n", message);
 }
 
 //-----------------------------------------------------------------------------
@@ -395,7 +395,7 @@ void CTFDiscordRPC::DiscordDisconnected(int code, const char* message)
 //-----------------------------------------------------------------------------
 void CTFDiscordRPC::DiscordError(int code, const char* message)
 {
-	DISCORD_LOG_MSG("An error occured! Too bad! - %s\n", message);
+	DISCORD_LOG_MSG("An error occured! - %s\n", message);
 }
 
 //-----------------------------------------------------------------------------
