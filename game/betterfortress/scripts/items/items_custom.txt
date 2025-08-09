@@ -715,6 +715,47 @@
 					"value" 	"1"
 				}
 			}
+
+		"850"
+		{
+			"name"		"The Stonewall"
+			"prefab"	"weapon_shotgun"
+			"craft_class"	"weapon"
+			"item_name"		"#TF_Weapon_Stonewall"
+			"item_slot"	"primary"
+			"moditem"	"1"
+			"used_by_classes"
+			{
+				"engineer"	"1"
+			}
+			"attributes"
+			{
+				"spread penalty"
+				{
+					"attribute_class"	"mult_spread_scale"
+					"value"	"1.15"
+				}
+				"fire rate bonus"
+				{
+					"attribute_class"	"mult_postfiredelay"
+					"value" "0.5"
+				}
+				"max health additive bonus"
+				{
+					"attribute_class"	"add_maxhealth"
+					"value" "15"
+				}
+				"clip size bonus"
+				{
+					"attribute_class"	"mult_clipsize"
+					"value" "1.34"
+				}
+				"heal on kill"
+				{
+					"attribute_class"	"heal_on_kill"
+					"value"	"25"
+				}
+			}
 		}
 		//CUT - Mercenary Park Cap
 		"1191"
