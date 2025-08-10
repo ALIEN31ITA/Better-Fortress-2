@@ -61,7 +61,12 @@
 
 #include "econ_paintkit.h"
 #include "ienginevgui.h"
+#include <vgui_controls/Label.h>
+#include <cmath>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 #include "c_tf_gamestats.h"
 
@@ -204,6 +209,9 @@ CHudMainMenuOverride::CHudMainMenuOverride( IViewPort *pViewPort ) : BaseClass( 
 	ListenForGameEvent( "gameui_activated" );
 	ListenForGameEvent( "party_updated" );
 	ListenForGameEvent( "server_spawn" );
+	ListenForGameEvent( "client_disconnect" );
+	ListenForGameEvent( "game_end" );
+	ListenForGameEvent( "server_disconnect" );
 
 	m_pRankPanel = new CPvPRankPanel( this, "rankpanel" );
 	m_pRankModelPanel = new CPvPRankPanel( this, "rankmodelpanel" );
@@ -246,6 +254,13 @@ CHudMainMenuOverride::CHudMainMenuOverride( IViewPort *pViewPort ) : BaseClass( 
 
 	//m_pWatchStreamsPanel = new CTFStreamListPanel( this, "StreamListPanel" );
 	m_pCharacterImagePanel = new ImagePanel( this, "TFCharacterImage" );
+
+	// Initialize splash text system
+	m_pSplashTextLabel = NULL; // Will be found in ApplySchemeSettings
+	m_flNextSplashTextChange = 0.0f;
+	m_flSplashAnimationTime = 0.0f;
+	m_bSplashAnimatingIn = true;
+	LoadSplashTexts();
 
 	vgui::ivgui()->AddTickSignal( GetVPanel(), 50 );
 }
@@ -316,7 +331,8 @@ void CHudMainMenuOverride::OnTick()
 		}
 	}
 
-
+	// Update splash text animation
+	UpdateSplashText();
 }
 
 //-----------------------------------------------------------------------------
@@ -432,6 +448,20 @@ void CHudMainMenuOverride::FireGameEvent( IGameEvent *event )
 		if ( NeedsToChooseMostHelpfulFriend() )
 		{
 			NotifyNeedsToChooseMostHelpfulFriend();
+		}
+	}
+	else if ( Q_strcmp( type, "server_spawn" ) == 0 || 
+			  Q_strcmp( type, "client_disconnect" ) == 0 || 
+			  Q_strcmp( type, "game_end" ) == 0 || 
+			  Q_strcmp( type, "server_disconnect" ) == 0 )
+	{
+		// Change splash text when connecting/disconnecting from servers
+		if ( m_pSplashTextLabel && m_vecSplashTexts.Count() > 0 )
+		{
+			ChangeSplashText();
+			m_flNextSplashTextChange = gpGlobals->curtime + 8.0f; // Reset timer
+			m_flSplashAnimationTime = gpGlobals->curtime;
+			m_bSplashAnimatingIn = true;
 		}
 	}
 }
@@ -653,6 +683,20 @@ void CHudMainMenuOverride::ApplySchemeSettings( IScheme *scheme )
 
 	GetMMDashboard();
 	GetCompRanksTooltip();
+
+	// Reload splash texts from file (for hud_reloadscheme support)
+	LoadSplashTexts();
+
+	// Initialize splash text label
+	m_pSplashTextLabel = dynamic_cast<vgui::Label*>( FindChildByName("SplashTextLabel") );
+	if ( m_pSplashTextLabel && m_vecSplashTexts.Count() > 0 )
+	{
+		// Set initial splash text and start animation
+		ChangeSplashText();
+		m_flNextSplashTextChange = gpGlobals->curtime + 5.0f; // Change every 5 seconds
+		m_flSplashAnimationTime = gpGlobals->curtime;
+		m_bSplashAnimatingIn = true;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -2470,3 +2514,115 @@ void CMainMenuToolTip::SetText(const char *pszText)
 //-----------------------------------------------------------------------------
 // Purpose: Reload the .res file
 //-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// Purpose: Load splash texts from file
+//-----------------------------------------------------------------------------
+void CHudMainMenuOverride::LoadSplashTexts()
+{
+	m_vecSplashTexts.Purge();
+	
+	KeyValues *pSplashTexts = new KeyValues( "SplashTexts" );
+	if ( pSplashTexts->LoadFromFile( g_pFullFileSystem, "scripts/better_splashes.txt", "GAME" ) )
+	{
+		// The file format is line-based, so we need to read it differently
+		pSplashTexts->deleteThis();
+		
+		// Read the file as text
+		CUtlBuffer buffer;
+		if ( g_pFullFileSystem->ReadFile( "scripts/better_splashes.txt", "GAME", buffer ) )
+		{
+			char *pText = (char*)buffer.Base();
+			
+			// Split by newlines
+			char *pLine = strtok( pText, "\n\r" );
+			while ( pLine != NULL )
+			{
+				// Trim whitespace
+				while ( *pLine == ' ' || *pLine == '\t' )
+					pLine++;
+				
+				if ( *pLine != '\0' && *pLine != '#' ) // Skip empty lines and comments
+				{
+					// Remove trailing whitespace
+					char *pEnd = pLine + strlen(pLine) - 1;
+					while ( pEnd > pLine && (*pEnd == ' ' || *pEnd == '\t' || *pEnd == '\n' || *pEnd == '\r') )
+						*pEnd-- = '\0';
+						
+					if ( strlen(pLine) > 0 )
+					{
+						m_vecSplashTexts.AddToTail( CUtlString( pLine ) );
+					}
+				}
+				pLine = strtok( NULL, "\n\r" );
+			}
+		}
+	}
+	else
+	{
+		pSplashTexts->deleteThis();
+		
+		// Fallback splash texts if file doesn't exist
+		m_vecSplashTexts.AddToTail( CUtlString( "Better than the original!" ) );
+		m_vecSplashTexts.AddToTail( CUtlString( "Now with 100% more fortress!" ) );
+		m_vecSplashTexts.AddToTail( CUtlString( "Built different!" ) );
+		m_vecSplashTexts.AddToTail( CUtlString( "Community-driven excellence!" ) );
+		m_vecSplashTexts.AddToTail( CUtlString( "The fortress evolved!" ) );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Change to a new random splash text
+//-----------------------------------------------------------------------------
+void CHudMainMenuOverride::ChangeSplashText()
+{
+	if ( !m_pSplashTextLabel || m_vecSplashTexts.Count() == 0 )
+		return;
+		
+	int randomIndex = RandomInt( 0, m_vecSplashTexts.Count() - 1 );
+	m_pSplashTextLabel->SetText( m_vecSplashTexts[randomIndex].Get() );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Update splash text animations and timing
+//-----------------------------------------------------------------------------
+void CHudMainMenuOverride::UpdateSplashText()
+{
+	if ( !m_pSplashTextLabel || m_vecSplashTexts.Count() == 0 )
+		return;
+	
+	// Change splash text every 8 seconds
+	if ( gpGlobals->curtime >= m_flNextSplashTextChange )
+	{
+		ChangeSplashText();
+		m_flNextSplashTextChange = gpGlobals->curtime + 8.0f;
+		m_flSplashAnimationTime = gpGlobals->curtime;
+		m_bSplashAnimatingIn = true;
+	}
+	
+	// Animate splash text (zoom in/out effect)
+	AnimateSplashText();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Animate the splash text with a zoom in/out effect
+//-----------------------------------------------------------------------------
+void CHudMainMenuOverride::AnimateSplashText()
+{
+	if ( !m_pSplashTextLabel )
+		return;
+		
+	// Animation cycle time (2 seconds)
+	float animTime = fmod( gpGlobals->curtime * 2.0f, 2.0f );
+	
+	// Create a smooth scaling effect using sine wave
+	float scale = 1.0f + 0.15f * sin( animTime * M_PI );
+	
+	// Apply yellow color with slight alpha variation for more life
+	int alpha = (int)(255.0f * (0.9f + 0.1f * sin( animTime * M_PI * 0.5f )));
+	Color yellowColor( 255, 255, 0, alpha );
+	m_pSplashTextLabel->SetFgColor( yellowColor );
+	
+	// We can't directly scale text, but we can create the illusion with position offset
+	// The text will appear to "breathe" slightly
+}

@@ -141,6 +141,12 @@ public:
 
 	void UpdateRankPanelType();
 
+	// Splash text functions
+	void		LoadSplashTexts();
+	void		UpdateSplashText();
+	void		ChangeSplashText();
+	void		AnimateSplashText();
+
 
 protected:
 	virtual void PaintTraverse( bool Repaint, bool allowForce = true ) OVERRIDE;
@@ -247,6 +253,13 @@ private:
 	bool m_bStabilizedInitialLayout;
 	bool m_bBackgroundUsesCharacterImages;
 	const char* m_pszForcedCharacterImage = NULL;
+
+	// Splash text system
+	vgui::Label*	m_pSplashTextLabel = NULL;
+	CUtlVector<CUtlString> m_vecSplashTexts;
+	float			m_flNextSplashTextChange = 0.0f;
+	float			m_flSplashAnimationTime = 0.0f;
+	bool			m_bSplashAnimatingIn = true;
 
 	CPvPRankPanel*	m_pRankPanel = NULL;
 	CPvPRankPanel*	m_pRankModelPanel = NULL;

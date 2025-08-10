@@ -242,6 +242,25 @@
 		"mouseinputenabled"	"0"
 	}	
 	
+	"SplashTextLabel"
+	{
+		"ControlName"	"CExLabel"
+		"fieldName"		"SplashTextLabel"
+		"xpos"			"c-250"
+		"ypos"			"75"
+		"zpos"			"2"
+		"wide"			"256"
+		"tall"			"20"
+		"visible"		"1"
+		"enabled"		"1"
+		"textAlignment"	"center"
+		"labelText"		"Better than ever!"
+		"font"			"SplashTextFont"
+		"fgcolor"		"255 255 0 255"
+		"mouseinputenabled"	"0"
+	}
+	
+	
 	"TFCharacterImage"
 	{
 		// "ControlName"	"ImagePanel"

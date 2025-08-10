@@ -10830,7 +10830,7 @@ void C_TFPlayer::UpdateMVMEyeGlowEffect( bool bVisible )
 	m_pMVMEyeGlowEffect[ 0 ] = NULL;
 	m_pMVMEyeGlowEffect[ 1 ] = NULL;
 
-	if ( bVisible && !(IsLocalPlayer() && LocalPlayerInFirstPersonView()) )
+	if ( bVisible && !(IsLocalPlayer() && LocalPlayerInFirstPersonView()) && !m_Shared.IsStealthed() )
 	{
 		// Set color based on skill
 		Vector vColor = Vector( 255, 255, 255 );
