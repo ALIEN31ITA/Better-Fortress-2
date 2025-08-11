@@ -479,6 +479,8 @@ static const char *g_aConditionNames[] =
 
 	// ******** Keep this block last! ********
 	// Keep experimental conditions below and graduate out of it before shipping
+
+	"TF_COND_SENTRY_BUSTER",					// Player is acting as a Sentry Buster
 };
 COMPILE_TIME_ASSERT( ARRAYSIZE( g_aConditionNames ) == TF_COND_LAST );
 
@@ -1510,7 +1512,7 @@ void LoadObjectInfos( IBaseFileSystem *pFileSystem )
 			// Does it make sense to call the below Steam API so it'll force a validation next startup time?
 			// Need to verify it's real corruption and not someone dorking around with their objects.txt file...
 			//
-			// From Martin Otten: If you have a file on disc and you’re 100% sure it’s
+			// From Martin Otten: If you have a file on disc and youï¿½re 100% sure itï¿½s
 			//  corrupt, call ISteamApps::MarkContentCorrupt( false ), before you shutdown
 			//  the game. This will cause a content validation in Steam.
 

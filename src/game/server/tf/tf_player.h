@@ -26,6 +26,7 @@ class CTFGoalItem;
 class CTFItem;
 class CTFWeaponBuilder;
 //class CBaseObject;
+class CObjectSentrygun;
 class CTFWeaponBase;
 class CIntroViewpoint;
 class CTriggerAreaCapture;
@@ -1186,6 +1187,7 @@ private:
 	float				m_flNextRuneAmmoRegenAt;
 	float				m_flLastRuneHealthRegenAt;
 	float				m_flAccumulatedAmmoRegens[TF_AMMO_SECONDARY+1];	// Only support regenerating primary & secondary right now
+	float				m_flNextSentryBusterDetonateTime; // Time when Sentry Buster should detonate during taunt
 
 	// Bots.
 	friend void			Bot_Think( CTFPlayer *pBot );
@@ -1220,6 +1222,12 @@ private:
 	bool				GetResponseSceneFromConcept( int iConcept, char *chSceneBuffer, int numSceneBufferBytes );
 
 public:
+	// Human Sentry Buster functions
+	void				BecomeHumanSentryBuster( CObjectSentrygun *pTargetSentry );
+	void				ForceRespawnAsSentryBuster( CObjectSentrygun *pTargetSentry );
+	void				SentryBusterDetonate();
+	void				SentryBusterStompCheck();
+
 	const QAngle& GetNetworkEyeAngles() const { return m_angEyeAngles; }
 
 	// Achievement data storage

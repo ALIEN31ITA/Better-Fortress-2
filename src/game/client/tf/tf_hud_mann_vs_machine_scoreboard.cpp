@@ -9,6 +9,8 @@
 #include <filesystem.h>
 #include <time.h>
 #include "tf_lobby_server.h"
+#include "c_tf_player.h"
+#include "tf_shareddefs.h"
 
 using namespace vgui;
 
@@ -263,6 +265,10 @@ void CTFHudMannVsMachineScoreboard::InitPlayerList ( IScheme *pScheme )
 	m_iImageDead = m_pImageList->AddImage( scheme()->GetImage( "../hud/leaderboard_dead", true ) );
 	m_iSquadSurplusTexture = m_pImageList->AddImage( scheme()->GetImage( "pve/mvm_squad_surplus_small", true ) );
 
+	// Add server host images
+	m_iImageServerHost = m_pImageList->AddImage( scheme()->GetImage( "../hud/scoreboard_serverhost", true ) );
+	m_iImageServerHostDead = m_pImageList->AddImage( scheme()->GetImage( "../hud/scoreboard_serverhost_d", true ) );
+
 	for(int i = 1 ; i < SCOREBOARD_CLASS_ICONS ; i++)
 	{
 		m_iImageClass[i] = m_pImageList->AddImage( scheme()->GetImage( g_pszClassIcons[i], true ) );
@@ -309,6 +315,7 @@ void CTFHudMannVsMachineScoreboard::InitPlayerList ( IScheme *pScheme )
 		m_pPlayerList->AddColumnToSection( 0, "support", "#TF_MvMScoreboard_Support", SectionedListPanel::COLUMN_RIGHT, m_iStatWidth );
 		m_pPlayerList->AddColumnToSection( 0, "credits", "#TF_MvMScoreboard_Money", SectionedListPanel::COLUMN_RIGHT, m_iStatWidth );
 		m_pPlayerList->AddColumnToSection( 0, "squad_surplus", "", SectionedListPanel::COLUMN_IMAGE | SectionedListPanel::COLUMN_CENTER, m_iStatWidth );
+		m_pPlayerList->AddColumnToSection( 0, "serverhost", "", SectionedListPanel::COLUMN_IMAGE | SectionedListPanel::COLUMN_CENTER, m_iServerHostWidth );
 		m_pPlayerList->AddColumnToSection( 0, "ping", "#TF_Scoreboard_Ping", SectionedListPanel::COLUMN_RIGHT, m_iPingWidth );
 		
 		// Add columns for Invaders section (section 1) - without Tours and Credits
@@ -324,6 +331,7 @@ void CTFHudMannVsMachineScoreboard::InitPlayerList ( IScheme *pScheme )
 		m_pPlayerList->AddColumnToSection( 1, "healing", "#TF_MvMScoreboard_Healing", SectionedListPanel::COLUMN_RIGHT, m_iStatWidth );
 		m_pPlayerList->AddColumnToSection( 1, "support", "#TF_MvMScoreboard_Support", SectionedListPanel::COLUMN_RIGHT, m_iStatWidth );
 		m_pPlayerList->AddColumnToSection( 1, "squad_surplus", "", SectionedListPanel::COLUMN_IMAGE | SectionedListPanel::COLUMN_CENTER, m_iStatWidth );
+		m_pPlayerList->AddColumnToSection( 1, "serverhost", "", SectionedListPanel::COLUMN_IMAGE | SectionedListPanel::COLUMN_CENTER, m_iServerHostWidth );
 		m_pPlayerList->AddColumnToSection( 1, "ping", "#TF_Scoreboard_Ping", SectionedListPanel::COLUMN_RIGHT, m_iPingWidth );
 	}
 	else
@@ -347,6 +355,7 @@ void CTFHudMannVsMachineScoreboard::InitPlayerList ( IScheme *pScheme )
 		m_pPlayerList->AddColumnToSection( 0, "support", "#TF_MvMScoreboard_Support", SectionedListPanel::COLUMN_RIGHT, m_iStatWidth );
 		m_pPlayerList->AddColumnToSection( 0, "credits", "#TF_MvMScoreboard_Money", SectionedListPanel::COLUMN_RIGHT, m_iStatWidth );
 		m_pPlayerList->AddColumnToSection( 0, "squad_surplus", "", SectionedListPanel::COLUMN_IMAGE | SectionedListPanel::COLUMN_CENTER, m_iStatWidth );
+		m_pPlayerList->AddColumnToSection( 0, "serverhost", "", SectionedListPanel::COLUMN_IMAGE | SectionedListPanel::COLUMN_CENTER, m_iServerHostWidth );
 		m_pPlayerList->AddColumnToSection( 0, "ping", "#TF_Scoreboard_Ping", SectionedListPanel::COLUMN_RIGHT, m_iPingWidth );
 	}
 	
@@ -417,6 +426,10 @@ void CTFHudMannVsMachineScoreboard::UpdatePlayerList ()
 			if( !g_PR->IsConnected( playerIndex ) )
 				continue;
 				
+			// In MvM Versus mode, only count real human players, filter out bots
+			if ( g_PR->IsFakePlayer( playerIndex ) )
+				continue;
+				
 			int playerTeam = g_PR->GetTeam( playerIndex );
 			if ( playerTeam == TF_TEAM_PVE_DEFENDERS )
 				defenderCount++;
@@ -446,6 +459,12 @@ void CTFHudMannVsMachineScoreboard::UpdatePlayerList ()
 		{
 			// In MvM Versus, show both defenders and invaders (but skip spectators, unassigned, etc.)
 			if ( playerTeam != TF_TEAM_PVE_DEFENDERS && playerTeam != TF_TEAM_PVE_INVADERS ) 
+			{
+				continue;
+			}
+			
+			// In MvM Versus mode, only show real human players, filter out bots
+			if ( g_PR->IsFakePlayer( playerIndex ) )
 			{
 				continue;
 			}
@@ -511,6 +530,23 @@ void CTFHudMannVsMachineScoreboard::UpdatePlayerList ()
 			{
 				pKeyValues->SetString( "ping", ConvertScoreboardValueToString( g_PR->GetPing( playerIndex ) ) );
 			}
+		}
+
+		// Check if this player is the server host (only on listen servers)
+		bool bIsServerHost = false;
+		if ( gpGlobals->maxClients > 1 && playerIndex == 1 )
+		{
+			bIsServerHost = true;
+		}
+
+		// Set server host icon if applicable
+		if ( bIsServerHost )
+		{
+			pKeyValues->SetInt( "serverhost", bAlive ? m_iImageServerHost : m_iImageServerHostDead );
+		}
+		else
+		{
+			pKeyValues->SetInt( "serverhost", 0 );
 		}
 
 		Color fgClr;

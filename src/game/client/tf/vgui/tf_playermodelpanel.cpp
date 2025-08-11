@@ -1269,6 +1269,33 @@ void CTFPlayerModelPanel::SetTeam( int iTeam )
 	UpdatePreviewVisuals();
 }
 
+void CTFPlayerModelPanel::SetPreviewSkin( int iSkin )
+{
+	// Directly set the skin (0 = RED, 1 = BLU)
+	SetSkin( iSkin );
+	m_nBody = iSkin;
+
+	// Also set the weapon's skin if we have one
+	if ( m_MergeMDL && m_pHeldItem )
+	{
+		// Use the appropriate team for skin selection
+		int iTeamForSkin = (iSkin == 0) ? TF_TEAM_RED : TF_TEAM_BLUE;
+		SetMDLSkinForTeam( GetMergeMDL( m_MergeMDL ), GetPreviewItem( m_pHeldItem ), iTeamForSkin );
+	}
+
+	// Set the skin for all other equipped items (wearables, etc).
+	for ( int i=0; i<m_vecDynamicAssetsLoaded.Count(); i++ )
+	{
+		const model_t *pModel = modelinfo->GetModel( m_vecDynamicAssetsLoaded[i] );
+		if ( pModel )
+		{
+			MDLHandle_t hMDL = modelinfo->GetCacheHandle( pModel );
+			int iTeamForSkin = (iSkin == 0) ? TF_TEAM_RED : TF_TEAM_BLUE;
+			SetMDLSkinForTeam( GetMergeMDL( hMDL ), GetPreviewItem( m_vecItemsLoaded[i] ), iTeamForSkin );
+		}
+	}
+}
+
 void CTFPlayerModelPanel::UpdatePreviewVisuals()
 {
 	// Assume skin will be chosen based only on the preview team

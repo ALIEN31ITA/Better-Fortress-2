@@ -123,6 +123,7 @@ private:
 	CSpawnLocation m_where;
 
 	bool UpdateMissionDestroySentries( void );
+	bool SelectHumanSentryBuster( CObjectSentrygun *pTargetSentry );
 	bool UpdateMission( CTFBot::MissionType mission );
 
 	enum StateType

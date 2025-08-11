@@ -833,6 +833,8 @@ enum ETFCond
 	// ******** Keep this block last! ********
 	// Keep experimental conditions below and graduate out of it before shipping
 
+	TF_COND_SENTRY_BUSTER,			// Player is acting as a Sentry Buster
+
 	TF_COND_LAST
 };
 

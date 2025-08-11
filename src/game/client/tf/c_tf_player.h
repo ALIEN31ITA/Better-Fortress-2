@@ -948,6 +948,8 @@ public:
 	Vector GetOverheadEffectPosition();
 
 	int GetSkinOverride() const { return m_iPlayerSkinOverride; }
+	bool IsZombieCostumeEquipped( void ) const { return m_iPlayerSkinOverride == 1; }
+	bool HasZombieCosmetics( bool bWeaponsCheck = false );  // Check zombie costume without Halloween vision requirement
 	bool IsRobot() const { return m_bIsRobot; }
 
 	virtual void ClientAdjustStartSoundParams( EmitSound_t &params ) override;

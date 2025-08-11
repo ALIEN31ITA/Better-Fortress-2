@@ -46,7 +46,7 @@ DESCRIPTION INFO_OPTIONS
 	}	
 	"credit2_2"
 	{
-		"CTrigger_Hurt - MVM Versus Viewmodels"
+		"CTrigger_Hurt - MVM Robots (Viewmodels,Anim & Texture fixes)"
 		"https://steamcommunity.com/profiles/76561198036209556"
 		{ BOOL }
 		{ "1" }
@@ -72,7 +72,7 @@ DESCRIPTION INFO_OPTIONS
 	}
 	"credit2_6"
 	{
-		"k-vog - Classselection animation bug"
+		"k-vog - Class select anim bug"
 		{ BOOL }
 		{ "1" }
 	}

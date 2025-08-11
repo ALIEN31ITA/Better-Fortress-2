@@ -54,6 +54,9 @@ public:
 	void	SetTeam( int iTeam );
 	int		GetTeam( void ) { return m_iTeam; }
 
+	void	SetPreviewSkin( int iSkin );
+	int		GetPreviewSkin( void ) { return m_nBody; }
+
 	void	UpdatePreviewVisuals( void );
 
 	// From IChoreoEventCallback

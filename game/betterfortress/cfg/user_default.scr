@@ -538,6 +538,14 @@ DESCRIPTION INFO_OPTIONS
 		{ "1" }
 	}
 
+	"bf_clean_spectator_hud"
+	{
+		"#BF_CleanSpectatorHUD"
+		"#Tooltip_CleanSpectatorHUD"
+		{ BOOL }
+		{ "0" }
+	}
+
 	"category5"
 	{
 		"#TF_OptionCategory_Replay"

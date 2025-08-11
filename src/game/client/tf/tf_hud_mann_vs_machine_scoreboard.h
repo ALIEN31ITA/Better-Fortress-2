@@ -28,6 +28,7 @@
 #include "vgui_avatarimage.h"
 #include "tf_hud_mann_vs_machine_status.h"
 #include "tf_mann_vs_machine_stats.h"
+#include "tf_shareddefs.h"
 #include "tf_gc_client.h"
 
 //=========================================================
@@ -87,6 +88,8 @@ private:
 	int							m_iImageClass[SCOREBOARD_CLASS_ICONS];
 	int							m_iImageClassAlt[SCOREBOARD_CLASS_ICONS];
 	int							m_iSquadSurplusTexture;
+	int							m_iImageServerHost;
+	int							m_iImageServerHostDead;
 
 	vgui::EditablePanel *m_pDifficultyContainer;
 
@@ -124,6 +127,7 @@ private:
 	CPanelAnimationVarAliasType( int, m_iStatWidth, "stat_width", "43", "proportional_int" );
 	CPanelAnimationVarAliasType( int, m_iClassWidth, "class_width", "25", "proportional_int" );
 	CPanelAnimationVarAliasType( int, m_iPingWidth, "ping_width", "25", "proportional_int" );
+	CPanelAnimationVarAliasType( int, m_iServerHostWidth, "serverhost_width", "15", "proportional_int" );
 };
 
 #endif // TF_HUD_MANN_VS_MACHINE_SCOREBOARD_H

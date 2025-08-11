@@ -68,6 +68,16 @@ CTFSpectatorGUI *GetTFSpectatorGUI()
 //-----------------------------------------------------------------------------
 ConVar cl_spec_carrieditems( "cl_spec_carrieditems", "1", FCVAR_ARCHIVE, "Show non-standard items being carried by player you're spectating." );
 
+void HUDCleanSpectatorChangedCallBack( IConVar *var, const char *pOldString, float flOldValue )
+{
+	CTFSpectatorGUI *pPanel = (CTFSpectatorGUI*)gViewPortInterface->FindPanelByName( PANEL_SPECGUI );
+	if ( pPanel )
+	{
+		pPanel->InvalidateLayout( true, true );
+	}
+}
+ConVar bf_clean_spectator_hud( "bf_clean_spectator_hud", "0", FCVAR_ARCHIVE, "Hide the spectator GUI elements for a cleaner viewing experience.", HUDCleanSpectatorChangedCallBack );
+
 void HUDTournamentSpecChangedCallBack( IConVar *var, const char *pOldString, float flOldValue )
 {
 	CTFSpectatorGUI *pPanel = (CTFSpectatorGUI*)gViewPortInterface->FindPanelByName( PANEL_SPECGUI );
@@ -295,6 +305,14 @@ bool CTFSpectatorGUI::NeedsUpdate( void )
 //-----------------------------------------------------------------------------
 void CTFSpectatorGUI::Update()
 {
+	// Check if clean spectator HUD is enabled and hide panel if needed
+	static ConVarRef bf_clean_spectator_hud( "bf_clean_spectator_hud" );
+	if ( bf_clean_spectator_hud.GetBool() && IsVisible() )
+	{
+		SetVisible( false );
+		return;
+	}
+
 	BaseClass::Update();
 
 	UpdateReinforcements();
@@ -790,6 +808,15 @@ void CTFSpectatorGUI::UpdateKeyLabels( void )
 //-----------------------------------------------------------------------------
 void CTFSpectatorGUI::ShowPanel(bool bShow)
 {
+	// Check if clean spectator HUD is enabled
+	static ConVarRef bf_clean_spectator_hud( "bf_clean_spectator_hud" );
+	if ( bf_clean_spectator_hud.GetBool() && bShow )
+	{
+		// Hide the spectator GUI completely when clean mode is enabled
+		BaseClass::ShowPanel( false );
+		return;
+	}
+
 	if ( bShow != IsVisible() )
 	{
 		CTFHudObjectiveStatus *pStatus = GET_HUDELEMENT( CTFHudObjectiveStatus );

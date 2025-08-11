@@ -956,6 +956,37 @@ void CTFPlayerInventory::UpdateCachedServerLoadoutItems()
 }
 	
 //-----------------------------------------------------------------------------
+// Purpose: Maps Better Fortress 2 slot indices to original TF2 slot indices
+//-----------------------------------------------------------------------------
+static int MapBF2SlotToTF2Slot( int iBF2Slot )
+{
+	// Slots before LOADOUT_POSITION_SKIN remain the same
+	if ( iBF2Slot <= LOADOUT_POSITION_ACTION )
+		return iBF2Slot;
+	
+	// LOADOUT_POSITION_SKIN doesn't exist in original TF2, so skip it
+	if ( iBF2Slot == LOADOUT_POSITION_SKIN )
+		return -1; // Invalid slot in original TF2
+	
+	// Slots after LOADOUT_POSITION_SKIN need to be shifted back by 1
+	return iBF2Slot - 1;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Maps original TF2 slot indices to Better Fortress 2 slot indices
+//-----------------------------------------------------------------------------
+static int MapTF2SlotToBF2Slot( int iTF2Slot )
+{
+	// Slots before LOADOUT_POSITION_SKIN remain the same
+	if ( iTF2Slot <= LOADOUT_POSITION_ACTION )
+		return iTF2Slot;
+	
+	// Slots at LOADOUT_POSITION_MISC2 and after need to be shifted forward by 1
+	// to account for the inserted LOADOUT_POSITION_SKIN
+	return iTF2Slot + 1;
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CTFPlayerInventory::UpdateRealTFLoadoutItems()
@@ -1082,7 +1113,20 @@ void CTFPlayerInventory::SaveLocalLoadout( bool bReset, bool bDefaultToGC )
 				itemid_t uItemId = m_PresetItems[iPreset][iClass][iSlot];
 				//itemid_t uItemId = m_LoadoutItems[iClass][iSlot];
 				if (bReset) {
-					uItemId = ( bDefaultToGC && iPreset == 0 ) ? m_RealTFLoadoutItems[iClass][iSlot] : 0;
+					if ( bDefaultToGC && iPreset == 0 ) {
+						// Map BF2 slot to original TF2 slot for syncing
+						int iTF2Slot = MapBF2SlotToTF2Slot( iSlot );
+						if ( iTF2Slot >= 0 && iTF2Slot < ORIGINAL_TF2_LOADOUT_POSITION_COUNT )
+						{
+							uItemId = m_RealTFLoadoutItems[iClass][iTF2Slot];
+						}
+						else
+						{
+							uItemId = 0; // No corresponding item in TF2 (e.g., SKIN slot)
+						}
+					} else {
+						uItemId = 0;
+					}
 				}
 
 				pClassKV->SetUint64(szSlot, uItemId);

@@ -88,6 +88,10 @@ enum loadout_positions_t
 	CLASS_LOADOUT_POSITION_COUNT,
 };
 
+// Original TF2 loadout position count (before LOADOUT_POSITION_SKIN was added)
+// This is used for syncing with the base TF2 game
+const int ORIGINAL_TF2_LOADOUT_POSITION_COUNT = CLASS_LOADOUT_POSITION_COUNT - 1;
+
 const loadout_positions_t FIRST_LOADOUT_SLOT_WITH_CHARGE_METER( LOADOUT_POSITION_PRIMARY );
 const loadout_positions_t LAST_LOADOUT_SLOT_WITH_CHARGE_METER( LOADOUT_POSITION_MISC2 );
 

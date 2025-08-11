@@ -434,6 +434,82 @@
 		"textAlignment"	"east"
 		"centerwrap"	"1"
 	}
+	
+	"RedSkinButton"
+	{
+		"ControlName"	"CExImageButton"
+		"fieldName"		"RedSkinButton"
+		"labelText"		""
+		"xpos"			"c-25"
+		"ypos"			"c60"
+		"zpos"			"2"
+		"wide"			"25"
+		"tall"			"25"
+		"autoResize"	"0"
+		"pinCorner"		"3"
+		"visible"		"1"
+		"enabled"		"1"
+		"tabPosition"	"0"
+		"dulltext"		"0"
+		"brighttext"	"0"
+		"default"		"0"
+		"Command"		"skinred"
+		"sound_depressed"	"UI/buttonclick.wav"
+		"sound_released"	"UI/buttonclickrelease.wav"
+
+		"SubImage"
+		{
+			"ControlName"	"ImagePanel"
+			"fieldName"		"SubImage"
+			"xpos"			"0"
+			"ypos"			"0"
+			"zpos"			"1"
+			"wide"			"25"
+			"tall"			"25"
+			"visible"		"1"
+			"enabled"		"1"
+			"scaleImage"	"1"
+			"image"			"../hud/hud_sel_red"
+		}
+	}
+
+	"BluSkinButton"
+	{
+		"ControlName"	"CExImageButton"
+		"fieldName"		"BluSkinButton"
+		"labelText"		""
+		"xpos"			"c2"
+		"ypos"			"c60"
+		"zpos"			"2"
+		"wide"			"25"
+		"tall"			"25"
+		"autoResize"	"0"
+		"pinCorner"		"3"
+		"visible"		"1"
+		"enabled"		"1"
+		"tabPosition"	"0"
+		"dulltext"		"0"
+		"brighttext"	"0"
+		"default"		"0"
+		"Command"		"skinblu"
+		"sound_depressed"	"UI/buttonclick.wav"
+		"sound_released"	"UI/buttonclickrelease.wav"
+
+		"SubImage"
+		{
+			"ControlName"	"ImagePanel"
+			"fieldName"		"SubImage"
+			"xpos"			"0"
+			"ypos"			"0"
+			"zpos"			"1"
+			"wide"			"25"
+			"tall"			"25"
+			"visible"		"1"
+			"enabled"		"1"
+			"scaleImage"	"1"
+			"image"			"../hud/hud_sel_blu"
+		}
+	}
 
 	"CharacterLoadoutButton"
 	{
