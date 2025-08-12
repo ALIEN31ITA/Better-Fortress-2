@@ -2523,6 +2523,10 @@ void CTFPlayer::BecomeHumanSentryBuster( CObjectSentrygun *pTargetSentry )
 	// Set the Sentry Buster condition
 	m_Shared.AddCond( TF_COND_SENTRY_BUSTER, -1.0f ); // Permanent until death
 
+	//Give our friend his tick tock sound
+	SetIsMiniBoss(true);
+	MVM_StartIdleSound();
+
 	// Force the player to be a Demoman (Sentry Busters are Demomans)
 	if ( GetPlayerClass()->GetClassIndex() != TF_CLASS_DEMOMAN )
 	{
@@ -2557,7 +2561,7 @@ void CTFPlayer::BecomeHumanSentryBuster( CObjectSentrygun *pTargetSentry )
 	CTFWeaponBase *pCaber = Weapon_OwnsThisID( TF_WEAPON_STICKBOMB );
 	if ( !pCaber )
 	{
-		pCaber = dynamic_cast<CTFWeaponBase*>( GiveNamedItem( "tf_weapon_stickbomb", 0, NULL, true ) );
+		pCaber = dynamic_cast<CTFWeaponBase*>( GiveNamedItem( "The Ullapool Caber", 0, NULL, true ) );
 	}
 	
 	if ( pCaber )
@@ -2566,11 +2570,15 @@ void CTFPlayer::BecomeHumanSentryBuster( CObjectSentrygun *pTargetSentry )
 	}
 
 	// Set Sentry Buster health to 2500
-	SetMaxHealth( 2500 );
 	SetHealth( 2500 );
+	SetMaxHealth( 2500 );
 
-	// Set Sentry Buster speed boost (permanent speed boost condition)
-	m_Shared.AddCond( TF_COND_SPEED_BOOST, -1.0f ); // Permanent speed boost
+	//Original Attributes from the popfile
+	AddCustomAttribute("override footstep sound set",7,-1);
+	AddCustomAttribute("move speed bonus", 2, -1);
+	AddCustomAttribute("damage force reduction", 0.5, -1);
+	AddCustomAttribute("airblast vulnerability multiplier", 0.5, -1);
+	AddCustomAttribute("cannot be backstabbed", 1, -1);
 
 	// Store target sentry for AI purposes (if needed)
 	// Could be used for objectives or HUD indicators
@@ -16791,11 +16799,17 @@ const char* CTFPlayer::GetSceneSoundToken( void )
 
 	if (iOverrideVoiceSoundSet == kVoiceSoundSet_Default)
 	{
-		//Engineer bot has some "special" voice clips that VALVe ruined
+		//MvM Versus - We filter the voices depending if your playing MvM or wear the Robot Costume
 		if (TFGameRules() && TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS || IsMVMRobot() )
 		{
-			if (IsMiniBoss())
+			int iGiants = GetPlayerClass()->GetClassIndex();
+			if ( IsMiniBoss() )
 			{
+				//If the player IS NOT one of the first 5 classes, return to normal voice.
+				//This patch is meant for missing voicelines, perhaps in future custom made can be made, if someone nails the filter.
+				if ( iGiants != TF_CLASS_SCOUT && iGiants != TF_CLASS_SOLDIER && iGiants != TF_CLASS_PYRO && iGiants != TF_CLASS_DEMOMAN && iGiants != TF_CLASS_HEAVYWEAPONS )
+					return "MVM_";
+			
 				return "M_MVM_";
 			}
 			else
@@ -22264,7 +22278,14 @@ void CTFPlayer::MVM_StartIdleSound(void)
 			}
 			case TF_CLASS_DEMOMAN:
 			{
-				pszSoundName = "MVM.GiantDemomanLoop";
+				if ( m_Shared.InCond( TF_COND_SENTRY_BUSTER ) )
+				{
+					pszSoundName = "MVM.SentryBusterLoop";
+				}
+				else
+				{
+					pszSoundName = "MVM.GiantDemomanLoop";
+				}
 				break;
 			}
 			case TF_CLASS_SCOUT:
@@ -22317,6 +22338,7 @@ void CTFPlayer::MVM_SetMinibossType(void)
     {
         AddTag("bot_giant");
         int iClass = GetPlayerClass()->GetClassIndex();
+		int iSentryBuster = m_Shared.InCond( TF_COND_SENTRY_BUSTER );
         switch(iClass)
         {
             case TF_CLASS_HEAVYWEAPONS:

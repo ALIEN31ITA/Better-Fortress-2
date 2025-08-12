@@ -339,6 +339,14 @@
 				"sound_burst"			"MVM.GiantDemoman_Grenadeshoot"
 			}
 		}
+		"weapon_flamethrower"
+		{
+			"visuals_mvm_boss"
+			{
+				"sound_single_shot"	"MVM.GiantPyro_FlameStart"
+				"sound_special1"	"MVM.GiantPyro_FlameLoop"
+			}
+		}
 		
 		"weapon_swordfish"
 		{
@@ -1952,194 +1960,8 @@
 				}
 			}
 		}
-		//The big bang - PERMISSION GRANTED FROM AUTHOR
-		"32015"
-		{
-			"name"	"The Big Bang"
-			"item_class"	"tf_weapon_wrench"
-			"craft_class"	"weapon"
-			"craft_material_type"	"weapon"
-			"capabilities"
-			{
-				"nameable"		"1"
-			}
-			"tags"
-			{
-				"can_deal_damage"				"1"
-				"can_deal_posthumous_damage"	"1"
-				"can_destroy_sappers"			"1"
-			}
-			"show_in_armory"	"1"
-			"moditem" "1"
-			"item_type_name"	"#TF_Weapon_Hammer"
-			"item_name"	"#TFCW_Pipewrench"
-			"item_description"	"#TFCW_Pipewrench_Desc"
-			"item_slot"	"melee"
-			"item_quality"	"community"
-			"min_ilevel"	"20"
-			"max_ilevel"	"20"
-			"propername"	"1"
-			"item_logname"	"necro_smasher"
-			"item_iconname"	"necro_smasher"
-			"image_inventory"	"backpack/weapons/custommade/c_pipewrench"
-			"image_inventory_size_w"		"128"
-			"image_inventory_size_h"		"82"
-			"inspect_panel_dist" 			"45"
-			"model_player"	"models/weapons/c_models/c_the_big_bang/c_the_big_bang.mdl"
-			"attach_to_hands" "1"
-			"used_by_classes"
-			{
-				"engineer"	"1"
-			}
-			"static_attrs"
-			{
-				"min_viewmodel_offset"		"10 -2 -9"				
-			}
-			"attributes"
-			{
-				"crit mod disabled"
-				{
-					"attribute_class"	"mult_crit_chance"
-					"value"	"0"
-				}
-				"engy sentry damage bonus"
-				{
-					"attribute_class"	"mult_engy_sentry_damage"
-					"value" "1.25"
-				}
-				"fire rate penalty"
-				{
-					"attribute_class"	"mult_postfiredelay"
-					"value"	"1.2"
-				}
-				"kill eater score type"
-				{
-					"attribute_class"	"kill_eater_score_type"
-					"value" 	"0"									
-				}
-				"kill eater score type 2"
-				{
-					"attribute_class"	"kill_eater_score_type_2"
-					"value" 	"3"									
-				}
-				"is community contributed item"
-				{
-					"attribute_class"  "is_community_contributed_item"
-					"value"							"8"
-				}
-			}
-			"visuals"
-			{
-				"animation_replacement"
-				{
-					"ACT_VM_IDLE"	"ACT_ITEM3_VM_IDLE"
-					"ACT_VM_DRAW"	"ACT_ITEM3_VM_DRAW"
-					"ACT_VM_HITCENTER"	"ACT_ITEM3_VM_HITCENTER"
-					"ACT_VM_SWINGHARD"	"ACT_ITEM3_VM_SWINGHARD"
-				}
-			}
-			"mouse_pressed_sound"	"ui/item_metal_weapon_pickup.wav"
-			"drop_sound"		"ui/item_metal_weapon_drop.wav"
-		}
-		//The big Tex - PERMISSION GRANTED
-		"32016"
-		{
-			"name"	"The Big Tex"
-			"prefab"	"weapon_revolver_secondary"
-			"capabilities"
-			{
-				"nameable"		"1"
-			}
-			"tags"
-			{
-				"can_deal_damage"			"1"
-				"can_deal_mvm_penetration_damage"	"1"
-				"can_deal_long_distance_damage"	"1"
-			}
-			"item_class"	"tf_weapon_revolver_secondary"
-			"craft_class"	"weapon"
-			"craft_material_type"	"weapon"
-			"item_type_name"	"#TF_Weapon_Revolver"
-			"item_name"	"#TF_Weapon_Revolver"
-			"item_slot"	"secondary"
-			"item_quality"	"community"
-			"moditem" "1"
-			"min_ilevel"	"1"
-			"max_ilevel"	"1"
-			"image_inventory"	"backpack/weapons/w_models/w_revolver"
-			"image_inventory_size_w"		"128"
-			"image_inventory_size_h"		"82"
-			"model_player"	"models/weapons/c_models/c_big_tex/c_big_tex.mdl"
-			"attach_to_hands" "1"
-			"used_by_classes"
-			{
-				"engineer"	"1"
-			}
-			"visuals"
-			{
-				"animation_replacement"
-				{
-					"ACT_VM_DRAW"							"ACT_ENGINEER_REVOLVER_DRAW"
-					"ACT_VM_IDLE"							"ACT_ENGINEER_REVOLVER_IDLE"
-					"ACT_VM_PRIMARYATTACK"					"ACT_ENGINEER_REVOLVER_PRIMARYATTACK"
-					"ACT_VM_RELOAD"							"ACT_ENGINEER_REVOLVER_RELOAD"
-				}
-			}
-			"mouse_pressed_sound"	"ui/item_light_gun_pickup.wav"
-			"drop_sound"		"ui/item_light_gun_drop.wav"
-		}
-		//BMMH - PERMISSION GRANTED
-		"32017"
-		{
-			"name"	"The Big Mean Mother Hubbard"
-			"prefab"	"valve weapon_bmmh"
-			"static_attrs"
-			{
-				"min_viewmodel_offset"		"10 0 -9"
-			}
-			"visuals"
-			{
-
-				"animation_replacement"
-				{
-					"ACT_VM_IDLE"	"ACT_SECONDARY2_VM_IDLE"
-					"ACT_VM_DRAW"	"ACT_SECONDARY2_VM_DRAW"
-					"ACT_VM_PRIMARYATTACK"	"ACT_SECONDARY2_VM_PRIMARYATTACK"
-					"ACT_PRIMARY_VM_INSPECT_START"	"ACT_SECONDARY_ALT1_VM_INSPECT_START"
-					"ACT_PRIMARY_VM_INSPECT_IDLE"	"ACT_SECONDARY_ALT1_VM_INSPECT_IDLE"
-					"ACT_PRIMARY_VM_INSPECT_END"	"ACT_SECONDARY_ALT1_VM_INSPECT_END"
-				}
-				"sound_single_shot"	"Weapon_Bmmh.Single"
-				"sound_burst"	"Weapon_Bmmh.Single"
-			}
-			"xifier_class_remap"	"frontier_justice"
-		}
-		//Go ahead, pee
-		"32018" 
-		{
-			"name"	"Customizable Targe"	
-			"prefab"	"no_craft weapon_targe"
-			"item_name"	"#TF_Weapon_FestiveTarge"
-			"image_inventory"	"backpack/weapons/c_models/c_targe/c_targe_xmas"
-			"model_player"	"models/weapons/c_models/c_targe/c_targe_user.mdl"
-			"propername"	"0"
-			"moditem" "1"
-			"armory_desc" "can_customize_texture"
-			"capabilities"
-			{
-				"nameable"		"1"
-				"can_customize_texture"	"1"
-				"can_craft_count"	"1"
-			}
-			"visuals_red"
-			{
-				"skin"	"0"
-			}
-			"visuals_blu"
-			{
-				"skin"	"1"
-			}
-		}
+		//32015 - 32016 - 32017 | Engi set
+		//32018 | Demoman customizable shield
 		// WARPAINT ITEMS
 		"34000" 
 		{

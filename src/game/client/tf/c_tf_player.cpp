@@ -6183,7 +6183,14 @@ void C_TFPlayer::MVM_StartIdleSound(void)
 		}
 		case TF_CLASS_DEMOMAN:
 		{
-			pszSoundName = "MVM.GiantDemomanLoop";
+			if ( m_Shared.InCond( TF_COND_SENTRY_BUSTER ) )
+			{
+				pszSoundName = "MVM.SentryBusterLoop";
+			}
+			else
+			{
+				pszSoundName = "MVM.GiantDemomanLoop";
+			}
 			break;
 		}
 		case TF_CLASS_SCOUT:

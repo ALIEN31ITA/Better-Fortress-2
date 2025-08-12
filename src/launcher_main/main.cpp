@@ -579,7 +579,7 @@ static void WaitForDebuggerConnect( int argc, char *argv[], int time )
 
 static const char *GetExecutableModName( char *pszExePath )
 {
-	static char s_szFinalFilename[ MAX_PATH + 1 ] = "hl2";
+	static char s_szFinalFilename[ MAX_PATH + 1 ] = "betterfortress";
 
 	char szExePath[ MAX_PATH + 1 ];
 	strncpy( szExePath, pszExePath, sizeof( szExePath ) );
@@ -637,7 +637,7 @@ int main( int argc, char *argv[] )
 	}
 
 	char szExecutable[8192];
-	snprintf(szExecutable, sizeof(szExecutable), "%s/hl2.sh", szGameInstallDir );
+	snprintf(szExecutable, sizeof(szExecutable), "%s/betterfortress.sh", szGameInstallDir );
 
 	std::vector<char *> new_argv;
 

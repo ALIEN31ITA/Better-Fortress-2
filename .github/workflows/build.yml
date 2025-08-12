@@ -89,11 +89,20 @@ jobs:
         working-directory: src
         if: runner.os == 'Windows'
 
-      - name: Generate project files (Linux)
+      - name: Build (Linux)
         run: ${{ matrix.build_script }}
         working-directory: src
         shell: bash
         if: runner.os == 'Linux'
+
+      - name: Clean and strip (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          find game/betterfortress/bin/linux64 -type f -executable -exec strip --strip-all {} +
+          if [ -f game/betterfortress_linux64 ]; then
+            strip --strip-all game/betterfortress_linux64
+          fi
+        shell: bash
 
       - name: Build (Windows only)
         if: runner.os == 'Windows'
@@ -115,6 +124,12 @@ jobs:
             C:\Users\runneradmin\AppData\Local\Microsoft\MSBuild
             C:\Users\runneradmin\AppData\Local\Temp
           key: ${{ runner.os }}-msvc-${{ github.sha }}
+
+      - name: Clean up Windows build
+        if: runner.os == 'Windows'
+        run: |
+            for /r "game" %%f in (*.pdb) do del /q "%%f"
+        shell: cmd
 
       - name: Upload Game Folder
         uses: actions/upload-artifact@v4

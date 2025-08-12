@@ -3,6 +3,16 @@
 // you will never read this but whatever, i tried i guess.
 // ***********************************************
 
+//Voice commands
+"sniper_mvm_sniper01"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		"1.000"
+	"pitch"		"PITCH_NORM"
+	"soundlevel"		"SNDLVL_95dB"
+	"wave"		"vo/sniper_mvm_sniper01.mp3"
+}
+
 "heavy_taunt_gangnam_hate"
 {
 	"channel" 			"CHAN_VOICE"
