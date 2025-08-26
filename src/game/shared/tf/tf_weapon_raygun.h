@@ -46,7 +46,8 @@ public:
 
 	virtual const char*	GetMuzzleFlashParticleEffect( void );
 
-	virtual float		GetDamage( void ) { return 20.f; }
+	// @ThePixelMoon: haha buff go brr 2
+	virtual float		GetDamage( void ) { return 75.f; }
 
 	virtual bool		IsEnergyWeapon( void ) const { return true; }
 	virtual float		Energy_GetShotCost( void ) const

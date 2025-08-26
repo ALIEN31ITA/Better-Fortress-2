@@ -216,7 +216,8 @@ void CTFRaygun::ClientEffectsThink( void )
 //-----------------------------------------------------------------------------
 float CTFRaygun::GetProjectileSpeed( void )
 {
-	return 1200.f;
+	// @ThePixelMoon: haha buff go brr
+	return 2400.f;
 }
 
 //-----------------------------------------------------------------------------
