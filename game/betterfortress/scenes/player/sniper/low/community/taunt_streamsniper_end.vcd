@@ -1,0 +1,44 @@
+// Choreo version 1
+actor "Sniper"
+{
+  channel "Anim"
+  {
+    event expression "mad"
+    {
+      time 0.002415 1.294686
+      param "player\sniper\emotion\emotion"
+      param2 "mad"
+      event_ramp
+      {
+        0.0000 1.0001
+        1.1461 0.9923
+      }
+    }
+    event sequence "taunt_streamsniper_end"
+    {
+      time 0.000000 1.366667
+      param "taunt_streamsniper_end"
+      fixedlength
+    }
+    event speak "Sniper.Taunt_Pissing_Outro"
+    {
+      time 0.049618 1.409006
+      param "Sniper.Taunt_Pissing_Outro"
+      fixedlength
+      cctype "cc_master"
+      cctoken ""
+    }
+  }
+}
+
+scalesettings
+{
+  "CChoreoView" "100"
+  "SceneRampTool" "100"
+  "ExpressionTool" "100"
+  "GestureTool" "100"
+  "RampTool" "100"
+}
+fps 60
+snap off
+ignorePhonemes off

@@ -2525,9 +2525,15 @@ void CHudMainMenuOverride::LoadSplashTexts()
 	KeyValues *pSplashTexts = new KeyValues( "SplashTexts" );
 	if ( pSplashTexts->LoadFromFile( g_pFullFileSystem, "scripts/better_splashes.txt", "GAME" ) )
 	{
-		// The file format is line-based, so we need to read it differently
+		for ( KeyValues *pCurItem = pSplashTexts->GetFirstValue(); pCurItem; pCurItem = pCurItem->GetNextValue() )
+		{
+			const char *pName = pCurItem->GetName();
+			m_vecSplashTexts.AddToTail( CUtlString( pName ) );
+		}
 		pSplashTexts->deleteThis();
 		
+		// the code below might be a tad bit over-engineered, keeping it around as it seems useful
+		/*
 		// Read the file as text
 		CUtlBuffer buffer;
 		if ( g_pFullFileSystem->ReadFile( "scripts/better_splashes.txt", "GAME", buffer ) )
@@ -2542,12 +2548,24 @@ void CHudMainMenuOverride::LoadSplashTexts()
 				while ( *pLine == ' ' || *pLine == '\t' )
 					pLine++;
 				
-				if ( *pLine != '\0' && *pLine != '#' ) // Skip empty lines and comments
+				// Skip empty lines, comments, "SplashTexts" line, and curly brackets
+				if ( *pLine != '\0' && *pLine != '#' && 
+					 strcmp(pLine, "\"SplashTexts\"") != 0 && 
+					 strcmp(pLine, "{") != 0 && 
+					 strcmp(pLine, "}") != 0 )
 				{
 					// Remove trailing whitespace
 					char *pEnd = pLine + strlen(pLine) - 1;
 					while ( pEnd > pLine && (*pEnd == ' ' || *pEnd == '\t' || *pEnd == '\n' || *pEnd == '\r') )
 						*pEnd-- = '\0';
+						
+					// Check if line starts and ends with quotes, and remove them
+					if ( strlen(pLine) > 2 && pLine[0] == '\"' && pLine[strlen(pLine)-1] == '\"' )
+					{
+						// Remove quotes
+						pLine[strlen(pLine)-1] = '\0';
+						pLine++;
+					}
 						
 					if ( strlen(pLine) > 0 )
 					{
@@ -2556,7 +2574,7 @@ void CHudMainMenuOverride::LoadSplashTexts()
 				}
 				pLine = strtok( NULL, "\n\r" );
 			}
-		}
+		}*/
 	}
 	else
 	{

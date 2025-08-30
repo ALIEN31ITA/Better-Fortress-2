@@ -1,0 +1,63 @@
+// Choreo version 1
+event loop "loop"
+{
+  time 4.633334 -1.000000
+  param "1.670000"
+  loopcount "255"
+}
+actor "Sniper"
+{
+  channel "Anim"
+  {
+    event expression "specialAction01"
+    {
+      time 0.788360 2.930818
+      param "player\sniper\emotion\emotion"
+      param2 "mad"
+      event_ramp
+      {
+        0.1220 0.0000
+        0.6200 0.0000
+        0.9580 1.0001
+        2.1424 1.0001
+      }
+    }
+    event expression "painSmallUpper"
+    {
+      time 0.018519 1.018519
+      param "player\sniper\emotion\emotion"
+      param2 "painSmallUpper"
+      event_ramp
+      {
+        0.1500 0.8001
+        1.0000 0.9530
+      }
+    }
+    event sequence "taunt_streamsniper_loop"
+    {
+      time 0.000000 4.633334
+      param "taunt_streamsniper_loop"
+      fixedlength
+    }
+    event speak "Sniper.Taunt_Pissing_Intro"
+    {
+      time 0.022222 2.679841
+      param "Sniper.Taunt_Pissing_Intro"
+      fixedlength
+      cctype "cc_master"
+      cctoken ""
+    }
+  }
+}
+
+scalesettings
+{
+  "CChoreoView" "100"
+  "SceneRampTool" "100"
+  "ExpressionTool" "100"
+  "GestureTool" "100"
+  "RampTool" "100"
+}
+fps 60
+snap off
+ignorePhonemes off

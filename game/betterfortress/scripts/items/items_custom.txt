@@ -100,11 +100,6 @@
 					"attribute_class"	"robotrobotrobotrobot"
 					"value"		"1"
 				}		
-				"override footstep sound set"
-				{
-					"attribute_class" "override_footstep_sound_set"
-					"value" 		"10"
-				}
 			}
 		}
 		
@@ -321,12 +316,29 @@
 					"attribute_class"	"mult_dmg"
 					"value"	"0.4"
 				}
+				//Smart or stupid?
+				"override projectile type"
+				{
+					"attribute_class"	"override_projectile_type"
+					"value" 			"31"
+				
+				}
 			}
 			"visuals"
 			{
-				"sound_single_shot"	"Weapon_FrontierJustice.Single"
-				"sound_burst"	"Weapon_FrontierJustice.SingleCrit"
-			}			
+				"animation_replacement"
+				{
+					"ACT_VM_IDLE"	"ACT_SECONDARY2_VM_IDLE"
+					"ACT_VM_DRAW"	"ACT_SECONDARY2_VM_DRAW"
+					"ACT_VM_PRIMARYATTACK"	"ACT_SECONDARY2_VM_PRIMARYATTACK"
+					"ACT_PRIMARY_VM_INSPECT_START"	"ACT_SECONDARY_ALT1_VM_INSPECT_START"
+					"ACT_PRIMARY_VM_INSPECT_IDLE"	"ACT_SECONDARY_ALT1_VM_INSPECT_IDLE"
+					"ACT_PRIMARY_VM_INSPECT_END"	"ACT_SECONDARY_ALT1_VM_INSPECT_END"
+				}
+				"sound_single_shot"	"Weapon_Bmmh.Single"
+				"sound_burst"	"Weapon_Bmmh.Single"
+				"sound_special1"		"MVM.RobotImpactHard"
+			}	
 			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
@@ -487,6 +499,18 @@
 					"attribute_class"	"zombiezombiezombiezombie"
 					"value"		"1"
 				}
+			}
+		}
+	}
+	"item_sets"
+	{
+		"testing_sets"
+		{
+			"name"	"#TF_Set_Desert_Sniper"
+			"items"
+			{
+				"The Hell Beneath"		"1"
+				"The Holy Marlin"		"1"
 			}
 		}
 	}
@@ -656,6 +680,34 @@
 			"stored_as_integer"		"1"
 			"can_affect_market_name"	"1"
 		}
+		"4013"
+		{
+			"name"	"airblast pushes teammates"
+			"attribute_class"	"airblast_pushes_teammates"
+			"description_string"	"#Attrib_AirblastYourTeam"
+			"description_format"	"value_is_additive"
+			"hidden"	"0"
+			"effect_type"	"positive"
+			"stored_as_integer"	"1"
+		}
+		"4014"
+		{
+			"name"	"visuals sound override"
+			"attribute_class"	"visuals_sound_override"
+			"description_format"	"value_is_additive"
+			"hidden"	"1"
+			"effect_type"	"positive"
+			"stored_as_integer"	"1"
+		}
+		"4015"
+		{
+			"name"	"projectile has gravity"
+			"attribute_class"	"projectile_has_gravity"
+			"description_format"	"value_is_additive"
+			"hidden"	"1"
+			"effect_type"	"positive"
+			"stored_as_integer"	"1"
+		}
 	}
 	"items"
 	{
@@ -705,12 +757,17 @@
 				"attack projectiles"
 				{
 					"attribute_class"  "attack_projectiles"
-					"value"							"2"
+					"value"							"1"
 				}
 				"spread penalty"
 				{
 					"attribute_class" 	"mult_spread_scale"
-					"value" "1.8"
+					"value" "1.5"
+				}
+				"no primary ammo from dispensers while active"
+				{
+					"attribute_class"	"no_primary_ammo_from_dispensers"	
+					"value"	"1"
 				}
 				"maxammo primary reduced"
 				{
@@ -762,6 +819,21 @@
 				{
 					"attribute_class"	"heal_on_kill"
 					"value"	"25"
+				}
+			}
+		}
+		//Tux - Powerup canteen :)
+		"1011"
+		{
+			"prefab"	"powerup_bottle"
+			"item_class"	"tf_powerup_bottle"
+			"item_slot"	"action"
+			"attributes"
+			{
+				"kill eater score type"
+				{
+					"attribute_class"		"kill_eater_score_type"
+					"value"		"109"
 				}
 			}
 		}
@@ -1168,6 +1240,73 @@
 				"custom_taunt_prop_per_class"
 				{
 					"engineer"	"models/workshop/player/items/taunts/engi_fishing_v2/engi_fishing_v2.mdl"
+				}
+			}
+		}
+		"29006"
+		{
+			"name"	"Taunt: Streamsniper"
+			"prefab"	"bf_community_taunt"
+			"item_name"	"#WS_DDAN_Taunt_StreamSniper"
+			"item_description"	"#WS_DDAN_Taunt_StreamSniper_Desc"
+			"image_inventory"	"backpack/player/taunts/taunt_ddan_streamsniper"
+			"image_inventory_size_w"	"128"
+			"image_inventory_size_h"	"82"
+			"item_quality"		"community"
+			"moditem" "1"
+			"min_ilevel"	"1"
+			"max_ilevel"	"100"
+			"used_by_classes"
+			{
+				"sniper"	"1"
+			}
+			"attributes"
+			{
+				"taunt is press and hold"
+				{
+					"attribute_class"	"enable_misc2_holdtaunt"
+					"value"				"1"
+				}
+				"taunt turn speed"
+				{
+					"attribute_class"	"taunt_turn_speed"
+					"value"				"60"
+				}
+				"taunt success sound loop"
+				{
+					"attribute_class"	"taunt_success_sound_loop"
+					"value"				"Taunt_DDan.SFX_Pissing_Loop"
+				}
+				"taunt success sound loop offset"
+				{
+					"attribute_class"	"taunt_success_sound_loop_offset"
+					"value"				"1"
+				}
+				"is community contributed item"
+				{
+					"attribute_class"  "is_community_contributed_item"
+					"value"							"8"
+				}
+			}
+			"taunt"
+			{
+				"custom_taunt_scene_per_class"
+				{
+					"sniper"	"scenes/player/sniper/low/community/taunt_streamsniper.vcd"
+				}
+				"custom_taunt_outro_scene_per_class"
+				{
+					"sniper"	"scenes/player/sniper/low/community/taunt_streamsniper_end.vcd"
+				}
+				"custom_taunt_input_remap"
+				{
+					"IN_ATTACK"
+					{
+						"pressed"
+						{
+							"sniper"	"scenes/player/sniper/low/community/taunt_streamsniper_a1.vcd"
+						}
+					}
 				}
 			}
 		}
@@ -1961,6 +2100,17 @@
 			}
 		}
 		//32015 - 32016 - 32017 | Engi set
+		//BMMH - PERMISSION GRANTED
+		"32017"
+		{
+			"name"	"The Big Mean Mother Hubbard"
+			"prefab"	"weapon_bmmh"
+			"static_attrs"
+			{
+				"min_viewmodel_offset"		"10 0 -9"
+			}
+			"xifier_class_remap"	"frontier_justice"
+		}
 		//32018 | Demoman customizable shield
 		// WARPAINT ITEMS
 		"34000" 
@@ -2067,6 +2217,7 @@
 			"5"			"#Attrib_UGCW_OFFSHORE_Wrench"
 			"6"			"#Attrib_UGCW_PDA_Mini"
 			"7"			"#Attrib_UGCW_BBeacon"
+			"8"			"#Attrib_UGCT_StreamSniper"
 		}
 	}
 	"client_loot_lists"

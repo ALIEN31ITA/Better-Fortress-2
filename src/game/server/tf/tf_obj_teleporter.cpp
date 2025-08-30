@@ -1461,9 +1461,14 @@ void CObjectTeleporter::MakeCarriedObject( CTFPlayer *pCarrier )
 {
 	ShowDirectionArrow( false );
 
+	// Clear teleporter spawn points when picked up in MvM Versus to prevent robots from spawning at old location
+	if ( GetBuilder() && GetBuilder()->GetTeamNumber() == TF_TEAM_PVE_INVADERS && !GetBuilder()->IsBot() && !IsEntrance() && TFGameRules() && TFGameRules()->IsMannVsMachineMode() && bf_gamemode_mvmvs.GetBool() )
+	{
+		m_teleportWhereName.RemoveAll();
+	}
+
 	BaseClass::MakeCarriedObject( pCarrier );
 }
-
 
 //-----------------------------------------------------------------------------
 // Purpose:

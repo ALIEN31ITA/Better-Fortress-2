@@ -897,7 +897,7 @@ void CTFHudDeathNotice::OnGameEvent( IGameEvent *event, int iDeathNoticeMsg )
 
 		if ( bPenetrateSound )
 		{
-			if (bf_snd_penetrationkill.GetBool())
+			if ( bf_snd_penetrationkill.GetBool() )
 			{
 				CLocalPlayerFilter filter;
 				C_BaseEntity::EmitSound(filter, SOUND_FROM_LOCAL_PLAYER, "Game.PenetrationKill");

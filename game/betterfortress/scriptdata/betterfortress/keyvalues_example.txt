@@ -1,0 +1,91 @@
+// hopefully these descriptions age well.
+// if they don't, please don't crucify me.
+"Better Fortress 2 Team"
+{
+	"main_thing"
+	{
+		"type"			"Developer"
+		"description"	"Casual modder, and invisible."
+		
+		"likes"
+		{
+			"game" "Team Fortress 2"
+			"game" "Better Fortress 2"
+		}
+	}
+	
+	"Alien31"
+	{
+		"type"			"Developer"
+		"description"	"Casual mapper, and modder, and a good friend."
+		
+		"likes"
+		{
+			"game" "Team Fortress 2"
+			"game" "Better Fortress 2"
+		}
+	}
+	
+	"TheGabenZone"
+	{
+		"type"			"developer"
+		"description"	"Great developer, and a chill person."
+		
+		"likes"
+		{
+			"game" "Team Fortress 2"
+			"game" "Better Fortress 2"
+		}
+	}
+	
+	"Loner"
+	{
+		"type"			"developer"
+		"description"	"Great concept artist, and quite chill too."
+		
+		"likes"
+		{
+			"game" "Team Fortress 2"
+			"game" "Better Fortress 2"
+		}
+	}
+	
+	"Gorden Freakman"
+	{
+		"type"			"developer"
+		"description"	"Great modder in general, great person."
+		
+		"likes"
+		{
+			"game" "Half-Life 2"
+			"game" "Team Fortress 2"
+			"game" "Better Fortress 2"
+		}
+	}
+	
+	"Vvis"
+	{
+		"type"			"developer"
+		"description"	"Great modder in general."
+		
+		"likes"
+		{
+			"game" "Half-Life 2"
+			"game" "Left 4 Dead"
+			"game" "Team Fortress 2"
+			"game" "Better Fortress 2"
+		}
+	}
+	
+	"MIXXERRULES"
+	{
+		"type"			"publisher"
+		"description"	"Cool guy in general."
+		
+		"likes"
+		{
+			"game" "Team Fortress 2"
+			"game" "Better Fortress 2"
+		}
+	}
+}

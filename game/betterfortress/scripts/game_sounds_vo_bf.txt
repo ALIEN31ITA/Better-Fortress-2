@@ -223,16 +223,6 @@
 		"wave"			"vo\heavy_jeers02.mp3"
 	}
 }
-"Taunt.Engineer_Fishing_Reelbig"
-{
-	"channel"		"CHAN_STATIC"
-	"volume"		"1"
-	"pitch"			"90,105"
-	"soundlevel"	"SNDLVL_74dB"
-	
-	"wave"	")player/taunt_fishing_reel_big.wav"
-
-}
 "Taunt.Engineer_Fishing_Appear"
 {
 	"channel"		"CHAN_STATIC"
@@ -324,5 +314,99 @@
 		"wave"	"vo/engineer_mvm_loot_godlike03.mp3"
 		"wave"	"vo/engineer_cheers06.mp3"
 		"wave"	"vo/engineer_yes02.mp3"
+	}
+}
+
+//------------------------------------
+// TAUNT SFX
+//------------------------------------
+
+"Taunt.Engineer_Fishing_Reelbig"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"pitch"			"90,105"
+	"soundlevel"	"SNDLVL_74dB"
+	
+	"wave"	")player/taunt_fishing_reel_big.wav"
+
+}
+
+"Taunt_DDan.SFX_Zipper_Up"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"pitch"			"PITCH_NORM"
+	"soundlevel"	"SNDLVL_74dB"	
+	"wave"	")player/taunt_zip_up.wav"
+}
+
+"Taunt_DDan.SFX_Zipper_Down"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"pitch"			"PITCH_NORM"
+	"soundlevel"	"SNDLVL_74dB"	
+	"wave"	")player/taunt_zip_down.wav"
+}
+
+"Taunt_DDan.SFX_Pissing_Loop"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"pitch"			"PITCH_NORM"
+	"soundlevel"	"SNDLVL_74dB"	
+	"wave"	")ambient/water/leak_1.wav"
+}
+
+"Sniper.Taunt_Pissing_Intro"
+{
+	"channel" 			"CHAN_VOICE"
+	"volume" 			"VOL_NORM"
+	"pitch" 			"PITCH_NORM"
+	"soundlevel" 		"SNDLVL_95dB"
+	"rndwave"
+	{ 
+		"wave"	"vo/Sniper_negativevocalization03.mp3"
+		"wave"	"vo/sniper_battlecry06.mp3"
+		"wave"	"vo/sniper_DominationMedic03.mp3"
+		"wave"	"vo/sniper_item_unicorn_uber01.mp3"
+		"wave"	"vo/compmode/cm_sniper_pregamefirst_06.mp3"
+		"wave"	"vo/compmode/cm_sniper_pregamefirst_rare_04.mp3"
+		"wave"	"vo/compmode/cm_sniper_pregamelostlast_rare_01.mp3"
+	}
+}
+
+"Sniper.Taunt_Pissing_A1"
+{
+	"channel" 			"CHAN_VOICE"
+	"volume" 			"VOL_NORM"
+	"pitch" 			"PITCH_NORM"
+	"soundlevel" 		"SNDLVL_95dB"
+	"rndwave"
+	{ 
+		"wave"	"vo/sniper_laughevil01.mp3"
+		"wave"	"vo/sniper_laughevil02.mp3"
+	}
+}
+
+"Sniper.Taunt_Pissing_Outro"
+{
+	"channel" 			"CHAN_VOICE"
+	"volume" 			"VOL_NORM"
+	"pitch" 			"PITCH_NORM"
+	"soundlevel" 		"SNDLVL_95dB"
+	"rndwave"
+	{ 
+		"wave"	"vo/Sniper_domination18.mp3"
+		"wave"	"vo/Sniper_revenge15.mp3"
+		"wave"	"vo/Sniper_award03.mp3"
+		"wave"	"vo/sniper_item_unicorn_uber01.mp3"
+		"wave"	"vo/compmode/Cm_sniper_pregamefirst_comp_04.mp3"
+		"wave"	"vo/compmode/Cm_sniper_pregamewonlast_rare_03.mp3"
+		"wave"	"vo/compmode/Cm_sniper_gamewon_01.mp3"
+		"wave" 	"vo/compmode/Cm_sniper_summary_callout_10.mp3"
+		"wave" 	"vo/Sniper_mvm_loot_rare04.mp3"
+		"wave" 	"vo/Sniper_mvm_resurrect03.mp3"
 	}
 }

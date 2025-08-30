@@ -1615,7 +1615,11 @@ void CTFFlameThrower::ComputeCrayAirBlastForce( CTFPlayer *pTarget, CTFPlayer *p
 //-----------------------------------------------------------------------------
 bool CTFFlameThrower::DeflectPlayer( CTFPlayer *pTarget, CTFPlayer *pOwner, Vector &vecForward )
 {
-	if ( !friendlyfire.GetBool() )
+
+	int iAirblastTeammates = 0;
+	CALL_ATTRIB_HOOK_INT( iAirblastTeammates, airblast_pushes_teammates );
+
+	if ( !friendlyfire.GetBool() && !iAirblastTeammates )
 	{
 		if (pTarget->GetTeamNumber() == pOwner->GetTeamNumber() && pTarget != pOwner)
 		{

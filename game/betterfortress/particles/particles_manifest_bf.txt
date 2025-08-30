@@ -1,4 +1,5 @@
 particles_manifest
 {
 		"file"		"!particles/offshore_particles.pcf"
+		"file"		"!particles/taunts_workshop_generic.pcf"
 }

@@ -7,7 +7,7 @@
 $Include "$SRCDIR\gcsdk\gcsdk_game_include.vpc"
 $Include "$SRCDIR\game\shared\base_gcmessages_include.vpc"
 $Include "$SRCDIR\game\shared\econ_gcmessages_include.vpc"
-$include "$SRCDIR\vpc_scripts\source_cryptlib_include.vpc" [!$SOURCESDK]
+// $include "$SRCDIR\vpc_scripts\source_cryptlib_include.vpc" [!$SOURCESDK]
 
 $Configuration
 {

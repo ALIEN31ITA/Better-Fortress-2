@@ -1047,13 +1047,30 @@ void CTFPlayerInventory::LoadLocalLoadout()
 
 				m_PresetItems[iPreset][iClass][iSlot] = uItemId;
 
-				if (iPreset == m_ActivePreset[iClass]) {
+				if (iPreset == m_ActivePreset[iClass]) 
+				{
 					m_LoadoutItems[iClass][iSlot] = uItemId;
 
 					CEconItemView *pItem = GetInventoryItemByItemID(uItemId);
-					if (pItem) {
+
+					if (uItemId < 100000)
+					{
+						int count = TFInventoryManager()->GetModItemCount();
+						for (int i = 0; i < count; i++)
+						{
+							CEconItemView *pTempItem = TFInventoryManager()->GetModItem(i);
+							if ( pTempItem->GetItemID() == uItemId )
+							{
+								pItem = pTempItem;
+							}
+						}
+					}
+
+					if (pItem) 
+					{
 						CEconItem* pItemSOC = pItem->GetSOCData();
-						if (pItemSOC) {
+						if (pItemSOC) 
+						{
 							pItemSOC->Equip( iClass, iSlot);
 						}
 					}
@@ -1651,7 +1668,7 @@ CEconItemView *CTFPlayerInventory::GetCacheServerItemInLoadout( int iClass, int 
 				CEconItemView* pItem = TFInventoryManager()->GetModItem(i);
 				if (pItem && pItem->GetItemDefIndex() == m_CachedServerLoadoutItems[iClass][iSlot])
 				{
-					//DevMsg( "Using cached mod item: %d\n", m_CachedServerLoadoutItems[iClass][iSlot] );
+					//DevMsg( "Using cached mod item: %lld\n", m_CachedServerLoadoutItems[iClass][iSlot] );
 					if (pItem && AreSlotsConsideredIdentical(pItem->GetStaticData()->GetEquipType(), pItem->GetStaticData()->GetLoadoutSlot(iClass), iSlot))
 						return pItem;
 				}

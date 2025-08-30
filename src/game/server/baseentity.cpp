@@ -5597,9 +5597,8 @@ HSCRIPT CBaseEntity::ScriptGetModelKeyValues( void )
 		// UNDONE: how does destructor get called on this
 		m_pScriptModelKeyValues = new CScriptKeyValues( pModelKeyValues );
 
-		// UNDONE: who calls ReleaseInstance on this??? Does name need to be unique???
-
 		hScript = g_pScriptVM->RegisterInstance( m_pScriptModelKeyValues );
+		m_pScriptModelKeyValues->m_hScriptInstance = hScript;
 		
 		/* 
 		KeyValues *pParticleEffects = pModelKeyValues->FindKey("Particles");

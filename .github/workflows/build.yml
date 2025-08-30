@@ -1,4 +1,4 @@
-# I'm old!
+# Updated for proper 64-bit builds
 name: Build
 
 on:
@@ -77,7 +77,7 @@ jobs:
       - name: Install Linux build dependencies
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get install -y g++-multilib ninja-build lib32z1-dev podman
+          sudo apt-get install -y g++-multilib ninja-build lib32z1-dev podman file
 
       - name: Setup MSBuild (Windows only)
         if: runner.os == 'Windows'
@@ -89,11 +89,78 @@ jobs:
         working-directory: src
         if: runner.os == 'Windows'
 
+      # Set 64-bit compilation environment
+      - name: Set 64-bit build environment (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          echo 'export CFLAGS="-m64"' >> $GITHUB_ENV
+          echo 'export CXXFLAGS="-m64"' >> $GITHUB_ENV
+          echo 'export LDFLAGS="-m64"' >> $GITHUB_ENV
+        shell: bash
+
+      # Clean previous builds to avoid architecture conflicts
+      - name: Clean previous builds (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          cd src
+          rm -rf _vpc_/
+        shell: bash
+
       - name: Build (Linux)
         run: ${{ matrix.build_script }}
         working-directory: src
         shell: bash
         if: runner.os == 'Linux'
+
+      # Verify all libraries are 64-bit
+      - name: Verify library architecture (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          echo "Verifying all .so files are 64-bit..."
+          
+          # Check libraries in src/lib/public/linux64/
+          if [ -d "src/lib/public/linux64" ]; then
+            for lib in src/lib/public/linux64/*.so; do
+              if [ -f "$lib" ]; then
+                echo "Checking $lib:"
+                file "$lib" | grep -q "ELF 64-bit" || {
+                  echo "ERROR: $lib is not 64-bit!"
+                  file "$lib"
+                  exit 1
+                }
+                echo "✓ $lib is 64-bit"
+              fi
+            done
+          fi
+          
+          # Check game binaries
+          if [ -d "game/betterfortress/bin/linux64" ]; then
+            for lib in game/betterfortress/bin/linux64/*.so; do
+              if [ -f "$lib" ]; then
+                echo "Checking $lib:"
+                file "$lib" | grep -q "ELF 64-bit" || {
+                  echo "ERROR: $lib is not 64-bit!"
+                  file "$lib"
+                  exit 1
+                }
+                echo "✓ $lib is 64-bit"
+              fi
+            done
+          fi
+          
+          # Check main executable
+          if [ -f "game/betterfortress_linux64" ]; then
+            echo "Checking game/betterfortress_linux64:"
+            file "game/betterfortress_linux64" | grep -q "ELF 64-bit" || {
+              echo "ERROR: betterfortress_linux64 is not 64-bit!"
+              file "game/betterfortress_linux64"
+              exit 1
+            }
+            echo "✓ betterfortress_linux64 is 64-bit"
+          fi
+          
+          echo "All binaries verified as 64-bit ✓"
+        shell: bash
 
       - name: Clean and strip (Linux)
         if: runner.os == 'Linux'

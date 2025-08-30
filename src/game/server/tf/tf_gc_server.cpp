@@ -1586,6 +1586,8 @@ void CTFGCServerSystem::PreClientUpdate( )
 		}
 
 		int playerCount = tf_mvm_defenders_team_size.GetInt() + spectatorCount;
+		// Clamp to prevent byte overflow in server browser
+		playerCount = Min( playerCount, 254 );
 		if ( sv_visiblemaxplayers.GetInt() <= 0 || sv_visiblemaxplayers.GetInt() != playerCount )
 		{
 			MMLog( "Setting sv_visiblemaxplayers to %d for MvM\n", playerCount );

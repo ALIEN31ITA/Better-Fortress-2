@@ -69,7 +69,16 @@ public:
 	bool ScriptGetKeyValueBool( const char *pszName );
 	void ScriptReleaseKeyValues( );
 
+	int ScriptGetInt();
+	float ScriptGetFloat();
+	const char *ScriptGetString();
+	const char *ScriptGetName();
+	bool ScriptGetBool();
+	bool ScriptIsEmpty();
+	int ScriptGetDataType();
+
 	KeyValues *m_pKeyValues;	// actual KeyValue entity
+	HSCRIPT	m_hScriptInstance;
 };
 
 class CVScriptGameEventListener : public CGameEventListener

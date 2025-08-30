@@ -23,6 +23,7 @@
 
 	#include "tf_projectile_flare.h"
 	#include "tf_projectile_rocket.h"
+	#include "tf_projectile_scrapball.h"
 	#include "tf_projectile_arrow.h"
 	#include "tf_projectile_energy_ball.h"
 	#include "tf_weapon_grenade_pipebomb.h"
@@ -342,6 +343,11 @@ CBaseEntity *CTFWeaponBaseGun::FireProjectile( CTFPlayer *pPlayer )
 		}
 		break;
 
+	case TF_PROJECTILE_SCRAPBALL:
+		pProjectile = FireRocket( pPlayer, iProjectile );
+		pPlayer->DoAnimationEvent( PLAYERANIMEVENT_ATTACK_PRIMARY );
+		break;
+
 	case TF_PROJECTILE_NONE:
 	default:
 		// do nothing!
@@ -536,15 +542,44 @@ CBaseEntity *CTFWeaponBaseGun::FireRocket( CTFPlayer *pPlayer, int iRocketType )
 	CTraceFilterSimple traceFilter( this, COLLISION_GROUP_NONE );
 	UTIL_TraceLine( vecEye, vecSrc, MASK_SOLID_BRUSHONLY, &traceFilter, &trace );
 
-	CTFProjectile_Rocket *pProjectile = CTFProjectile_Rocket::Create( this, trace.endpos, angForward, pPlayer, pPlayer );
+	//Nobody owns Gravity... unless you get hit by an apple.
+	float fGravitationalProjectiles = 0;
+	CALL_ATTRIB_HOOK_FLOAT( fGravitationalProjectiles, projectile_has_gravity );
 
-	if ( pProjectile )
+	CTFProjectile_Rocket *pRocket;
+	CTFProjectile_ScrapBall *pScrapBall;
+
+	switch( iRocketType )
 	{
-		pProjectile->SetCritical( IsCurrentAttackACrit() );
-		pProjectile->SetDamage( GetProjectileDamage() );
-	}
+	case TF_PROJECTILE_ROCKET:
+		pRocket = CTFProjectile_Rocket::Create( this, trace.endpos, angForward, pPlayer, pPlayer );
 
-	return pProjectile;
+		if ( pRocket )
+		{
+			pRocket->SetCritical( IsCurrentAttackACrit() );
+			pRocket->SetDamage( GetProjectileDamage() );
+			if ( fGravitationalProjectiles )
+			{
+				pRocket->SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_CUSTOM );
+				pRocket->SetGravity( fGravitationalProjectiles );
+			}
+		}
+		return pRocket;
+		break;
+
+	case TF_PROJECTILE_SCRAPBALL:
+		pScrapBall = CTFProjectile_ScrapBall::Create( this, trace.endpos, angForward, pPlayer, pPlayer );
+
+		if ( pScrapBall )
+		{
+			pScrapBall->SetCritical( IsCurrentAttackACrit() );
+			pScrapBall->SetDamage( GetProjectileDamage() );
+		}
+		return pScrapBall;
+		break;
+	}
+	// This should never be reached
+	return NULL;
 
 #endif
 

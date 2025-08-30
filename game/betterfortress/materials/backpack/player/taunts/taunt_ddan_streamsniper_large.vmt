@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "backpack/player/taunts/taunt_ddan_streamsniper_large"
+	"$translucent" 1
+	"$vertexcolor" 1
+}

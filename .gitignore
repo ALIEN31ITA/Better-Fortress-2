@@ -609,3 +609,4 @@ game/betterfortress/scripts/vscripts/shieldpic.nut
 game/betterfortress/scripts/vscripts/objectorid.nut
 game/betterfortress/cfg/bf_devtest_bots.cfg
 game/betterfortress/cfg/bf_devtest.cfg
+game/betterfortress/scripts/population/sentrybuster.pop

@@ -1005,7 +1005,13 @@ void CClassLoadoutPanel::UpdateModelPanels( void )
 	{
 		m_pPlayerModelPanel->ClearCarriedItems();
 		m_pPlayerModelPanel->SetToPlayerClass( m_iCurrentClassIndex );
-		m_pPlayerModelPanel->SetTeam( m_iCurrentTeamIndex );
+		
+		// Set team based on current preview skin selection instead of m_iCurrentTeamIndex
+		int iPreviewTeam = (m_iCurrentPreviewSkin == 0) ? TF_TEAM_RED : TF_TEAM_BLUE;
+		m_pPlayerModelPanel->SetTeam( iPreviewTeam );
+		
+		// Apply the preview skin after setting team
+		m_pPlayerModelPanel->SetPreviewSkin( m_iCurrentPreviewSkin );
 	}
 
 	// For now, fill them out with the local player's currently wielded items
@@ -1026,6 +1032,7 @@ void CClassLoadoutPanel::UpdateModelPanels( void )
 	if ( m_pPlayerModelPanel )
 	{
 		m_pPlayerModelPanel->HoldItemInSlot( m_iCurrentSlotIndex );
+		m_pPlayerModelPanel->SetPreviewSkin( m_iCurrentPreviewSkin );
 	}
 
 	SetDialogVariable( "loadoutclass", g_pVGuiLocalize->Find( pData->m_szLocalizableName ) );
@@ -1077,7 +1084,14 @@ void CClassLoadoutPanel::OnSelectionReturned( KeyValues *data )
 
 			m_bLoadoutHasChanged = true;
 
+			// After equipping the item and updating model panels
 			UpdateModelPanels();
+	
+			// Ensure the selected skin is maintained
+			if ( m_pPlayerModelPanel )
+			{
+				m_pPlayerModelPanel->SetPreviewSkin( m_iCurrentPreviewSkin );
+			}
 
 			// Send the preset panel a msg so it can save the change
 			KeyValues *pLoadoutChangedMsg = new KeyValues( "LoadoutChanged" );

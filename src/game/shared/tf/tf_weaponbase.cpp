@@ -4615,14 +4615,17 @@ char const *CTFWeaponBase::GetShootSound( int iIndex ) const
 	const CEconItemView *pItem = GetAttributeContainer()->GetItem();
 	if ( pItem->IsValid() )
 	{
-		int nTeam = GetTeamNumber();
+		int iVisualOverride = 0;
+		CALL_ATTRIB_HOOK_INT( iVisualOverride, visuals_sound_override );
 
-		if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && nTeam == TF_TEAM_PVE_INVADERS )
+		int nTeam = iVisualOverride ? iVisualOverride : GetTeamNumber();
+
+		if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && nTeam == TF_TEAM_PVE_INVADERS && !iVisualOverride )
 		{
 			CTFPlayer *pPlayer = ToTFPlayer( GetOwner() );
 			if ( pPlayer && pPlayer->IsMiniBoss() )
 			{
-				// Not a real team - just a define used in replacing visuals via itemdefs ("visuals_mvm")
+				// Not a real team - just a define used in replacing visuals via itemdefs ("visuals_mvm_boss")
 				nTeam = TF_TEAM_PVE_INVADERS_GIANTS;
 			}
 		}

@@ -2665,12 +2665,35 @@ static bool IsItemEquipped( uint32 unAccountID, const CEconItemDefinition *pSear
 	Assert( ppFoundSetItemDef );
 
 	CPlayerInventory *pInv = InventoryManager()->GetInventoryForAccount( unAccountID );
+
+	// If it does not have an account ID, just use the local inventory.
 	if ( !pInv )
-		return false;
+		pInv = InventoryManager()->GetLocalInventory();
 
 	for ( int i = 0; i < pInv->GetItemCount(); i++ )
 	{
 		const CEconItemView *pInvItem = pInv->GetItem( i );
+		if ( !pInvItem )
+			continue;
+
+		// This code is client-only so we expect to always get back an item definition pointer.
+		const GameItemDefinition_t *pInvItemDef = pInvItem->GetItemDefinition();
+		Assert( pInvItemDef );
+
+		if ( pInvItemDef->GetSetItemRemap() != pSearchItemDef->GetDefinitionIndex() )
+			continue;
+
+		if ( !pInvItem->IsEquipped() )
+			continue;
+
+		*ppFoundSetItemDef = pInvItemDef;
+		return true;
+	}
+
+	// If it's not an item from base tf2, check for mod items.
+	for ( int i = 0; i < TFInventoryManager()->GetModItemCount(); i++)
+	{
+		const CEconItemView *pInvItem = TFInventoryManager()->GetModItem(i);
 		if ( !pInvItem )
 			continue;
 

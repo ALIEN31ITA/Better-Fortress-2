@@ -226,7 +226,7 @@ void CScriptConvarAccessor::LevelInitPreEntity()
 	m_AllowedConVars.RemoveAll();
 
 	KeyValues *kv = new KeyValues( "vscript_convar_allowlist" );
-	bool bLoaded = kv->LoadFromFile( g_pFullFileSystem, VSCRIPT_CONVAR_ALLOWLIST_NAME, "MOD" );
+	bool bLoaded = kv->LoadFromFile( g_pFullFileSystem, VSCRIPT_CONVAR_ALLOWLIST_NAME, "GAME" );
 	if ( bLoaded )
 	{
 		for ( KeyValues *pCurItem = kv->GetFirstValue(); pCurItem; pCurItem = pCurItem->GetNextValue() )
@@ -903,6 +903,13 @@ BEGIN_SCRIPTDESC_ROOT( CScriptKeyValues, "Wrapper class over KeyValues instance"
 	DEFINE_SCRIPTFUNC_NAMED( ScriptGetKeyValueFloat, "GetKeyFloat", "Given a KeyValues object and a key name, return associated float value" );
 	DEFINE_SCRIPTFUNC_NAMED( ScriptGetKeyValueBool, "GetKeyBool", "Given a KeyValues object and a key name, return associated bool value" );
 	DEFINE_SCRIPTFUNC_NAMED( ScriptGetKeyValueString, "GetKeyString", "Given a KeyValues object and a key name, return associated string value" );
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetInt, "GetInt", "Given a KeyValues object, return associated integer value" );
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetFloat, "GetFloat", "Given a KeyValues object, return associated float value" );
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetBool, "GetBool", "Given a KeyValues object, return associated bool value" );
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetString, "GetString", "Given a KeyValues object, return associated string value" );
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetName, "GetName", "Given a KeyValues object, return associated name" );
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetDataType, "GetDataType", "Given a KeyValues object, return associated datatype" );
+	DEFINE_SCRIPTFUNC_NAMED( ScriptIsEmpty, "IsEmpty", "Given a KeyValues object, return true if key name has no value" );
 	DEFINE_SCRIPTFUNC_NAMED( ScriptIsKeyValueEmpty, "IsKeyEmpty", "Given a KeyValues object and a key name, return true if key name has no value" );
 	DEFINE_SCRIPTFUNC_NAMED( ScriptReleaseKeyValues, "ReleaseKeyValues", "Given a root KeyValues object, release its contents" );
 END_SCRIPTDESC();
@@ -915,8 +922,8 @@ HSCRIPT CScriptKeyValues::ScriptFindKey( const char *pszName )
 
 	CScriptKeyValues *pScriptKey = new CScriptKeyValues( pKeyValues );
 
-	// UNDONE: who calls ReleaseInstance on this??
 	HSCRIPT hScriptInstance = g_pScriptVM->RegisterInstance( pScriptKey );
+	pScriptKey->m_hScriptInstance = hScriptInstance;
 	return hScriptInstance;
 }
 
@@ -928,8 +935,8 @@ HSCRIPT CScriptKeyValues::ScriptGetFirstSubKey( void )
 
 	CScriptKeyValues *pScriptKey = new CScriptKeyValues( pKeyValues );
 
-	// UNDONE: who calls ReleaseInstance on this??
 	HSCRIPT hScriptInstance = g_pScriptVM->RegisterInstance( pScriptKey );
+	pScriptKey->m_hScriptInstance = hScriptInstance;
 	return hScriptInstance;
 }
 
@@ -941,8 +948,8 @@ HSCRIPT CScriptKeyValues::ScriptGetNextKey( void )
 
 	CScriptKeyValues *pScriptKey = new CScriptKeyValues( pKeyValues );
 
-	// UNDONE: who calls ReleaseInstance on this??
 	HSCRIPT hScriptInstance = g_pScriptVM->RegisterInstance( pScriptKey );
+	pScriptKey->m_hScriptInstance = hScriptInstance;
 	return hScriptInstance;
 }
 
@@ -976,9 +983,54 @@ bool CScriptKeyValues::ScriptGetKeyValueBool( const char *pszName )
 	return b;
 }
 
+int CScriptKeyValues::ScriptGetInt()
+{
+	int i = m_pKeyValues->GetInt();
+	return i;
+}
+
+float CScriptKeyValues::ScriptGetFloat()
+{
+	float f = m_pKeyValues->GetFloat();
+	return f;
+}
+
+const char *CScriptKeyValues::ScriptGetString()
+{
+	const char *psz = m_pKeyValues->GetString();
+	return psz;
+}
+
+const char *CScriptKeyValues::ScriptGetName()
+{
+	const char *psz = m_pKeyValues->GetName();
+	return psz;
+}
+
+bool CScriptKeyValues::ScriptGetBool()
+{
+	bool b = m_pKeyValues->GetBool();
+	return b;
+}
+
+int CScriptKeyValues::ScriptGetDataType()
+{
+	int i = m_pKeyValues->GetDataType();
+	return i;
+}
+
+bool CScriptKeyValues::ScriptIsEmpty()
+{
+	bool b = m_pKeyValues->IsEmpty();
+	return b;
+}
+
 void CScriptKeyValues::ScriptReleaseKeyValues( )
 {
-	m_pKeyValues->deleteThis();
+	if (m_pKeyValues)
+	{
+		m_pKeyValues->deleteThis();
+	}
 	m_pKeyValues = NULL;
 }
 
@@ -989,6 +1041,7 @@ CScriptKeyValues::CScriptKeyValues( KeyValues *pKeyValues )
 	m_pKeyValues = pKeyValues;
 }
 
+// TODO: Find out if this ever gets called.
 // destructor
 CScriptKeyValues::~CScriptKeyValues( )
 {
@@ -997,6 +1050,12 @@ CScriptKeyValues::~CScriptKeyValues( )
 		m_pKeyValues->deleteThis();
 	}
 	m_pKeyValues = NULL;
+
+	if( m_hScriptInstance )
+	{
+		g_pScriptVM->RemoveInstance( m_hScriptInstance );
+		m_hScriptInstance = NULL;
+	}
 }
 
 
@@ -1778,6 +1837,42 @@ static const char *Script_FileToString( const char *pszFileName )
 	g_pFullFileSystem->Close( hFile );
 //	DevMsg("Think we loaded, rval was %d and iflen was %d for file %s\n", rval, iFLen, pszFileName );
 	return fileReadBuf;
+}
+
+HSCRIPT Script_FileToKeyValues( const char *pszFileName )
+{
+	if ( !pszFileName || !*pszFileName )
+	{
+		Log_Warning( LOG_VScript, "Script_FileToKeyValues: NULL/empty file name\n" );
+		return NULL;
+	}
+
+	if ( V_strstr( pszFileName, "..") )
+	{
+		Log_Warning( LOG_VScript, "FileToKeyValues() file name cannot contain '..'\n" );
+		return NULL;
+	}
+
+	char szFilePath[MAX_PATH];
+	if ( !CreateAndValidateFileLocation( szFilePath, pszFileName ) )
+		return NULL;
+
+	FileHandle_t hFile = g_pFullFileSystem->Open( szFilePath, "r", "DEFAULT_WRITE_PATH" );
+	if (hFile == FILESYSTEM_INVALID_HANDLE )
+		return NULL;
+
+	KeyValues *pKeyValues = new KeyValues("");
+	HSCRIPT hScriptInstance = NULL;
+
+	if ( pKeyValues->LoadFromFile( g_pFullFileSystem, szFilePath, "MOD" ) )
+	{
+		CScriptKeyValues *pScriptKey = new CScriptKeyValues( pKeyValues );
+
+		hScriptInstance = g_pScriptVM->RegisterInstance( pScriptKey );
+		pScriptKey->m_hScriptInstance = hScriptInstance;
+
+	}
+	return hScriptInstance;
 }
 
 void TraceToScriptVM( HSCRIPT hTable, Vector vStart, Vector vEnd, trace_t& tr )
@@ -2668,6 +2763,7 @@ bool VScriptServerInit()
 
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_StringToFile, "StringToFile", "Store a string to a file for later reading" );
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_FileToString, "FileToString", "Reads a string from a file to send to script" );
+				ScriptRegisterFunctionNamed( g_pScriptVM, Script_FileToKeyValues, "FileToKeyValues", "Read KeyValues from a file to send to script" );
 
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_TraceLineEx, "TraceLineEx", "Pass table - Inputs: start, end, mask, ignore  -- outputs: pos, fraction, hit, enthit, allsolid, startpos, endpos, startsolid, plane_normal, plane_dist, surface_name, surface_flags, surface_props" );
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_TraceHull, "TraceHull", "Pass table - Inputs: start, end, hullmin, hullmax, mask, ignore  -- outputs: pos, fraction, hit, enthit, allsolid, startpos, endpos, startsolid, plane_normal, plane_dist, surface_name, surface_flags, surface_props" );
@@ -3606,6 +3702,18 @@ DECLARE_SCRIPT_CONST_NAMED( Math, "Sqrt2", 1.414213562f)
 DECLARE_SCRIPT_CONST_NAMED( Math, "Sqrt3", 1.732050808f)
 DECLARE_SCRIPT_CONST_NAMED( Math, "GoldenRatio", 1.618033989f)
 REGISTER_SCRIPT_CONST_TABLE( Math )
+
+DECLARE_SCRIPT_CONST_TABLE( EKeyValueType )
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_NONE", KeyValues::TYPE_NONE)
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_STRING", KeyValues::TYPE_STRING)
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_INT", KeyValues::TYPE_INT)
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_FLOAT", KeyValues::TYPE_FLOAT)
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_PTR", KeyValues::TYPE_PTR)
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_WSTRING", KeyValues::TYPE_WSTRING)
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_COLOR", KeyValues::TYPE_COLOR)
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_UINT64", KeyValues::TYPE_UINT64)
+DECLARE_SCRIPT_CONST_NAMED( EKeyValueType, "TYPE_NUMTYPES", KeyValues::TYPE_NUMTYPES)
+REGISTER_SCRIPT_CONST_TABLE( EKeyValueType )
 
 DECLARE_SCRIPT_CONST_TABLE( Server )
 DECLARE_SCRIPT_CONST( Server, MAX_EDICTS )

@@ -6738,17 +6738,18 @@ void CTFPlayer::PostInventoryApplication( void )
 	m_iPlayerSkinOverride = iPlayerSkinOverride;
 
 	//MVM Versus - Remove the robo cosmetic if we are not a bot
-	//TODO - Optimize this to only get called if your playermodel is a Robot
-
-	bool bRealRobot = TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS;
-	if ( !m_bIsRobot && !bRealRobot )
+	bool bMVMRobot = TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && !IsFakeClient();
+	bool bMVMHlwPopfile = TFGameRules()->IsMannVsMachineMode() && g_pPopulationManager->IsPopFileEventType(MVM_EVENT_POPFILE_HALLOWEEN);
+	//IF Not wearing Robot costume && Real MVM Robot || OR || It's Halloween && Real MvM Robot || NOT FOR BOTS
+	if ( !m_bIsRobot && !bMVMRobot || bMVMHlwPopfile && bMVMRobot )
 	{
 		GetPlayerClass()->SetCustomModel(NULL, USE_CLASS_ANIMATIONS);
 		UpdateModel();
 	}
-	else
+	else 
 	{
 		MVM_TurnIntoRobot();
+		UpdateModel();
 	}
 
 	m_Inventory.ClearClassLoadoutChangeTracking();
@@ -16621,10 +16622,10 @@ void CTFPlayer::PainSound( const CTakeDamageInfo &info )
 				//Robots need to play their Robotic pain lines!
 				if(TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS || IsMVMRobot() ) // MVM Versus - Wearable support)
 				{
-					EmitSound( pData->GetDeathSound(IsMiniBoss() ? DEATH_SOUND_GENERIC_GIANT_MVM : DEATH_SOUND_GENERIC_MVM ));
+					EmitSound( pData->GetDeathSound( IsMiniBoss() ? DEATH_SOUND_GENERIC_GIANT_MVM : DEATH_SOUND_GENERIC_MVM ) );
 				}
 				else
-					EmitSound(pData->GetDeathSound(DEATH_SOUND_GENERIC));
+					EmitSound( pData->GetDeathSound(DEATH_SOUND_GENERIC) );
 			}
 		}
 		return;
@@ -16796,11 +16797,12 @@ const char* CTFPlayer::GetSceneSoundToken( void )
 
 	int iOverrideVoiceSoundSet = kVoiceSoundSet_Default;
 	CALL_ATTRIB_HOOK_INT(iOverrideVoiceSoundSet, override_voice_sound_set);
+	bool bHalloweenMVM = TFGameRules()->IsMannVsMachineMode() && g_pPopulationManager->IsPopFileEventType(MVM_EVENT_POPFILE_HALLOWEEN);
 
 	if (iOverrideVoiceSoundSet == kVoiceSoundSet_Default)
 	{
 		//MvM Versus - We filter the voices depending if your playing MvM or wear the Robot Costume
-		if (TFGameRules() && TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS || IsMVMRobot() )
+		if (TFGameRules() && TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && !bHalloweenMVM || IsMVMRobot() )
 		{
 			int iGiants = GetPlayerClass()->GetClassIndex();
 			if ( IsMiniBoss() )

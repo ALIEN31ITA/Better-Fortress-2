@@ -65,7 +65,7 @@ void ImpactCallback( const CEffectData &data )
 		bool bPlaySound = true;
 		bool bIsRobotImpact = false;
 		
-		if ( bIsMVM && pPlayer && nApparentTeam == TF_TEAM_PVE_INVADERS )
+		if ( bIsMVM && pPlayer && nApparentTeam == TF_TEAM_PVE_INVADERS || pPlayer && pPlayer->IsRobot() )
 		{
 			bPlaySound = true;
 			bIsRobotImpact = true;
