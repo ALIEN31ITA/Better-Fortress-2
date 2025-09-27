@@ -123,7 +123,7 @@
 			"min_ilevel"	"5"
 			"max_ilevel"	"5"
 			"attach_to_hands"	"1"
-			"image_inventory"	"backpack/weapons/c_models/urinejar"
+			"image_inventory"	"backpack/weapons/custommade/c_bread"
 			"image_inventory_size_w"		"128"
 			"image_inventory_size_h"		"82"
 			"inspect_panel_dist" 			"22"

@@ -51,6 +51,7 @@ using namespace GCSDK;
 #define LOCAL_LOADOUT_FILE		"cfg/local_loadout.txt"
 
 ConVar bf_cosmetic_restrictions("bf_cosmetic_restrictions", "1", FCVAR_REPLICATED, "Disable holiday restrictions on items.");
+ConVar bf_force_base_weapons("bf_force_base_weapons", "0", FCVAR_REPLICATED | FCVAR_CHEAT, "Force base weapons in-game.");
 
 #ifdef CLIENT_DLL
 //-----------------------------------------------------------------------------
@@ -395,6 +396,9 @@ int	CTFInventoryManager::GetAllUsableItemsForSlot( int iClass, int iSlot, CUtlVe
 //-----------------------------------------------------------------------------
 CEconItemView *CTFInventoryManager::GetItemInLoadoutForClass( int iClass, int iSlot, CSteamID *pID )
 {
+	if (bf_force_base_weapons.GetBool())
+		return GetBaseItemForClass( iClass, iSlot );
+	
 #ifdef CLIENT_DLL
 	CSteamID localSteamID;
 	if ( !pID )
