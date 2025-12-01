@@ -140,7 +140,7 @@ DESCRIPTION INFO_OPTIONS
 		"HUD FIXES"
 		{ CATEGORY }
 	}	
-	"credit6_1"
+	"credit7_1"
 	{
 		"995qa
 		Fixed the mainmenu being broken on resolutions other than 16:9"
