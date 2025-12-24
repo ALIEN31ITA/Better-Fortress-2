@@ -32,7 +32,7 @@
 //-----------------------------------------------------------------------------
 
 ConVar cl_notifications_show_ingame( "cl_notifications_show_ingame", "1", FCVAR_ARCHIVE, "Whether notifications should show up in-game." );
-ConVar cl_notifications_max_num_visible( "cl_notifications_max_num_visible", "3", FCVAR_ARCHIVE, "How many notifications are visible in-game." );
+ConVar cl_notifications_max_num_visible( "cl_notifications_max_num_visible", "12", FCVAR_ARCHIVE, "How many notifications are visible in-game." );
 ConVar cl_notifications_move_time( "cl_notifications_move_time", "0.5", FCVAR_ARCHIVE, "How long it takes for a notification to move." );
 
 // notification queue holds all the notifications
