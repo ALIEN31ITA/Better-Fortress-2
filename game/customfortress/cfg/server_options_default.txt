@@ -265,6 +265,18 @@
 			"type"		"BOOL"
 			"val"		"0"
 		}
+		"mp_tournament_readymode"
+		{
+			"label"		"TOURNAMENT PER-PLAYER READY STATUS"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"mp_tournament_whitelist"
+		{
+			"label"		"TOURNAMENT WHITELIST"
+			"type"		"STRING"
+			"val"		"item_whitelist.txt"
+		}
 		"mp_highlander"
 		{
 			"label"		"HIGHLANDER MODE (REQUIRES TOURNAMENT MODE)"
