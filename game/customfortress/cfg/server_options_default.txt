@@ -41,9 +41,9 @@
 			"type"		"LIST"
 			"options"
 			{
-				"Normal"		"normal"
-				"Fill"			"fill"
-				"Match"			"match"
+				"NORMAL"		"normal"
+				"FILL"			"fill"
+				"MATCH"			"match"
 			}
 			"val"		"normal"
 		}
