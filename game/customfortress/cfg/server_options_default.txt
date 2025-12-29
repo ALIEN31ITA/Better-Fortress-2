@@ -267,8 +267,20 @@
 		}
 		"mp_tournament_readymode"
 		{
-			"label"		"TOURNAMENT PER-PLAYER READY STATUS"
+			"label"		"TOURNAMENT READY MODE"
 			"type"		"BOOL"
+			"val"		"0"
+		}
+		"mp_tournament_readymode_min"
+		{
+			"label"		"TOURNAMENT MINIMUM PER-PLAYER READY"
+			"type"		"STRING"
+			"val"		"2"
+		}
+		"mp_tournament_readymode_team_size"
+		{
+			"label"		"TOURNAMENT MINIMUM PER-TEAM READY"
+			"type"		"STRING"
 			"val"		"0"
 		}
 		"mp_tournament_whitelist"
