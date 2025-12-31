@@ -111,7 +111,10 @@ void C_BotNPC::FireEvent( const Vector& origin, const QAngle& angles, int event,
 {
 	if ( event == 7001 )
 	{
-		EmitSound( "RobotBoss.Footstep" );
+		if ( FClassnameIs( this, "boss_alpha") )
+			EmitSound( "RobotBoss.Footstep" );
+		else
+			EmitSound( "MVM.BotStep" );
 
 /*
 		ParticleProp()->Create( "halloween_boss_foot_impact", PATTACH_ABSORIGIN, 0 );

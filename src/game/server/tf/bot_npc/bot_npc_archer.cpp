@@ -34,6 +34,8 @@ LINK_ENTITY_TO_CLASS( bot_npc_archer, CBotNPCArcher );
 
 PRECACHE_REGISTER( bot_npc_archer );
 
+#define MDL_ARCHER "models/bots/sniper/bot_sniper.mdl"
+#define SOUND_FOOTSTEP "MVM.BotStep"
 
 //-----------------------------------------------------------------------------------------------------
 CBotNPCArcher::CBotNPCArcher()
@@ -65,17 +67,24 @@ void CBotNPCArcher::Precache()
 {
 	BaseClass::Precache();
 
-	PrecacheModel( "models/player/sniper.mdl" );
+	PrecacheModel( MDL_ARCHER );
+	PrecacheScriptSound( SOUND_FOOTSTEP );
 	PrecacheModel( "models/weapons/c_models/c_bow/c_bow.mdl" );
 }
 
+//-----------------------------------------------------------------------------------------------------
+void CBotNPCArcher::ChangeTeam( int iTeamNum )
+{
+	BaseClass::ChangeTeam( iTeamNum );
+	m_nSkin = ( GetTeamNumber() == TF_TEAM_RED ) ? 0 : 1;
+}
 
 //-----------------------------------------------------------------------------------------------------
 void CBotNPCArcher::Spawn( void )
 {
 	BaseClass::Spawn();
 
-	SetModel( "models/player/sniper.mdl" );
+	SetModel( MDL_ARCHER );
 
 	m_bow = (CBaseAnimating *)CreateEntityByName( "prop_dynamic" );
 	if ( m_bow )
@@ -253,7 +262,7 @@ public:
 	CTFPlayer *GetVictim( CBotNPCArcher *me )
 	{
 		CUtlVector< CTFPlayer * > playerVector;
-		CollectPlayers( &playerVector, TF_TEAM_BLUE, COLLECT_ONLY_LIVING_PLAYERS );
+		CollectPlayers( &playerVector, me->GetTeamNumber() == TF_TEAM_RED ? TF_TEAM_BLUE : TF_TEAM_RED , COLLECT_ONLY_LIVING_PLAYERS );
 
 		CTFPlayer *closeVictim = NULL;
 		float victimRangeSq = FLT_MAX;
@@ -330,7 +339,6 @@ private:
 
 
 //---------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------
 class CBotNPCArcherMoveToMark : public Action< CBotNPCArcher >
 {
 public:
@@ -389,8 +397,10 @@ public:
 		{
 			forceVector += magnet->GetForceVector( me );
 		}
-
+		//Kill his weapon
+		me->GetBow()->Remove();
 		me->BecomeRagdoll( info, forceVector );
+		
 
 		return TryDone();
 	}

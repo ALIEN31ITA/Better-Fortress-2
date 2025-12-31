@@ -724,7 +724,7 @@ void CTFGrenadePipebombProjectile::StickybombTouch( CBaseEntity *pOther )
 
 	if	 ( ( dynamic_cast< CBossAlpha * >( pOther ) != NULL )
 		|| ( dynamic_cast< CBotNPCMinion * >( pOther ) != NULL )
-		|| ( pOther != NULL && pOther->m_bSticksProjectiles ) )
+		 )
 	{
 		//Stick it
 		m_bTouched = true;
@@ -953,6 +953,9 @@ void CTFGrenadePipebombProjectile::VPhysicsCollision( int index, gamevcollisione
 	if ( pHitEntity && ( pHitEntity->IsWorld() || bIsDynamicProp || pHitEntity->m_bSticksProjectiles ) && gpGlobals->curtime > m_flMinSleepTime )
 	{
 		m_bTouched = true;
+
+		if ( pHitEntity->m_bSticksProjectiles )
+			SetParent( pHitEntity );
 
 		g_PostSimulationQueue.QueueCall( VPhysicsGetObject(), &IPhysicsObject::EnableMotion, false );
 
@@ -1308,6 +1311,9 @@ void CTFGrenadePipebombProjectile::Deflected( CBaseEntity *pDeflectedBy, Vector&
 	if ( HasStickyEffects() )
 	{
 		CTakeDamageInfo info;
+
+		if ( GetParent() )
+			SetParent( NULL );
 
 		float flForceMultiplier = 1.0f;
 		ITFChargeUpWeapon *pWeapon = dynamic_cast<ITFChargeUpWeapon*>( pTFDeflector->GetActiveWeapon() );

@@ -18,6 +18,7 @@ public:
 	CBotNPCBody( INextBot *bot );
 	virtual ~CBotNPCBody() { }
 
+	void SetSkin( int nSkin );
 	virtual void Update( void );
 
 	virtual bool StartActivity( Activity act, unsigned int flags = 0 );

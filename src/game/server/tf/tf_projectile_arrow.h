@@ -58,6 +58,7 @@ public:
 	virtual void	CheckSkyboxImpact( CBaseEntity *pOther );
 	bool			CheckRagdollPinned( const Vector &start, const Vector &vel, int boneIndexAttached, int physicsBoneIndex, CBaseEntity *pOther, int iHitGroup, int iVictim );
 	virtual void	AdjustDamageDirection( const CTakeDamageInfo &info, Vector &dir, CBaseEntity *pEnt );
+	const char *	GetImpactSoundSurface( CBaseEntity *pOther );
 	void			ImpactSound( const char *pszSoundName, bool bLoudForAttacker = false );
 	virtual void	BreakArrow();
 	virtual void	ImpactTeamPlayer( CTFPlayer *pOther ) {}

@@ -40,6 +40,7 @@ public:
 	virtual bool	ShouldCollide( int collisionGroup, int contentsMask ) const;
 
 	CBaseAnimating *GetBow( void ) const;
+	virtual void	ChangeTeam( int iTeamNum );		
 
 	void SetHomePosition( const Vector &pos );
 	const Vector &GetHomePosition( void ) const;

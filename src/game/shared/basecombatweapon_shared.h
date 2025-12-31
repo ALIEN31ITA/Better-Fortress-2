@@ -20,7 +20,7 @@
 #include "utlmap.h"
 
 #if defined( CLIENT_DLL )
-#define CBaseCombatWeapon C_BaseCombatWeapon
+class CBaseCombatWeapon;
 #endif
 
 // Hacky
@@ -317,7 +317,7 @@ public:
 
 	virtual char			*GetDeathNoticeName( void );	// Get the string to print death notices with
 
-	inline const char* CBaseCombatWeapon::GetWeaponScriptName()
+	inline const char* GetWeaponScriptName()
 	{
 		if (Q_strcmp(m_iszWeaponScriptName.Get(), "") > 0)
 		{

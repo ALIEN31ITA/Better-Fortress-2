@@ -100,7 +100,7 @@ void CTFArcherProxy::Update( void )
 				if ( m_timer.IsElapsed() )
 				{
 					ShootArrowAt( target );
-					// ShootGrenadeAt( target );
+					ShootGrenadeAt( target );
 
 					m_state = HIDE;
 					m_timer.Start( 1.0f );

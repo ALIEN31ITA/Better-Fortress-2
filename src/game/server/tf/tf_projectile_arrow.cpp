@@ -272,6 +272,9 @@ void CTFProjectile_Arrow::Precache()
 	PrecacheScriptSound( "Weapon_Arrow.Nearmiss" );
 	PrecacheScriptSound( "Weapon_Arrow.ImpactFleshCrossbowHeal" );
 
+	//MVM
+	PrecacheScriptSound( "MVM_Weapon_Arrow.ImpactFlesh" );
+
 	BaseClass::Precache();
 }
 
@@ -514,10 +517,11 @@ bool CTFProjectile_Arrow::StrikeTarget( mstudiobbox_t *pBox, CBaseEntity *pOther
 			// Damage
 			if ( bApplyEffect )
 			{
+				CTFPlayer *pVictim = ToTFPlayer( pOther );
 				// Apply Milk First so we can get health from this
 				if ( m_bApplyMilkOnHit && pOther->IsPlayer() )
 				{
-					CTFPlayer *pVictim = ToTFPlayer( pOther );
+					
 					if ( pVictim && pVictim->m_Shared.CanBeDebuffed() && pVictim->CanGetWet() )
 					{
 						// duration is based on damage
@@ -531,8 +535,11 @@ bool CTFProjectile_Arrow::StrikeTarget( mstudiobbox_t *pBox, CBaseEntity *pOther
 				CTakeDamageInfo info( this, pAttacker, m_hLauncher, vecVelocity, vecOrigin, GetDamage(), nDamageType, nDamageCustom );
 				pOther->TakeDamage( info );
 
-				// Play an impact sound.
-				ImpactSound( "Weapon_Arrow.ImpactFlesh", true );
+				// Play an impact sound. || MVM Versus || Robots have their own impact sound
+				if ( pOther->IsPlayer() )
+					ImpactSound( ( pVictim->IsMVMRobot() || pVictim->IsPVERobot () ) ? "MVM_Weapon_Arrow.ImpactFlesh" : "Weapon_Arrow.ImpactFlesh", true);
+				else
+					ImpactSound( GetImpactSoundSurface( pOther ), true);
 			}
 		}
 		else if ( pOther->IsPlayer() ) // Hit a team-mate.
@@ -762,7 +769,8 @@ void CTFProjectile_Arrow::ArrowTouch( CBaseEntity *pOther )
 
 	CTFMerasmusTrickOrTreatProp *pMerasmusProp = dynamic_cast< CTFMerasmusTrickOrTreatProp* >( pOther );
 	CTFRobotDestruction_Robot *pRobot = dynamic_cast< CTFRobotDestruction_Robot* >( pOther );
-	if ( pOther->IsWorld() || ( !pOtherCombatCharacter && !pPumpkinBomb && !pMerasmusProp && !bShield && !pRobot ) )
+	bool bSticksProjectiles = pOther->m_bSticksProjectiles;
+	if ( pOther->IsWorld() || ( !pOtherCombatCharacter && !pPumpkinBomb && !pMerasmusProp && !bShield && !pRobot && !bSticksProjectiles ) )
 	{
 		// Check to see if we struck the skybox.
 		CheckSkyboxImpact( pOther );
@@ -871,6 +879,40 @@ void CTFProjectile_Arrow::ArrowTouch( CBaseEntity *pOther )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+const char * CTFProjectile_Arrow::GetImpactSoundSurface( CBaseEntity *pOther )
+{
+	const char* pszSoundName = "Weapon_Arrow.ImpactMetal";
+
+	IPhysicsObject *pObject = pOther->VPhysicsGetObject();
+	if ( pObject )
+	{
+		int material = pObject->GetMaterialIndex();
+		const surfacedata_t* psurf = physprops->GetSurfaceData(material);
+		if (psurf)
+		{
+			switch (psurf->game.material)
+			{
+			case CHAR_TEX_GRATE:
+			case CHAR_TEX_METAL:
+				pszSoundName = "Weapon_Arrow.ImpactMetal";
+				break;
+
+			case CHAR_TEX_CONCRETE:
+				pszSoundName = "Weapon_Arrow.ImpactConcrete";
+				break;
+
+			case CHAR_TEX_WOOD:
+				pszSoundName = "Weapon_Arrow.ImpactWood";
+				break;
+			}
+		}
+	}
+	return pszSoundName;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
 void CTFProjectile_Arrow::CheckSkyboxImpact( CBaseEntity *pOther )
 {
 	trace_t tr;
@@ -885,7 +927,7 @@ void CTFProjectile_Arrow::CheckSkyboxImpact( CBaseEntity *pOther )
 		return;
 	}
 
-	if ( !pOther->IsWorld() )
+	if ( !pOther->IsWorld() && !pOther->m_bSticksProjectiles )
 	{
 		BreakArrow();
 	}
@@ -905,27 +947,7 @@ void CTFProjectile_Arrow::CheckSkyboxImpact( CBaseEntity *pOther )
 		FadeOut( 3.f );
 
 		// Play an impact sound.
-		const char* pszSoundName = "Weapon_Arrow.ImpactMetal";
-		surfacedata_t *psurf = physprops->GetSurfaceData( tr.surface.surfaceProps );
-		if ( psurf )
-		{
-			switch ( psurf->game.material )
-			{
-			case CHAR_TEX_GRATE:
-			case CHAR_TEX_METAL:
-				pszSoundName = "Weapon_Arrow.ImpactMetal";
-				break;
-
-			case CHAR_TEX_CONCRETE:
-				pszSoundName = "Weapon_Arrow.ImpactConcrete";
-				break;
-
-			case CHAR_TEX_WOOD:
-				pszSoundName = "Weapon_Arrow.ImpactWood";
-				break;
-			}
-		}
-		ImpactSound( pszSoundName );
+		ImpactSound( GetImpactSoundSurface( pOther ) );
 	}
 }
 

@@ -95,7 +95,8 @@ void CHudBowChargeMeter::FireGameEvent( IGameEvent *event )
 	if ( FStrEq( pszEventName, "arrow_impact" ) )
 	{
 		int attachedEntity = event->GetInt( "attachedEntity" );
-		C_BaseFlex *pFlex = dynamic_cast<C_BaseFlex*>( ClientEntityList().GetEnt( attachedEntity ) );
+		//C_BaseFlex *pFlex = dynamic_cast<C_BaseFlex*>( ClientEntityList().GetEnt( attachedEntity ) );
+		C_BaseAnimating *pFlex = dynamic_cast<C_BaseAnimating*>( ClientEntityList().GetEnt( attachedEntity ) );
 		if ( !pFlex )
 			return;
 
