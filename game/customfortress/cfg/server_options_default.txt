@@ -35,6 +35,18 @@
 			"type"		"STRING"
 			"val"		"0"
 		}
+		"tf_bot_quota_mode"
+		{
+			"label"		"BOTS QUOTA MODE"
+			"type"		"LIST"
+			"options"
+			{
+				"NORMAL"		"normal"
+				"FILL"			"fill"
+				"MATCH"			"match"
+			}
+			"val"		"normal"
+		}
 		"tf_bot_difficulty"
 		{
 			"label"		"#TF_Bot_Difficulty"
@@ -111,6 +123,12 @@
 			"type"		"BOOL"
 			"val"		"0"
 		}
+		"tf_gravetalk"
+		{
+			"label"		"ALLOW LIVING PLAYERS TO HEAR DEAD PLAYERS USING TEXT/VOICE CHAT"
+			"type"		"BOOL"
+			"val"		"1"
+		}
 		"sv_voiceenable"
 		{
 			"label"		"ENABLE VOICE CHAT"
@@ -149,6 +167,12 @@
 		"mp_stalemate_enable"
 		{
 			"label"		"ENABLE STALEMATE/SUDDEN DEATH"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"mp_stalemate_meleeonly"
+		{
+			"label"		"RESTRICT TO MELEE WEAPON WHILE IN SUDDEN DEATH"
 			"type"		"BOOL"
 			"val"		"0"
 		}
@@ -241,6 +265,30 @@
 			"type"		"BOOL"
 			"val"		"0"
 		}
+		"mp_tournament_readymode"
+		{
+			"label"		"TOURNAMENT READY MODE"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"mp_tournament_readymode_min"
+		{
+			"label"		"TOURNAMENT MINIMUM PER-PLAYER READY"
+			"type"		"STRING"
+			"val"		"2"
+		}
+		"mp_tournament_readymode_team_size"
+		{
+			"label"		"TOURNAMENT MINIMUM PER-TEAM READY"
+			"type"		"STRING"
+			"val"		"0"
+		}
+		"mp_tournament_whitelist"
+		{
+			"label"		"TOURNAMENT WHITELIST"
+			"type"		"STRING"
+			"val"		"item_whitelist.txt"
+		}
 		"mp_highlander"
 		{
 			"label"		"HIGHLANDER MODE (REQUIRES TOURNAMENT MODE)"
@@ -259,23 +307,35 @@
 			"type"		"BOOL"
 			"val"		"0"
 		}
+		"tf_medieval"
+		{
+			"label"		"MEDIEVAL MODE"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"tf_medieval_autorp"
+		{
+			"label"		"MEDIEVAL CHAT PARSER"
+			"type"		"BOOL"
+			"val"		"1"
+		}
 		"sv_gravity"
 		{
 			"label"		"GRAVITY"
 			"type"		"STRING"
 			"val"		"800"
 		}
-		"cf_allow_ladders"
-		{
-			"label"		"ALLOW LADDERS"
-			"type"		"BOOL"
-			"val"		"1"
-		}
 		"cf_max_speed"
 		{
 			"label"		"MAX SPEED"
 			"type"		"STRING"
 			"val"		"520"
+		}
+		"cf_allow_ladders"
+		{
+			"label"		"ALLOW LADDERS"
+			"type"		"BOOL"
+			"val"		"1"
 		}
 		"category2"
 		{
@@ -388,6 +448,94 @@
 			}
 			"val"		"0"
 		}
+		"category3c"
+		{
+			"label"		"VOTE SETTINGS"
+			"type"		"CATEGORY"
+		}
+		"sv_allow_votes"
+		{
+			"label"		"ALLOW TO VOTE"
+			"type"		"BOOL"
+			"val"		"1"
+		}
+		"sv_vote_allow_spectators"
+		{
+			"label"		"ALLOW SPECTATORS TO VOTE"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"sv_vote_bots_allowed"
+		{
+			"label"		"ALLOW BOTS TO VOTE OR NOT"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"sv_vote_holder_may_vote_no"
+		{
+			"label"		"ALLOW A VOTE CALLER TO VOTE YES/NO"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"sv_vote_issue_autobalance_allowed"
+		{
+			"label"		"ENABLE VOTE TO ENABLE OR DISABLE AUTO TEAM BALANCE"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"sv_vote_issue_changelevel_allowed"
+		{
+			"label"		"ENABLE VOTE TO CHANGE LEVELS"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"sv_vote_issue_changelevel_allowed_mvm"
+		{
+			"label"		"ENABLE VOTE TO CHANGE LEVELS IN MVM"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"sv_vote_issue_classlimits_allowed"
+		{
+			"label"		"ENABLE VOTE TO ENABLE OR DISABLE CLASS LIMITS"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"sv_vote_issue_classlimits_allowed_mvm"
+		{
+			"label"		"ENABLE VOTE TO ENABLE OR DISABLE CLASS LIMITS IN MVM"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"category3d"
+		{
+			"label"		"VOTE COOLDOWNS"
+			"type"		"CATEGORY"
+		}
+		"sv_vote_creation_timer"
+		{
+			"label"		"VOTE ATTEMPT COOLDOWN (SECONDS)"
+			"type"		"STRING"
+			"val"		"150"
+		}
+		"sv_vote_failure_timer"
+		{
+			"label"		"VOTE FAILURE COOLDOWN (SECONDS)"
+			"type"		"STRING"
+			"val"		"300"
+		}
+		"sv_vote_failure_timer_mvm"
+		{
+			"label"		"VOTE FAILURE COOLDOWN IN MVM (SECONDS)"
+			"type"		"STRING"
+			"val"		"120"
+		}
+		"sv_vote_issue_autobalance_cooldown"
+		{
+			"label"		"AUTO BALANCE VOTE COOLDOWN (SECONDS)"
+			"type"		"STRING"
+			"val"		"300"
+		}
 	}
 	"FUN"
 	{
@@ -411,6 +559,12 @@
 		"mp_friendlyfire"
 		{
 			"label"		"ENABLE FRIENDLY FIRE"
+			"type"		"BOOL"
+			"val"		"0"
+		}
+		"tf_allow_sliding_taunt"
+		{
+			"label"		"ALLOW TO SLIDE FOR A BIT AFTER TAUNTING"
 			"type"		"BOOL"
 			"val"		"0"
 		}
@@ -513,6 +667,12 @@
 		{
 			"label"		"MANN VS MACHINE OPTIONS"
 			"type"		"CATEGORY"
+		}
+		"tf_mvm_defenders_team_size"
+		{
+			"label"		"MAX DEFENDERS TEAM SIZE (RED TEAM)"
+			"type"		"STRING"
+			"val"		"6"
 		}
 		"cf_mvm_footstep_sounds"
 		{
