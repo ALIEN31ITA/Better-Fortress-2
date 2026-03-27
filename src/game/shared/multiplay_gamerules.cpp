@@ -136,7 +136,7 @@ ConVar mp_waitingforplayers_time( "mp_waitingforplayers_time", "0", FCVAR_GAMEDL
 #ifdef TF_DLL
 ConVar cf_voicespam("cf_voicespam", "0", FCVAR_NOTIFY, "Allow voice commands to be spammed. 1 = spam with subtitiles, 2 = spam without subtitles");
 #endif
-
+ConVar mp_waitingforplayers_system( "mp_waitingforplayers_system", "0", FCVAR_GAMEDLL, "Set to 1 to enable the WaitingForPlayers system." ); 
 ConVar mp_waitingforplayers_restart( "mp_waitingforplayers_restart", "0", FCVAR_GAMEDLL, "Set to 1 to start or restart the WaitingForPlayers period." );
 ConVar mp_waitingforplayers_cancel( "mp_waitingforplayers_cancel", "0", FCVAR_GAMEDLL, "Set to 1 to end the WaitingForPlayers period." );
 ConVar mp_clan_readyrestart( "mp_clan_readyrestart", "0", FCVAR_GAMEDLL, "If non-zero, game will restart once someone from each team gives the ready signal" );

@@ -947,7 +947,7 @@ void CTeamplayRoundBasedRules::CheckWaitingForPlayers( void )
 		mp_waitingforplayers_restart.SetValue( 0 );
 	}
 
-	bool bCancelWait = ( mp_waitingforplayers_cancel.GetBool() || IsInItemTestingMode() ) && !IsInTournamentMode();
+	bool bCancelWait = ( mp_waitingforplayers_cancel.GetBool() || IsInItemTestingMode() || !mp_waitingforplayers_system.GetBool() ) && !IsInTournamentMode();
 
 #if defined( _DEBUG ) || defined( STAGING_ONLY )
 	if ( mp_developer.GetBool() )
@@ -3019,7 +3019,7 @@ bool CTeamplayRoundBasedRules::ShouldCreateEntity( const char *pszClassName )
 //-----------------------------------------------------------------------------
 bool CTeamplayRoundBasedRules::RoundCleanupShouldIgnore( CBaseEntity *pEnt )
 {
-	return FindInList( s_PreserveEnts, pEnt->GetClassname() );
+	return ( FindInList( s_PreserveEnts, pEnt->GetClassname() ) || pEnt->IsEFlagSet( EFL_KEEP_ON_RECREATE_ENTITIES ) );
 }
 
 //-----------------------------------------------------------------------------

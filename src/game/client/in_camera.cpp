@@ -752,7 +752,7 @@ void CInput::CAM_ToThirdPerson(void)
 	{
 		m_fCameraInThirdPerson = true; 
 	
-		g_ThirdPersonManager.SetCameraOffsetAngles( Vector( viewangles[ YAW ], viewangles[ PITCH ], CAM_MIN_DIST ) );
+		g_ThirdPersonManager.SetCameraOffsetAngles( Vector( viewangles[ PITCH ], viewangles[ YAW ], CAM_MIN_DIST ) );
 	}
 
 	cam_command.SetValue( 0 );

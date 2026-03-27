@@ -61,7 +61,8 @@ $Configuration "Release"
 		// General
 		$AdditionalIncludeDirectories			"$SRCDIR\common;$SRCDIR\public;$SRCDIR\public\tier0;$SRCDIR\public\tier1"
 		$Resolve#UsingReferences
-		$DebugInformationFormat					"Program Database (/Zi)"
+		$DebugInformationFormat					"Program Database (/Zi)" [!$HOTRELOADENABLED]
+		$DebugInformationFormat					"Program Database for Edit And Continue (/ZI)" [$HOTRELOADENABLED]
 		$SuppressStartupBanner
 		$WarningLevel							"Level 4 (/W4)"
 		$TreatWarningsAsErrors
@@ -152,7 +153,8 @@ $Configuration "Release"
 		$OutputFile								"$(OutDir)/$OUTBINNAME.exe"
 		$ShowProgress							"Not Set"
 		$Version
-		$EnableIncrementalLinking				"No (/INCREMENTAL:NO)"
+		$EnableIncrementalLinking				"No (/INCREMENTAL:NO)" [!$HOTRELOADENABLED]
+		$EnableIncrementalLinking				"Yes (/INCREMENTAL:YES)" [$HOTRELOADENABLED]
 		$SuppressStartupBanner					"Yes (/NOLOGO)"
 		$IgnoreImportLibrary
 		$RegisterOutput
@@ -206,7 +208,8 @@ $Configuration "Release"
 		$RandomizedBaseAddress				"false" [!$RETAIL]
 
 		// Optimization
-		$References							"Eliminate Unreferenced Data (/OPT:REF)"
+		$References							"Eliminate Unreferenced Data (/OPT:REF)" [!$HOTRELOADENABLED]
+		$References 						"No (/OPT:NOREF)" [$HOTRELOADENABLED]
 		// COMDAT folding can be very confusing when debugging and profiling because it can
 		// cause execution to go through nonsensical functions (that happen to be binary
 		// equivalent to the logical function). The performance benefit is small enough that

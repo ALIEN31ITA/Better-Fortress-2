@@ -24,6 +24,7 @@ extern ConVar mp_restartgame_immediate;
 extern ConVar mp_waitingforplayers_time;
 extern ConVar mp_waitingforplayers_restart;
 extern ConVar mp_waitingforplayers_cancel;
+extern ConVar mp_waitingforplayers_system;
 extern ConVar mp_clan_readyrestart;
 extern ConVar mp_clan_ready_signal;
 extern ConVar nextlevel;

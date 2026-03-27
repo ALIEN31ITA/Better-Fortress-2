@@ -4645,6 +4645,9 @@ bool CTFGameRules::RoundCleanupShouldIgnore( CBaseEntity *pEnt )
 	if ( FindInList( s_PreserveEnts, pEnt->GetClassname() ) )
 		return true;
 
+	if ( pEnt->IsEFlagSet( EFL_KEEP_ON_RECREATE_ENTITIES ) )
+		return true;
+
 	//There has got to be a better way of doing this.
 	if ( Q_strstr( pEnt->GetClassname(), "tf_weapon_" ) )
 		return true;
@@ -10313,7 +10316,7 @@ void CTFGameRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 
 	pTFPlayer->SetDefaultFOV( iFov );
 
-	pTFPlayer->m_bFlipViewModels = Q_strcmp( engine->GetClientConVarValue( pPlayer->entindex(), "cl_flipviewmodels" ), "1" ) == 0;
+	pTFPlayer->m_bFlipViewModels = Q_atoi( engine->GetClientConVarValue( pPlayer->entindex(), "cl_flipviewmodels" ) ) > 0;
 }
 
 //-----------------------------------------------------------------------------
