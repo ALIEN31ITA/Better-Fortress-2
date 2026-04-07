@@ -395,7 +395,7 @@ void CTFDiscordRPC::DiscordReady(const DiscordUser* connectedBastard)
 //-----------------------------------------------------------------------------
 void CTFDiscordRPC::DiscordDisconnected(int code, const char* message)
 {
-	DISCORD_LOG_MSG("Disconnected from Discord, too bad! - %s\n", message);
+	DISCORD_LOG_MSG("Disconnected from Discord - %s\n", message);
 }
 
 //-----------------------------------------------------------------------------
@@ -403,7 +403,7 @@ void CTFDiscordRPC::DiscordDisconnected(int code, const char* message)
 //-----------------------------------------------------------------------------
 void CTFDiscordRPC::DiscordError(int code, const char* message)
 {
-	DISCORD_LOG_MSG("An error occured! Too bad! - %s\n", message);
+	DISCORD_LOG_MSG("An error occured - %s\n", message);
 }
 
 //-----------------------------------------------------------------------------
