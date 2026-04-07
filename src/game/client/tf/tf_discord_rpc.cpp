@@ -71,7 +71,7 @@ void CDiscordJoinRequestNotification::UpdateTick()
 //-----------------------------------------------------------------------------
 CTFDiscordRPC::CTFDiscordRPC()
 	: CAutoGameSystemPerFrame("tf_discord_rpc")
-	, m_pRpc()
+	, m_Rpc()
 	, m_flLastUpdateTime(0.0f)
 {
 	Q_memset(m_szMapName, 0, MAX_MAP_NAME);
@@ -138,8 +138,8 @@ void CTFDiscordRPC::SetMapImage()
 		imageText = pData->GetString("image_text");
 	}
 
-	m_pRpc.largeImageKey = imageKey;
-	m_pRpc.largeImageText = imageText;
+	m_Rpc.largeImageKey = imageKey;
+	m_Rpc.largeImageText = imageText;
 
 	kv->deleteThis();
 }
@@ -168,8 +168,8 @@ void CTFDiscordRPC::SetGameTypeImage(const char *gameType)
 		imageText = pData->GetString("image_text");
 	}
 
-	m_pRpc.smallImageKey = imageKey;
-	m_pRpc.smallImageText = imageText;
+	m_Rpc.smallImageKey = imageKey;
+	m_Rpc.smallImageText = imageText;
 
 	kv->deleteThis();
 }
@@ -205,12 +205,12 @@ void CTFDiscordRPC::UpdateRPC()
 
 	m_flLastUpdateTime = gpGlobals->realtime;
 
-	Q_memset(&m_pRpc, 0, sizeof(m_pRpc));
+	Q_memset(&m_Rpc, 0, sizeof(m_Rpc));
 
 	if (engine->IsDrawingLoadingImage() == true)
 	{
-		m_pRpc.state = "";
-		m_pRpc.details = "Currently loading...";
+		m_Rpc.state = "";
+		m_Rpc.details = "Currently loading...";
 	}
 	else 
 	{
@@ -220,13 +220,13 @@ void CTFDiscordRPC::UpdateRPC()
 		}
 		else
 		{
-			m_pRpc.details = "";
-			m_pRpc.state = "In main menu";
-			m_pRpc.endTimestamp;
+			m_Rpc.details = "";
+			m_Rpc.state = "In main menu";
+			m_Rpc.endTimestamp;
 		}
 	}
 
-	Discord_UpdatePresence(&m_pRpc);
+	Discord_UpdatePresence(&m_Rpc);
 }
 
 //-----------------------------------------------------------------------------
@@ -249,10 +249,10 @@ void CTFDiscordRPC::UpdateServerInfo()
 	char partyId[128];
 	Q_snprintf(partyId, sizeof(partyId), "%s-party", ni->GetAddress());
 
-	Q_memset(&m_pRpc, 0, sizeof(m_pRpc));
+	Q_memset(&m_Rpc, 0, sizeof(m_Rpc));
 
-	m_pRpc.partyId = partyId;
-	m_pRpc.joinSecret = ni->GetAddress();
+	m_Rpc.partyId = partyId;
+	m_Rpc.joinSecret = ni->GetAddress();
 
 	const char* pszGameType = NULL;
 	const char* pszGameTypeShort = NULL;
@@ -313,10 +313,10 @@ void CTFDiscordRPC::UpdateServerInfo()
 
 	char szState[256];
 	Q_snprintf(szState, sizeof(szState), "Map: %s", m_szMapName);
-	m_pRpc.state = szState;
+	m_Rpc.state = szState;
 	SetMapImage();
 	SetGameTypeImage(pszGameTypeShort);
-	m_pRpc.details = pszGameType;
+	m_Rpc.details = pszGameType;
 
 	// alright now update our player info
 	if (g_TF_PR)
@@ -332,11 +332,11 @@ void CTFDiscordRPC::UpdateServerInfo()
 			}
 		}
 
-		m_pRpc.partyMax = maxPlayers;
-		m_pRpc.partySize = curPlayers;
+		m_Rpc.partyMax = maxPlayers;
+		m_Rpc.partySize = curPlayers;
 	}
 
-	m_pRpc.startTimestamp = mktime(tStartTime);
+	m_Rpc.startTimestamp = mktime(tStartTime);
 }
 
 //-----------------------------------------------------------------------------
@@ -345,12 +345,12 @@ void CTFDiscordRPC::UpdateServerInfo()
 void CTFDiscordRPC::Reset()
 {
 	DISCORD_LOG_VERBOSE(1, "CTFDiscordRPC::Reset\n");
-	Q_memset(&m_pRpc, 0, sizeof(m_pRpc));
-	m_pRpc.details = "";
-	m_pRpc.state = "In main menu";
-	m_pRpc.endTimestamp;
+	Q_memset(&m_Rpc, 0, sizeof(m_Rpc));
+	m_Rpc.details = "";
+	m_Rpc.state = "In main menu";
+	m_Rpc.endTimestamp;
 
-	Discord_UpdatePresence(&m_pRpc);
+	Discord_UpdatePresence(&m_Rpc);
 	DISCORD_LOG_MSG("Rich presence resetted.\n");
 }
 
