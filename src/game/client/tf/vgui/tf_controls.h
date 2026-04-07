@@ -300,6 +300,12 @@ private:
 };
 } // namespace vgui
 
+struct CreateServerMapItem {
+	char mapName[MAX_MAP_NAME];
+	bool bIsWorkshopMap;
+	PublishedFileId_t iMapFileId;
+};
+
 class CTFCreateServerDialog : public vgui::PropertyDialog
 {
 	DECLARE_CLASS_SIMPLE(CTFCreateServerDialog, vgui::PropertyDialog);
@@ -348,9 +354,10 @@ private:
 	// Map filtering
 	vgui::TextEntry* m_pMapSearchEntry;
 	vgui::CheckButton* m_pWorkshopFilterCheck;
-	CUtlVector< CUtlString > m_vecAllMaps;
-	CUtlVector< bool > m_vecIsWorkshopMap;
-	CUtlVector< PublishedFileId_t > m_vecMapFileIDs;
+	//CUtlVector< CUtlString > m_vecAllMaps;
+	//CUtlVector< bool > m_vecIsWorkshopMap;
+	//CUtlVector< PublishedFileId_t > m_vecMapFileIDs;
+	CUtlVector<CreateServerMapItem> m_vecAllMaps;
 	char m_szLastSearchFilter[256];
 	bool m_bLastWorkshopOnly;
 
