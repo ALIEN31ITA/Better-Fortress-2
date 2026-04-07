@@ -69,7 +69,10 @@ void CDiscordJoinRequestNotification::UpdateTick()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-CTFDiscordRPC::CTFDiscordRPC() : CAutoGameSystemPerFrame("tf_discord_rpc")
+CTFDiscordRPC::CTFDiscordRPC()
+	: CAutoGameSystemPerFrame("tf_discord_rpc")
+	, m_pRpc()
+	, m_flLastUpdateTime(0.0f)
 {
 	Q_memset(m_szMapName, 0, MAX_MAP_NAME);
 }
