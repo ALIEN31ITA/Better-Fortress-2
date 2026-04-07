@@ -382,7 +382,7 @@ void CTFDiscordRPC::LevelShutdownPreEntity()
 void CTFDiscordRPC::DiscordReady(const DiscordUser* connectedBastard)
 {
 	DISCORD_LOG_MSG("Ready!\n");
-	DISCORD_LOG_MSG("The dastard's user ID: %s\n", connectedBastard->userId);
+	DISCORD_LOG_MSG("The user's user ID: %s\n", connectedBastard->userId);
 
 	GetDiscordRPC()->Reset();
 }
