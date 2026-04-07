@@ -2786,12 +2786,14 @@ void CHudMainMenuOverride::UpdateSplashText()
 	{
 		ChangeSplashText();
 		m_flNextSplashTextChange = gpGlobals->curtime + 8.0f;
-		m_flSplashAnimationTime = gpGlobals->curtime;
 		m_bSplashAnimatingIn = true;
 	}
 	
-	// Animate splash text (zoom in/out effect)
-	AnimateSplashText();
+	if (gpGlobals->curtime >= m_flSplashAnimationTime) {
+		m_flSplashAnimationTime = gpGlobals->curtime + 0.72f;
+		// Animate splash text (zoom in/out effect)
+		AnimateSplashText();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -2801,18 +2803,7 @@ void CHudMainMenuOverride::AnimateSplashText()
 {
 	if ( !m_pSplashTextLabel )
 		return;
-		
-	// Animation cycle time (2 seconds)
-	float animTime = fmod( gpGlobals->curtime * 2.0f, 2.0f );
 	
-	// Create a smooth scaling effect using sine wave
-	//float scale = 1.0f + 0.15f * sin( animTime * M_PI );
-	
-	// Apply yellow color with slight alpha variation for more life
-	int alpha = (int)(255.0f * (0.9f + 0.1f * sin( animTime * M_PI * 0.5f )));
-	Color yellowColor( 255, 255, 0, alpha );
-	m_pSplashTextLabel->SetFgColor( yellowColor );
-	
-	// We can't directly scale text, but we can create the illusion with position offset
-	// The text will appear to "breathe" slightly
+	if (!g_pClientMode->GetViewportAnimationController()->StartAnimationSequence(this, "SplashTextBounce"))
+		DevWarning("Failed to start animation sequence!\n");
 }
