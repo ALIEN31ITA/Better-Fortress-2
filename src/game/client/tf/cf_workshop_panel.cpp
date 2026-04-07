@@ -578,7 +578,7 @@ void CCFWorkshopItemDetails::Steam_OnPreviewImageReceived(HTTPRequestCompleted_t
 	
 	// Determine image format from header bytes
 	byte* pData = (byte*)imageBuffer.Base();
-	ImageFileFormat eFormat = kImageFileFormat_JPG; // Default to JPEG
+	//ImageFileFormat eFormat = kImageFileFormat_JPG; // Default to JPEG
 	
 	CFWorkshopMsg("Image data: size=%u, first bytes: %02X %02X %02X %02X\n", 
 		unBodySize, pData[0], pData[1], pData[2], pData[3]);
@@ -1045,7 +1045,7 @@ void CCFWorkshopBrowserPanel::RefreshList()
 		V_snprintf(szSize, sizeof(szSize), "%.1f MB", sizeMB);
 		kv->SetString("size", szSize);
 		
-		int itemID = m_pItemList->AddItem(kv, (unsigned int)pItem->GetFileID(), false, false);
+		/*int itemID = */m_pItemList->AddItem(kv, (unsigned int)pItem->GetFileID(), false, false);
 		kv->deleteThis();
 	}
 	

@@ -624,7 +624,7 @@ void CHudChat::MsgFunc_SayText2( bf_read &msg )
 			}
 			
 			// Look for prefixes in the message and colorize them
-			wchar_t *pszStart = pszMessage;
+			//wchar_t *pszStart = pszMessage;
 			wchar_t *pszPlayerStart = NULL;
 			
 			// Get localized prefix strings

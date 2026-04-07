@@ -917,7 +917,9 @@ bool ApplySpawnerTemplate( CTFPlayer *pPlayer, IPopulationSpawner *pSpawner )
 	{
 		// Store current class to see if it's changing
 		int nOldClass = pPlayer->GetPlayerClass()->GetClassIndex();
-		pPlayer->HandleCommand_JoinClass( g_aRawPlayerClassNamesShort[pBotSpawner->m_class] );
+		if (pBotSpawner->m_class != nOldClass) {
+			pPlayer->HandleCommand_JoinClass(g_aRawPlayerClassNamesShort[pBotSpawner->m_class]);
+		}
 	}
 
 	// Apply scale if specified - do this AFTER class change
@@ -933,8 +935,11 @@ bool ApplySpawnerTemplate( CTFPlayer *pPlayer, IPopulationSpawner *pSpawner )
 	if ( pBotSpawner->m_health > 0 )
 	{
 		// Apply the popfile health directly
-		pPlayer->SetMaxHealth( pBotSpawner->m_health );
-		pPlayer->SetHealth( pBotSpawner->m_health );
+		if (nCurrentMaxHealth != pBotSpawner->m_health)
+			pPlayer->SetMaxHealth( pBotSpawner->m_health );
+
+		if (nCurrentHealth != pBotSpawner->m_health)
+			pPlayer->SetHealth( pBotSpawner->m_health );
 	}
 
 	// Apply character attributes (like damage bonus, speed bonus, etc.)
@@ -4797,9 +4802,9 @@ void CTFPlayer::Spawn()
 				case 0: // Classic - Spawn with loadout, random chances for giants/gatebots
 				{
 					// Get current counts for bosses and giants
-					int iCurrentBosses = CountBossRobots( TF_TEAM_PVE_INVADERS );
+					//int iCurrentBosses = CountBossRobots( TF_TEAM_PVE_INVADERS );
 					int iCurrentGiants = CountGiantRobots( TF_TEAM_PVE_INVADERS );
-					int iMaxBosses = cf_mvmvs_max_bosses.GetInt();
+					//int iMaxBosses = cf_mvmvs_max_bosses.GetInt();
 					int iMaxGiants = cf_mvmvs_max_giants.GetInt();
 					
 					//Spawn the player as Gatebot | 50% chance
@@ -11204,7 +11209,7 @@ int CTFPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		}
 	}
 
-	CTFWeaponScripted *pScriptedWeapon = dynamic_cast<CTFWeaponScripted*>(info.GetWeapon());
+	//CTFWeaponScripted *pScriptedWeapon = dynamic_cast<CTFWeaponScripted*>(info.GetWeapon());
 	
 	// TODO: IMPLEMENT if(pScriptedWeapon && pScriptedWeapon->GetWeaponFlags() & SCRIPTED_WEAPON_HAS_DEATH_NOTICE)
 
@@ -17754,8 +17759,12 @@ static ConCommand dropitem( "dropitem", CC_DropItem, "Drop the flag." );
 // Purpose: 
 //-----------------------------------------------------------------------------
 CObserverPoint::CObserverPoint()
+	: m_bMatchSummary( false )
+	, m_bDefaultWelcome( false )
+	, m_bDisabled( false )
+	, m_flFOV( 0.0f )
+	, m_iszAssociateTeamEntityName( NULL_STRING )
 {
-	m_bMatchSummary = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -18377,7 +18386,7 @@ void CTFPlayer::ValidateCurrentObserverTarget( void )
 			ForceObserverMode( OBS_MODE_CHASE );
 		}
 		//[VSCRIPT] Generic Observable
-		if ( !m_hObserverTarget->m_nTFFlags & OBSERVABLE && !IsValidObserverTarget( m_hObserverTarget ))
+		if ( !(m_hObserverTarget->m_nTFFlags & OBSERVABLE) && !IsValidObserverTarget(m_hObserverTarget))
 			FindInitialObserverTarget();
 	}
 
@@ -22582,7 +22591,7 @@ void CTFPlayer::MVM_SetMinibossType(void)
     {
         AddTag("bot_giant");
         int iClass = GetPlayerClass()->GetClassIndex();
-		int iSentryBuster = m_Shared.InCond( TF_COND_SENTRY_BUSTER );
+		//int iSentryBuster = m_Shared.InCond( TF_COND_SENTRY_BUSTER );
         switch(iClass)
         {
             case TF_CLASS_HEAVYWEAPONS:

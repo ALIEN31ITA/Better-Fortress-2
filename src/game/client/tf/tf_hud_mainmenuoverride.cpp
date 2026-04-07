@@ -2806,7 +2806,7 @@ void CHudMainMenuOverride::AnimateSplashText()
 	float animTime = fmod( gpGlobals->curtime * 2.0f, 2.0f );
 	
 	// Create a smooth scaling effect using sine wave
-	float scale = 1.0f + 0.15f * sin( animTime * M_PI );
+	//float scale = 1.0f + 0.15f * sin( animTime * M_PI );
 	
 	// Apply yellow color with slight alpha variation for more life
 	int alpha = (int)(255.0f * (0.9f + 0.1f * sin( animTime * M_PI * 0.5f )));

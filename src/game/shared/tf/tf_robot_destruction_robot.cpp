@@ -1074,7 +1074,7 @@ ActionResult< CTFRobotDestruction_Robot > CRobotPanic::OnStart( CTFRobotDestruct
 	pMe->SetNewActivity( ACT_BOT_PANIC );	// Play panicked activity
 
 	m_SpeakTimer.Start( 3.f );
-	const RobotSpawnData_t & data = pMe->GetRobotSpawnData();
+	//const RobotSpawnData_t & data = pMe->GetRobotSpawnData();
 	pMe->EmitSound( pMe->m_spawnData.m_iszHurtSound );
 	
 	return Continue();
@@ -1128,7 +1128,7 @@ EventDesiredResult< CTFRobotDestruction_Robot > CRobotPanic::OnInjured( CTFRobot
 	if ( m_SpeakTimer.IsElapsed() )
 	{
 		m_SpeakTimer.Start( RandomFloat( 1.5f, 2.f ) );
-		const RobotSpawnData_t & data = pMe->GetRobotSpawnData();
+		//const RobotSpawnData_t & data = pMe->GetRobotSpawnData();
 		pMe->EmitSound( pMe->m_spawnData.m_iszHurtSound );
 	}
 
@@ -1169,7 +1169,7 @@ ActionResult< CTFRobotDestruction_Robot > CRobotBehavior::Update( CTFRobotDestru
 		{
 			m_SpeakTimer.Start( 1.f );
 			m_IdleSpeakTimer.Start( RandomFloat( 6.f, 10.f ) );
-			const RobotSpawnData_t & data = pMe->GetRobotSpawnData();
+			//const RobotSpawnData_t & data = pMe->GetRobotSpawnData();
 			pMe->EmitSound( pMe->m_spawnData.m_iszIdleSound );
 		}
 	}
@@ -1191,7 +1191,7 @@ EventDesiredResult< CTFRobotDestruction_Robot > CRobotBehavior::OnContact( CTFRo
 		m_SpeakTimer.Start( 3.f );
 
 		{
-			const RobotSpawnData_t & data = pMe->GetRobotSpawnData();
+			//const RobotSpawnData_t & data = pMe->GetRobotSpawnData();
 			pMe->EmitSound( pMe->m_spawnData.m_iszCollideSound );
 		}
 	}

@@ -404,7 +404,7 @@ public:
 	 */
 	virtual void OnCursorEntered( void )
 	{
-		int nSlot = vgui::ipanel()->GetMessageContextId( GetVPanel() );
+		//int nSlot = vgui::ipanel()->GetMessageContextId( GetVPanel() );
 		//ACTIVE_SPLITSCREEN_PLAYER_GUARD( nSlot );
 
 		int wide, tall;
@@ -979,7 +979,7 @@ void CRadialMenu::OnThink( void )
 	input->GetFullscreenMousePos( &m_cursorX, &m_cursorY );
 	ScreenToLocal( m_cursorX, m_cursorY );
 
-	int nSlot = vgui::ipanel()->GetMessageContextId( GetVPanel() );
+	//int nSlot = vgui::ipanel()->GetMessageContextId( GetVPanel() );
 	//ACTIVE_SPLITSCREEN_PLAYER_GUARD( nSlot );
 
 	int wide, tall;
