@@ -159,7 +159,7 @@ void CTFDiscordRPC::SetGameTypeImage(const char *gameType)
 	for (KeyValues* pData = kv->GetFirstSubKey(); pData != NULL; pData = pData->GetNextKey())
 	{
 		// key name doesnt match current short gamemode name, continue iterating.
-		if (Q_stricmp(pData->GetName(), gameType)) 
+		if (Q_stricmp(pData->GetName(), gameType) != 0) 
 		{
 			DISCORD_LOG_VERBOSE(3, "Warning: Expected %s but got %s. Ignoring...\n", gameType, pData->GetName());
 			continue;
