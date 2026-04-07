@@ -439,7 +439,5 @@ void CTFDiscordRPC::DiscordSpectateGame(const char* secret)
 	// TODO -- get the SourceTV IP address. :/
 }
 
-// source engine has too much spaghetti code that i had to add this
-// wtf valve? (the auto game system wont init CTFDiscordRPC with out defining this at least from my side)
 static CTFDiscordRPC s_DscMgr;
 CTFDiscordRPC* GetDiscordRPC() { return &s_DscMgr; }
