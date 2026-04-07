@@ -46,6 +46,9 @@ private:
 	const char* m_szUserId;
 };
 
+/**
+ * @brief Discord RPC implementation.
+ */
 class CTFDiscordRPC : public CAutoGameSystemPerFrame
 {
 public:
