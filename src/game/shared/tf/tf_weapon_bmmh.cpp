@@ -159,15 +159,15 @@ CBaseEntity *CTFBMMH::FireProjectile( CTFPlayer *pPlayer )
 {
 	if ( !pPlayer )
 		return NULL;
-
-	// Calculate and store the metal cost before firing
-	int iMetalCost = GetAmmoPerShot();
 	
 	// Call the gun base class, NOT the pipebomb launcher base class
 	// This avoids the pipebomb tracking code which doesn't apply to scrapballs
 	CBaseEntity *pProjectile = CTFWeaponBaseGun::FireProjectile( pPlayer );
 	
 #ifndef CLIENT_DLL
+	// Calculate and store the metal cost before firing
+	int iMetalCost = GetAmmoPerShot();
+
 	// Store the metal cost in the projectile
 	if ( pProjectile )
 	{
