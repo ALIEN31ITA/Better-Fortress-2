@@ -280,53 +280,56 @@ USER_MESSAGE( BreakModel_Pumpkin )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+bool CTFWearable::ShouldHideWearable(C_BasePlayer* pPlayer) {
+	C_TFPlayer* pOwner = ToTFPlayer(pPlayer);
+	if (!pOwner) return false;
+
+	if (TFGameRules() && TFGameRules()->IsMannVsMachineMode())
+		if (pOwner->GetTeamNumber() == TF_TEAM_PVE_INVADERS && pOwner->IsBot())
+			return true;
+
+	if (!GetWeaponAssociatedWith()) return false;
+
+	const CEconItemView* pItem = GetAttributeContainer()->GetItem();
+	if (!pItem) return false;
+	if (!pItem->IsValid()) return false;
+
+	const CTFItemDefinition* pItemDef = pItem->GetStaticData();
+	if (!pItemDef) return false;
+
+	// Get the loadout slot to determine if this is a cosmetic
+	int iLoadoutSlot = pItemDef->GetLoadoutSlot(pOwner ? pOwner->GetPlayerClass()->GetClassIndex() : TF_CLASS_SCOUT);
+
+	if (!(IsMiscSlot(iLoadoutSlot) || iLoadoutSlot == LOADOUT_POSITION_HEAD)) return false;
+
+	// If unusual effects are enabled, check if this item has them
+	if (!cf_disable_unusual_effects.GetBool())
+	{
+		// Check if this item has unusual effects
+		static CSchemaAttributeDefHandle pAttrDef_AttachParticleEffect("attach particle effect");
+		uint32 iValue = 0;
+		bool bHasParticleEffect = pItem->FindAttribute(pAttrDef_AttachParticleEffect, &iValue);
+		int iQualityParticleType = pItem->GetQualityParticleType();
+
+		// If this item has unusual effects, hide the model but keep the entity for effects
+		if ((bHasParticleEffect && iValue > 0) || iQualityParticleType > 0)
+			return true; // Don't draw the model, but entity stays visible for particle effects
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
 int	CTFWearable::InternalDrawModel( int flags )
 {
 	C_TFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
 
 #ifdef CLIENT_DLL
 	// Check if we should hide the cosmetic model while keeping the entity visible for unusual effects
-	if ( cf_disable_cosmetics.GetBool() )
-	{
-		// Check if this is a cosmetic item (not a weapon-associated wearable)
-		if ( !GetWeaponAssociatedWith() )
-		{
-			const CEconItemView *pItem = GetAttributeContainer()->GetItem();
-			if ( pItem && pItem->IsValid() )
-			{
-				const CTFItemDefinition *pItemDef = pItem->GetStaticData();
-				if ( pItemDef )
-				{
-					// Get the loadout slot to determine if this is a cosmetic
-					int iLoadoutSlot = pItemDef->GetLoadoutSlot( pOwner ? pOwner->GetPlayerClass()->GetClassIndex() : TF_CLASS_SCOUT );
-					
-					// Hide cosmetic model rendering (hat, misc slots) but keep entity visible for effects
-					if ( IsMiscSlot( iLoadoutSlot ) || iLoadoutSlot == LOADOUT_POSITION_HEAD )
-					{
-						// If unusual effects are enabled, check if this item has them
-						if ( !cf_disable_unusual_effects.GetBool() )
-						{
-							// Check if this item has unusual effects
-							static CSchemaAttributeDefHandle pAttrDef_AttachParticleEffect( "attach particle effect" );
-							uint32 iValue = 0;
-							bool bHasParticleEffect = pItem->FindAttribute( pAttrDef_AttachParticleEffect, &iValue );
-							int iQualityParticleType = pItem->GetQualityParticleType();
-							
-							// If this item has unusual effects, hide the model but keep the entity for effects
-							if ( (bHasParticleEffect && iValue > 0) || iQualityParticleType > 0 )
-							{
-								return 0; // Don't draw the model, but entity stays visible for particle effects
-							}
-						}
-						
-						// No unusual effects or they're disabled, hide the model completely
-						// (This shouldn't be reached since ShouldDraw() would return false)
-						return 0;
-					}
-				}
-			}
-		}
-	}
+	if (cf_disable_cosmetics.GetBool() && ShouldHideWearable(pOwner))
+		return 0;
 #endif
 
 	if ( pOwner && pOwner->m_Shared.InCond( TF_COND_HALLOWEEN_GHOST_MODE ) )
@@ -371,54 +374,8 @@ bool CTFWearable::ShouldDraw()
 
 #ifdef CLIENT_DLL
 	// Check if cosmetics are disabled
-	if ( cf_disable_cosmetics.GetBool() )
-	{
-		// Check if this is a cosmetic item (not a weapon-associated wearable)
-		if ( !GetWeaponAssociatedWith() )
-		{
-			// Also hide disguise wearables when cosmetics are disabled
-			if ( m_bDisguiseWearable )
-			{
-				return false;
-			}
-
-			const CEconItemView *pItem = GetAttributeContainer()->GetItem();
-			if ( pItem && pItem->IsValid() )
-			{
-				// Allow certain special wearables to still show (like badge items, action items, etc.)
-				const CTFItemDefinition *pItemDef = pItem->GetStaticData();
-				if ( pItemDef )
-				{
-					// Get the loadout slot to determine if this is a cosmetic
-					int iLoadoutSlot = pItemDef->GetLoadoutSlot( pOwner ? pOwner->GetPlayerClass()->GetClassIndex() : TF_CLASS_SCOUT );
-					
-					// Hide cosmetic slots (hat, misc slots)
-					if ( IsMiscSlot( iLoadoutSlot ) || iLoadoutSlot == LOADOUT_POSITION_HEAD )
-					{
-						// Check if unusual effects are enabled AND this item has unusual effects
-						if ( !cf_disable_unusual_effects.GetBool() )
-						{
-							// Check if this item has unusual effects
-							static CSchemaAttributeDefHandle pAttrDef_AttachParticleEffect( "attach particle effect" );
-							uint32 iValue = 0;
-							bool bHasParticleEffect = pItem->FindAttribute( pAttrDef_AttachParticleEffect, &iValue );
-							int iQualityParticleType = pItem->GetQualityParticleType();
-							
-							// If this item has unusual effects, keep the entity visible for the particle effects
-							// but the model will be hidden by InternalDrawModel()
-							if ( (bHasParticleEffect && iValue > 0) || iQualityParticleType > 0 )
-							{
-								return BaseClass::ShouldDraw();
-							}
-						}
-						
-						// Hide the cosmetic completely (no unusual effects or unusual effects are disabled)
-						return false;
-					}
-				}
-			}
-		}
-	}
+	if (cf_disable_cosmetics.GetBool() && ShouldHideWearable(pOwner))
+		return false;
 #endif
 
 	if ( pOwner )
