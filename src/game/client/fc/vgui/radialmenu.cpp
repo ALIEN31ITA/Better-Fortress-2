@@ -751,7 +751,7 @@ CHudElement( pElementName ), BaseClass( NULL, PANEL_RADIAL_MENU )
 
 	// initialize dialog
 	m_resource = new KeyValues( "RadialMenu" );
-	m_resource->LoadFromFile( filesystem, "resource/UI/RadialMenu.res" );
+	m_resource->LoadFromFile( filesystem, "Resource/UI/Custom/RadialMenu.res" );
 	m_menuData = NULL;
 	FlushClientMenus();
 
@@ -855,7 +855,7 @@ CRadialMenu::~CRadialMenu()
 
 void CRadialMenu::HandleControlSettings()
 {
-	LoadControlSettings("Resource/UI/RadialMenu.res");
+	LoadControlSettings("Resource/UI/Custom/RadialMenu.res");
 
 	for ( int i=0; i<NUM_BUTTON_DIRS; ++i )
 	{
@@ -1384,7 +1384,7 @@ void CRadialMenu::SetData( KeyValues *data )
 	{
 		m_resource->deleteThis();
 		m_resource = new KeyValues( "RadialMenu" );
-		m_resource->LoadFromFile( filesystem, "resource/UI/RadialMenu.res" );
+		m_resource->LoadFromFile( filesystem, "Resource/UI/Custom/RadialMenu.res" );
 	}
 
 	if ( m_menuData != data )
