@@ -51,10 +51,10 @@
 			// in folders where they don't exist.  (Searching a VPK is much faster than making an operating
 			// system call.)
 			game_lv				|appid_440|tf/tf2_lv.vpk
-			game				|appid_440|tf/tf2_textures.vpk
-			game				|appid_440|tf/tf2_sound_vo_english.vpk
-			game				|appid_440|tf/tf2_sound_misc.vpk
-			game+vgui			|appid_440|tf/tf2_misc.vpk
+			game+mod			|appid_440|tf/tf2_textures.vpk
+			game+mod			|appid_440|tf/tf2_sound_vo_english.vpk
+			game+mod			|appid_440|tf/tf2_sound_misc.vpk
+			game+mod+vgui		|appid_440|tf/tf2_misc.vpk
 			game				|appid_440|hl2/hl2_textures.vpk
 			game				|appid_440|hl2/hl2_sound_vo_english.vpk
 			game				|appid_440|hl2/hl2_sound_misc.vpk
