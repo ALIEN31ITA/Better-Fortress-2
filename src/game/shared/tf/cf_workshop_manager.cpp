@@ -707,7 +707,7 @@ void CCFWorkshopManager::InitWorkshop()
 			}
 		}
 	}
-	
+
 	// Queue a refresh of subscriptions
 	m_bRefreshQueued = true;
 }
