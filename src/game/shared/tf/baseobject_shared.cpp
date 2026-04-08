@@ -606,7 +606,7 @@ bool CBaseObject::CalculatePlacementPos( void )
 	}
 
 	//Vscript: Force it to be buildable
-	if ( tr.m_pEnt && tr.m_pEnt->m_nTFFlags & SUPPORTS_ENGINEER_BUILDINGS )
+	if ( tr.m_pEnt && (tr.m_pEnt->m_nTFFlags & SUPPORTS_ENGINEER_BUILDINGS) )
 	{
 		return true;
 	}

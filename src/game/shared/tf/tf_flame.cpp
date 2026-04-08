@@ -607,7 +607,7 @@ bool CFlameEntityEnum::EnumEntity( IHandleEntity *pHandleEntity )
 		// only add enemy robots
 		m_Targets.AddToTail( pEnt );
 	}
-	else if ( FClassnameIs( pEnt, "func_breakable" ) || FClassnameIs( pEnt, "tf_pumpkin_bomb" ) || FClassnameIs( pEnt, "tf_merasmus_trick_or_treat_prop" ) || FClassnameIs( pEnt, "tf_generic_bomb" ) || pEnt->m_nTFFlags & FLAMMABLE )
+	else if ( FClassnameIs( pEnt, "func_breakable" ) || FClassnameIs( pEnt, "tf_pumpkin_bomb" ) || FClassnameIs( pEnt, "tf_merasmus_trick_or_treat_prop" ) || FClassnameIs( pEnt, "tf_generic_bomb" ) || (pEnt->m_nTFFlags & FLAMMABLE) )
 	{
 		m_Targets.AddToTail( pEnt );
 	}
@@ -644,7 +644,7 @@ bool CTFFlameManager::IsValidBurnTarget( CBaseEntity *pEntity ) const
 		// only add enemy robots
 		return true;
 	}
-	else if ( FClassnameIs( pEntity, "func_breakable" ) || FClassnameIs( pEntity, "tf_pumpkin_bomb" ) || FClassnameIs( pEntity, "tf_merasmus_trick_or_treat_prop" ) || FClassnameIs( pEntity, "tf_generic_bomb" ) || pEntity->m_nTFFlags & FLAMMABLE )
+	else if ( FClassnameIs( pEntity, "func_breakable" ) || FClassnameIs( pEntity, "tf_pumpkin_bomb" ) || FClassnameIs( pEntity, "tf_merasmus_trick_or_treat_prop" ) || FClassnameIs( pEntity, "tf_generic_bomb" ) || (pEntity->m_nTFFlags & FLAMMABLE) )
 	{
 		return true;
 	}

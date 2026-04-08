@@ -769,7 +769,7 @@ void CTFProjectile_Arrow::ArrowTouch( CBaseEntity *pOther )
 
 	CTFMerasmusTrickOrTreatProp *pMerasmusProp = dynamic_cast< CTFMerasmusTrickOrTreatProp* >( pOther );
 	CTFRobotDestruction_Robot *pRobot = dynamic_cast< CTFRobotDestruction_Robot* >( pOther );
-	bool bSticksProjectiles = pOther->m_nTFFlags & STICKS_PROJECTILES;
+	bool bSticksProjectiles = (pOther->m_nTFFlags & STICKS_PROJECTILES);
 	if ( pOther->IsWorld() || ( !pOtherCombatCharacter && !pPumpkinBomb && !pMerasmusProp && !bShield && !pRobot && !bSticksProjectiles ) )
 	{
 		// Check to see if we struck the skybox.
@@ -927,7 +927,7 @@ void CTFProjectile_Arrow::CheckSkyboxImpact( CBaseEntity *pOther )
 		return;
 	}
 
-	if ( !pOther->IsWorld() && ~pOther->m_nTFFlags & STICKS_PROJECTILES )
+	if ( !pOther->IsWorld() && !(pOther->m_nTFFlags & STICKS_PROJECTILES) )
 	{
 		BreakArrow();
 	}
