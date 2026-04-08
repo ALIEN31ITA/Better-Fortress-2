@@ -4165,9 +4165,9 @@ void CTFCreateServerDialog::LoadMapList()
 	if (pUGC) {
 		uint32 iNumSubbed = pUGC->GetNumSubscribedItems();
 		if (iNumSubbed > 0) {
-			PublishedFileId_t *items = (PublishedFileId_t *)malloc(static_cast<size_t>(iNumSubbed) * sizeof(PublishedFileId_t));
+			PublishedFileId_t* items = new PublishedFileId_t[iNumSubbed];
 			if (pUGC->GetSubscribedItems(items, sizeof(items)) > 0) {
-				for (int i = 0; i < (signed)iNumSubbed; i++) {
+				for (int i = 0; i < sizeof(items); i++) {
 					PublishedFileId_t itemId = items[i];
 					char pszInstallPath[MAX_PATH];
 					uint64 iSize = 0;
@@ -4210,6 +4210,7 @@ void CTFCreateServerDialog::LoadMapList()
 					}
 				}
 			}
+			delete[] items;
 		}
 	}
 	
@@ -4239,7 +4240,7 @@ void CTFCreateServerDialog::LoadMapList()
 		char szStrippedShortName[MAX_PATH];
 		Q_StripExtension(szShortName, szStrippedShortName, sizeof(szStrippedShortName));
 
-		if (!MapExists(szStrippedShortName)) continue;
+		if (MapExists(szStrippedShortName)) continue;
 
 		CreateServerMapItem newItem{};
 		Q_strncpy(newItem.mapName, szStrippedShortName, sizeof(newItem.mapName));
@@ -4257,7 +4258,7 @@ void CTFCreateServerDialog::LoadMapList()
 	Q_FixSlashes(pszMapSearchDir);
 
 	// Also search workshop folder via filesystem (for any we might have missed)
-	pMapFileName = filesystem->FindFirstEx(pszMapSearchDir, "GAME", &mapHandle);
+	pMapFileName = filesystem->FindFirstEx(pszMapSearchDir, "MOD", &mapHandle);
 
 	while (pMapFileName && pMapFileName[0] != '\0')
 	{
@@ -4273,7 +4274,7 @@ void CTFCreateServerDialog::LoadMapList()
 		char szStrippedShortName[MAX_PATH];
 		Q_StripExtension(szShortName, szStrippedShortName, sizeof(szStrippedShortName));
 
-		if (!MapExists(szShortName)) continue;
+		if (MapExists(szStrippedShortName)) continue;
 
 		PublishedFileId_t fileID = CFWorkshop()->GetMapIDFromName(szShortName);
 
