@@ -260,11 +260,13 @@ void CTFPlayerModelPanel::SetToPlayerClass( int iClass, bool bForceRefresh /*= f
 	{
 		if ( !m_strPlayerModelOverride.IsEmpty() )
 		{
+			DevMsg("CTFPlayerModelPanel::SetToPlayerClass -> SetMDL: %s\n", m_strPlayerModelOverride.Get());
 			SetMDL( m_strPlayerModelOverride.Get() );
 		}
 		else
 		{
 			TFPlayerClassData_t *pData = GetPlayerClassData( m_iCurrentClassIndex );
+			DevMsg("CTFPlayerModelPanel::SetToPlayerClass -> SetMDL: %s\n", pData->GetModelName());
 			SetMDL( pData->GetModelName() );
 			HoldFirstValidItem();
 		}
