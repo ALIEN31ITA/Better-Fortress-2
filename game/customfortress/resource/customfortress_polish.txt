@@ -1,0 +1,375 @@
+//Bajo Jajo Bajo Jajo
+"lang"
+{
+	"Language" "Polish"
+	"Tokens"
+	{
+		//-----------------------------------------
+		// CUSTOM FORTRESS RELATED
+		//-----------------------------------------
+		// GENERAL
+		"TF_ModGameTitle"			 		"CUSTOM FORTRESS 2"
+		"TF_ModCredits_Title"			 	"MOD CREDITS"
+		"TF_ModCredits_Note"				"NOTICE: If we forgot to credit someone in our mod, reach us in Discord please :("
+		"TFB_BetaMessage"					"BETA"
+		"TFB_MOTD_DISCORD"					"DISCORD"
+		"TFB_MOTD_GITHUB"					"GITHUB"
+		"TF_ClearTextChatOnDisconnect"		"Clear text chat on disconnect"
+		"Tooltip_ClearTextChatOnDisconnect"	"If set, text chat is auto cleared on disconnecting from a server. (You may manually do this any time via cl_clearchathistory command)"
+		"TF_UseRadialVoiceMenu"				"Use Radial Voice Menu"
+		"Tooltip_UseRadialVoiceMenu"		"If set, the voice command keys will open a radial menu instead of the traditional numbered menu."
+		"GameUI_ItemSettings"				"ITEM SETTINGS"
+		
+		"Vote_ToggleVersus"					"Toggle Mann Vs Machine Versus"
+		"TF_vote_versus_enable"				"Enable Mann Vs Machine Versus Mode?"
+		"TF_vote_passed_versus_enable"		"Enabling Mann Vs Machine Versus Mode..."
+		"TF_vote_versus_disable"			"Disable Mann Vs Machine Versus Mode?"
+		"TF_vote_passed_versus_disable"		"Disabling Mann Vs Machine Versus Mode..."
+		"CF_DisableCosmetics"				"Disable Cosmetics"
+		"Tooltip_DisableCosmetics"			"If set, all cosmetic items (hats and misc items) will be hidden from view."
+		"CF_DisableUnusualEffects"			"Disable Unusual Effects"
+		"Tooltip_DisableUnusualEffects"	"If set, all unusual particle effects will be hidden from view."
+		"CF_DisableWeaponSkins"				"Disable Weapon Skins"
+		"Tooltip_DisableWeaponSkins"		"If set, all weapon skins and warpaints will be disabled, showing default weapon textures."
+		"CF_DisableHolidayThemes"			"Disable Holiday Themes"
+		"Tooltip_DisableHolidayThemes"		"If set, holiday-themed main menu backgrounds (Halloween, Christmas, etc.) will be disabled."
+		"CF_CleanSpectatorHUD"				"Clean Spectator HUD"
+		"Tooltip_CleanSpectatorHUD"		"If set, hides the spectator GUI elements for a cleaner viewing experience while spectating."
+		"TF_MedicShowCritHealIndicator"		"Medic: Enable Crit Heal Indicator"
+		"Tooltip_MedicShowCritHealIndicator"	"Show visual indicators above patients who can receive critical healing (haven't taken damage recently) while playing as Medic."
+		"CF_2007Visuals"                   "2007 Visuals"
+		"Tooltip_2007Visuals"              "When enabled, uses 2007-style weapon models (v_models and w_models) where available."
+		
+		// Item Quality
+		"beta"							"Beta"
+		
+		// Chat Tags
+		"TF_Tag_Host"					"[HOST] "
+		"TF_Tag_Dev"					"[DEV] "
+		"TF_Tag_Publisher"				"[Publisher] "
+		"TF_Tag_Contributor"			"[Contributor] "
+		
+		// Chat Prefixes
+		"TF_Chat_Dead"					"*DEAD*"
+		"TF_Chat_Spec"					"*SPEC*"
+		"TF_Chat_TeamPrefix"			"(TEAM)"
+		"TF_Chat_CoachPrefix"			"(COACH)"
+		
+		// Chat Format
+		"TF_Chat_All"					"%s1 :  %s2"
+		
+		//OVERRIDE
+		"NewItemsAcquired"		"%numitems% NEW ITEMS ACQUIRED IN TEAM FORTRESS 2!"
+		"NewItemAcquired"		"NEW ITEM ACQUIRED IN TEAM FORTRESS 2!"
+		
+		// ITEM SELECTION PANEL
+		"Selection_ShowModItems"	 "Show Mod Items"
+		"Selection_ShowTF2Items"	 "Show TF2 Items"
+		
+		//GAMEPLAY
+		"FreezePanel_Killer_Crusher" "You got crushed by"
+
+		// Voice Menu
+		"Voice_Menu_Sniper"	         "Sniper!"
+				
+		//Item Styles
+		"TFB_Jetpack_S1"		"Factory Issue"
+		"TFB_Jetpack_S2" 		"Rainbow magic!"
+		
+
+		//Item Sets
+		"TFCSet_PyroPilot" 		"Airborne Arsonist"
+		"TFCSet_BiggerIsBetter" "Bigger is Better"
+		"TFCSet_MeanMedicine"	"Heavy Duty Medicine"
+		
+		// Taunts
+		"TCF_TauntGangnam"             "Taunt: Mercenary Style!"
+		"TCF_TauntGangnam_Desc"        "Kpop? more like... Kpoop!"
+		"TCF_TauntArtBoom"		       "Taunt: Explosive Masterpiece"
+		"TCF_TauntArtBoom_Desc"	       "Express your art with some good ol' fashioned nitroglycerin!"
+		"TCF_TauntKill_Trustfall"	   "Taunt Kill: The Trust Fall"
+		"TCF_TauntKill_Trustfall_Desc" "I have squashed you like bug!"
+		
+		//Attributes
+		"Attrib_WrenchBuildsMiniDispenser"			"Replaces the Dispenser with a Mini-Dispenser"
+		"Attrib_ApplyKnockbackOnHit"				"Apply knockback on hit"
+		"Attrib_ShowHitsInKillfeed"					"Show hits in killfeed"
+		"Attrib_EngySentryFireRateDecreased"		"%s1% sentry firing speed"
+		"Attrib_EngySentryTurnRateIncreased"		"%s1% sentry turning rate"
+		"Attrib_EngyTankSentry"					    "Replaces the wearer's sentry with a more tanky sentry.\nThis Sentry deals more damage and has more health at the cost of firing and turning slower"
+		"Attrib_ModGhostlyDash"					    "Deal damage to fill up your DASH meter\nOnce the meter is charged, Alt-Fire to dash forward"
+		"Attrib_ModProximityStickies"				"Stickybombs explode when enemies get near"
+		"Attrib_ModFloatingStickies"				"Stickybombs float on water"
+		"Attrib_ModFizzleStickies"					"Stickybombs fizzle instead of detonating"
+		"Attrib_KeepDisguiseOnAttack"				"Wearer does not reveal disguise on attack"
+		"Attrib_Dispenser_Build_Rate"    			"Dispenser build speed increased by %s1%"
+		"Attrib_Back_Headshot"						"Crits on headshot from behind"
+		"Attrib_KillComboFireRateBoost"				"%s1% firing speed per class killed in a row (up to three)"
+		"Attrib_MinigunHolsterSpunUp"				"Minigun can holster whilst spun-up"
+		"Attrib_BlastDamageToSelf_Decreased"		"%s1% damage to self"
+		"Attrib_GiveHealthToTeammate"				"On Hit Teammate: Gives up to +%s1 health to teammate, damaging the wielder"
+		"Attrib_SpeedBuffAllyProjectile"			"On Hit Teammate: Boosts teammate's speed for 1 second"
+		"Attrib_MeleeCleanseAlly"					"On Hit Teammate: Remove debuffs from teammate, granting 1% - 20% Übercharge per debuff"
+		"Attrib_UberDurationPenalty"				"Über duration decreased by %s1%"
+		"Attrib_Medigun_Cloak"						"ÜberCharge cloaks patient and user"
+		
+		// Warpaints
+		"WARPAINT_MOD_BARNEY"		"Barney's Special"
+		"WARPAINT_MOD_MEATWAD"		"Purple Range MK.II"
+		
+		// Collections
+		"BetterFortress_collection"			"Custom Fortress Collection (Display only)"
+		"BetterFortress_collection_desc"		"Items from the mod Collection:"
+		
+		//Items Types
+		"TF_Throwable_Bread"				"Bread"
+		"TF_Taunt_Community"				"Community Taunt"
+		"TF_TauntKill_Community"			"Community Taunt Kill"
+		"TF_Throwable_Type_Bread"			"Wheat-Based Product"
+		"TF_Weapon_Throwable" 				"Throwable"
+		"TF_Dash"						    "DASH"
+		"TF_Weapon_Defib"					"Defibrillator"
+		"TF_Weapon_Tongs"					"Tongs"
+		
+		//Items
+		"TFCW_HandyPartner"		"The Handy Partner"
+		"TFCW_CardiacArrest"	"The Cardiac Arrest"
+		"TFCW_CardiacArrest_Desc"	"CLEAR!!!"
+		"TFCW_Torchlight"		"The Baleful Beacon"
+		"TFCW_Torchlight_Desc"	"This shattered old lantern on a stick still has a few good uses left in it."
+		"TFCW_Afterburner"		"The Afterburner"
+		"TFCW_Afterburner_Desc"	"Fly high you Pyromaniac!"
+		"TFCW_Spitfire"			"The Spitfire"
+		"TFCW_Spitfire_Desc"	"Target acquired."
+		"TFCW_Spitfire_SeekProj" "Flares ignore gravity and home-in on burning players"
+		"TFCW_Weapon_Afterburner_Dash" "Alt-Fire: Release a blast of air that\n propels the wearer towards the\n direction they are moving or looking"
+		"TFCW_Weapon_Afterburner_NoBlast" "Can't airblast or exstinguish teammates"
+		
+		"TFCW_SVDL_Conventional"		"Conventional"
+		"TFCW_SVDL_Conventional_Desc"	"Take them down from the shadows."
+		"TFCW_SVDL_AssaultCannon"	"The Assault Cannon"
+		"TFCW_SVDL_AssaultCannon_Desc"	"Feels somewhat familiar..."
+		
+		"TFCW_Bmmh"				"The B.M.M.H"
+		"TFCW_Bmmh_Desc"		"Shoots a scrapball filled with metal, based on the charge you can load up to 100 metal"
+		"TFCW_BigTex"			"The Big Tex"
+		"TFCW_BigBang"			"The Big Bang"
+		
+		"TFCW_Overdose"			"The Drogenabhängiger"
+		"TFCW_Overdose_Desc"	"A prototype of a prototype, how odd..."
+		"TFCW_SchwabenCharger"	"The Schwaben-Charger 9000"
+		"TFCW_TonsilClamp"		"The Tonsil Guillotines"
+		"TFCW_TonsilClamp_Desc"	"Open wide."
+
+		"TF_Default_Itemdef"				"INVALID ITEM! PLEASE RE-EQUIP! \n GAME MOST LIKELY UPDATED!"
+		
+		//Preset Names
+		"TF_ItemPresetName4"			"E"
+		"TF_ItemPresetName5"			"F"
+				
+		// ARMORY FILTERS
+		"ArmoryFilter_ModItems"			"Mod Items"
+		
+		//Tips [TEST]
+		"Tip_6_Count"				"21"
+		"Tip_6_21"				"As a Heavy, you dislike The Mercenary Style, the more you dance, the more Heavy gets angry... ."
+		
+		//-----------------------------------------
+		// COMMUNITY CONTENT
+		//-----------------------------------------
+		"Attrib_ScrappedItem_Description"			"This Item was originally cut in Team Fortress 2!"		
+		"Attrib_CommunityItem_SteamID"				"Community Item by: %s1"
+
+		"TFCWC_Heavy_SovietUnit"					"The Soviet Unit"
+		"TFCWC_Heavy_SovietUnit_Desc"				"Some food types think they can outsmart me... maybe... *nom* maybe..."
+		"TFCWC_Heavy_SovietUnit_S1"					"Unmoderated Appetite"
+		"TFCWC_Heavy_SovietUnit_S2"					"Meaty Mane"
+		
+		//Diva Dan
+		"WS_DDAN_Taunt_StreamSniper" 				"The Stream Sniper"
+		"WS_DDAN_Taunt_StreamSniper_Desc" 			"Unzip, let loose, and make your enemy take the piss!"
+		
+		"TF_Canteen_Merasmus"						"Misfortune Canteen"
+		"TF_Canteen_Merasmus_Desc"					"Foolish machines! you cannot match the one and only, greatest magician of the Badlands!!!"
+		
+		//-----------------------------------------
+		// MVM RELATED
+		//-----------------------------------------
+		
+		//Gamemode
+		"TF_MvM_EndlessWave"					"Endless!"
+		"TF_TANK_BOSS_DEATHCAM_NAME"			"A Tank!"
+		"Msg_DeployedBomb" 						"deployed the bomb!"
+
+		// MvM Versus Scoreboard
+		"TF_MvM_Defenders"						"Defenders"
+		"TF_MvM_Invaders"						"Invaders"
+		
+		"TF_PVE_Player_UsedRadiusStealth"			"%player% has used their RADIUS STEALTH Power Up Canteen!"
+		"TF_PVE_Player_SeeCashThroughWall" 			"%player% has used their X-RAY VISION Power Up Canteen!"
+		"TF_PVE_UsePowerup_RadiusStealth"			"'%use_action_slot_item%' to activate Radius Stealth"
+		"TF_PVE_UsePowerup_SeeCashThroughWall"		"'%use_action_slot_item%' to activate X-Ray Vision"
+		
+		//Attributes
+		"Attrib_SniperLaser"						"Zooming activates a laser pointer"
+		"Attrib_Heal_EngiBuildings"					"Heal your engineer's buildings!"
+		"Attrib_Heal_EngiBuildings_shortdesc"		"Bolt Flow"
+		"Attrib_Arrow_Mastery_shortdesc"			"Arrow Mastery"
+		"Attrib_Arrow_Mastery"			            "Arrows Split in 3"
+		"Attrib_Blacklisted_MVM_Description"		"This item cannot be used in Mann vs. Machine!"
+		"Attrib_AirblastYourTeam"					"Airblast pushes your Teammates! \n Don't be a Jerk..."
+		"Attrib_ItemCanTalk_Description"			"I Can Speak!"
+		"Attrib_AirBlastPushDownScale"				"%s1% airblast push force"
+		
+		//Canteen Attributes
+		"Attrib_Radius_Stealth_shortdesc"			"Radius Stealth"
+		"Attrib_Radius_Stealth"						"Consumable: Help your teammates to cloak for a few seconds!"
+		"Attrib_CashXray_shortdesc"					"X-Ray Cash"
+		"Attrib_CashXray"							"Consumable: Makes you able to see dropped money thru walls!"
+		
+		//Items
+		"TF_MVMRobotSkin_Type"			"Mechanized Mercenary"
+		"TF_Item_MVMBotScout"			"Mechanized Scout"
+		"TF_Item_MVMBotSoldier"			"Mechanized Soldier"
+		"TF_Item_MVMBotPyro"			"Mechanized Pyro"
+		"TF_Item_MVMBotDemo"			"Mechanized Demoman"
+		"TF_Item_MVMBotHeavy"			"Mechanized Heavy"
+		"TF_Item_MVMBotEngineer"		"Mechanized Engibot"
+		"TF_Item_MVMBotMedic"			"Mechanized Medic"
+		"TF_Item_MVMBotSniper"			"Mechanized Sniper"
+		"TF_Item_MVMBotSpy"				"Mechanized Spybot"
+		
+		"CF_Item_BetterMedal"			"The Better Mercenary"
+		"CF_Item_BetterMedal_Desc"		"Here's your special and unique BETTER badge! consider yourself superior in any way possible and beyond nature, and show others who is the king of the badlands!\n WARNING: Wearing this may cause blood loss!"
+
+		//Robot Tips
+		"ClassTips_1_1_Robot"			"Robot Scouts are the first line of defense for your team."
+		"ClassTips_1_2_Robot"			"They are a great choice for picking out key targets."
+		"ClassTips_1_3_Robot"			"Giant Scouts have extremely fast speed and more health."
+
+		"ClassTips_2_1_Robot"			"Robot Snipers usually have a long range and are very accurate."
+		"ClassTips_2_2_Robot"			"They cannot headshot and have laser pointers."
+
+		"ClassTips_3_1_Robot"			"Robot Soldiers are the most well-rounded of the robots."
+		"ClassTips_3_2_Robot"			"Equipped with a powerful rocket launcher, they can take out enemies from a distance."
+		"ClassTips_3_3_Robot"			"Giant Soldiers walk very slowly, but have a lot of health and are very durable."
+
+		"ClassTips_4_1_Robot"			"Robot Demomen are the most deadly of the robots."
+		"ClassTips_4_2_Robot"			"Armed with explosive weapons, they can take out most enemies and buildings."
+		"ClassTips_4_3_Robot"			"Giant Demomen walk very slowly, but have a lot of health and are very durable."
+
+		"ClassTips_5_1_Robot"			"Robot Medics are the best supports for your team."
+		"ClassTips_5_2_Robot"			"They have increased Ubercharge rate, making them a great choice for healing."
+		"ClassTips_5_3_Robot"			"Giant Medics have more health and longer uber duration."
+		
+		"ClassTips_6_1_Robot"			"Robot Heavies are the tankiest of the robots."
+		"ClassTips_6_2_Robot"			"They yield a minigun that can deal alot of damage to enemies up close."
+		"ClassTips_6_3_Robot"			"Giant Heavies sport alot of health and are very durable, but walk very slowly."
+
+		"ClassTips_7_1_Robot"			"Robot Pyros are very utility-heavy."
+		"ClassTips_7_2_Robot"			"They can burn enemies, remove Spy Sappers from robots and airblast!"
+		"ClassTips_7_3_Robot"			"Giant Pyros are very durable and deal good damage, but walk very slowly."
+
+		"ClassTips_8_1_Robot"			"Robot Spies tend to be the most stealthy of the robots."
+		"ClassTips_8_2_Robot"			"They can cloak forever, making them a great choice for sneaking up on enemies."
+
+		"ClassTips_9_1_Robot"			"Robot Engineers can greatly help your team by making buildings."
+		"ClassTips_9_2_Robot"			"They can build special teleporters, which can set a new spawn point for your team."
+		
+		//-----------------------------------------
+		// OFFSHORE CONTENT
+		//-----------------------------------------
+		
+		// Taunts
+		"OFFSHORE_TauntDirtkick"				"Taunt: Boot Scootin' Brusier"
+		"OFFSHORE_TauntDirtkick_Desc"			"Eat my dust, dust eaters!"
+		"OFFSHORE_TauntFishing"					"Taunt: Texan Tacklin'"
+		"OFFSHORE_TauntFishing_Desc"			"This ain't regular fishing son!"
+		
+		// Killfeed Messages
+		"Humiliation_Kill_Marlin"			"MARLIN KILL!"
+		
+		// Weapons
+		"TFCW_Swordfish" 		"The Holy Marlin"	//Altranade
+		"TFCW_Swordfish_Desc"	"Mother's nature true sword\nExcept it's smelly and dead..."
+		"TFCW_Pipewrench" 		"Junction Bolter"		//Lettuce
+		"TFCW_Pipewrench_Desc"	"Call me a plumber one more time and you will regret it."
+		"TFCW_HellSticky" 		"The Hell Beneath"		//Haau
+		"TFCW_HellSticky_Desc"	"Waves are not measured in feet or inches, they are measured in increments of fear."
+
+
+		// Killfeed Messages
+		"Humiliation_Kill_Marlin"			"MARLIN KILL!"
+		
+		//Crate and Keys - [DISPLAY ONLY]
+		"Offshore2025_Crate_sea"			"Offshore Murky Case"
+		"Offshore2025_Crate_sea_desc"		"This Case is locked and requires a\nOffshore Murky Key to open.\n\nContains a community made item\nfrom the Offshore Collection."
+		"Offshore2025_Crate_sea_adtext"		"-Contains Community Cosmetics from the Offshore Murky Collection\n-Requires a Offshore Murky Key to open\n-Contents may be Strange and hats may be Unusual."
+		"Offshore2025_Crate_sea_key"			"Offshore Murky Key"
+		"Offshore2025_Crate_sea_key_desc"		"Used to Open the Offshore Murky Case"
+		"Offshore2025_Crate_sea_key_adtext"	"-Used to Open the Offshore Murky Case\n-Contents may be Strange and hats may be Unusual."
+		"Offshore2025_Crate_sea_footer"	"Contents may be Strange and hats may be Unusual with an Offshore effect"
+		
+		//-----------------------------------------
+		// WORKSHOP WEAPON TOOL
+		//-----------------------------------------
+		"TF_WorkshopWeaponTool_Title"				"Workshop Weapon Tool"
+		"TF_WorkshopWeaponTool_ModelPreview"			"Model Preview"
+		"TF_WorkshopWeaponTool_DragToRotate"			"Mouse 1 to rotate, Mouse 2 to zoom, Mouse 3 to pan"
+		"TF_WorkshopWeaponTool_BrowseMDL"			"Browse MDL..."
+		"TF_WorkshopWeaponTool_ResetView"			"Reset View"
+		"TF_WorkshopWeaponTool_AutoRotate"			"Auto-Rotate Model"
+		"TF_WorkshopWeaponTool_SelectWeapon"			"Select Target Weapon"
+		"TF_WorkshopWeaponTool_AddReplacement"		"Add Replacement"
+		"TF_WorkshopWeaponTool_ReplacementList"		"Replacement List"
+		"TF_WorkshopWeaponTool_RemoveSelected"		"Remove Selected"
+		"TF_WorkshopWeaponTool_ClearAll"				"Clear All"
+		"TF_WorkshopWeaponTool_OutputDir"			"Output Directory"
+		"TF_WorkshopWeaponTool_Browse"				"Browse..."
+		"TF_WorkshopWeaponTool_CreateMod"			"Create Weapon Mod"
+		
+		//-----------------------------------------
+		// WORKSHOP COSMETIC TOOL
+		//-----------------------------------------
+		"TF_WorkshopCosmeticTool_Title"				"Cosmetic Preview Tool"
+		"TF_WorkshopCosmeticTool_Preview"			"Cosmetic Preview"
+		"TF_WorkshopCosmeticTool_DragToRotate"		"Left-click to rotate, Middle-click to pan, Scroll to zoom"
+		"TF_WorkshopCosmeticTool_BrowseMDL"			"Browse MDL..."
+		"TF_WorkshopCosmeticTool_ResetView"			"Reset View"
+		"TF_WorkshopCosmeticTool_AutoRotate"		"Auto-Rotate"
+		"TF_WorkshopCosmeticTool_ModelPath"			"Model Path:"
+		"TF_WorkshopCosmeticTool_ClassSection"		"Mercenary Selection"
+		"TF_WorkshopCosmeticTool_Class"				"Class:"
+		"TF_WorkshopCosmeticTool_Team"				"Team:"
+		"TF_WorkshopCosmeticTool_PaintSection"		"Paint Color"
+		"TF_WorkshopCosmeticTool_PaintColor"		"Color:"
+		"TF_WorkshopCosmeticTool_UnusualSection"	"Unusual Effect"
+		"TF_WorkshopCosmeticTool_UnusualEffect"		"Effect:"
+		"TF_WorkshopCosmeticTool_InfoSection"		"Instructions"
+		"TF_WorkshopCosmeticTool_Info1"				"1. Click 'Browse MDL...' to select a cosmetic model file. The model will be loaded onto the selected mercenary class."
+		"TF_WorkshopCosmeticTool_Info2"				"2. Use the dropdowns to preview different paint colors and unusual effects on your cosmetic. Change classes to see how it looks on different mercenaries."
+
+		//-----------------------------------------
+		// LOADOUT SLOTS
+		//-----------------------------------------
+		"CF_Extra"					"EXTRAS"
+		"LoadoutSlot_Skin"				"Skin"
+		"ItemSel_SKIN"					"- SKIN"
+
+		//-----------------------------------------
+		// BETA WEAPONS
+		//-----------------------------------------
+		"TFCW_PadsPDA"		"The Solder Pad"
+		"TF_Object_SpeedPad"	"Speed Pad"
+		"TF_Object_JumpPad"	    "Jump Pad"
+		"Attrib_TeleporterPads" "Replaces Teleporters with a Speed Pad and a Jump Pad"
+		"Building_hud_speedpad_not_built" "Speed Pad\nNot Built"
+		"Building_hud_jumppad_not_built"  "Jump Pad\nNot Built"
+		
+		//-----------------------------------------
+		// UI STRINGS
+		//-----------------------------------------
+		"GameUI_Search"					"Search:"
+		"GameUI_AdvancedOptions"		"Advanced Options"
+	}
+}
