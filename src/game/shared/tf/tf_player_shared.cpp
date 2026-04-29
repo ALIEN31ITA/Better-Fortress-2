@@ -13198,33 +13198,42 @@ bool CTFPlayer::CanDisguise_OnKill( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int	CTFPlayer::GetMaxAmmo( int iAmmoIndex, int iClassIndex /*= -1*/ )
+int    CTFPlayer::GetMaxAmmo(int iAmmoIndex, int iClassIndex /*= -1*/)
 {
-	int iMax = ( iClassIndex == -1 ) ? m_PlayerClass.GetData()->m_aAmmoMax[iAmmoIndex] : GetPlayerClassData( iClassIndex )->m_aAmmoMax[iAmmoIndex];
-	if ( iAmmoIndex == TF_AMMO_PRIMARY )
+	int iMax = (iClassIndex == -1) ? m_PlayerClass.GetData()->m_aAmmoMax[iAmmoIndex] : GetPlayerClassData(iClassIndex)->m_aAmmoMax[iAmmoIndex];
+	if (iAmmoIndex == TF_AMMO_PRIMARY)
 	{
-		CALL_ATTRIB_HOOK_INT( iMax, mult_maxammo_primary );
+		CALL_ATTRIB_HOOK_INT(iMax, mult_maxammo_primary);
+		CALL_ATTRIB_HOOK_INT(iMax, maxammo_primary_override);
 	}
-	else if ( iAmmoIndex == TF_AMMO_SECONDARY )
+	else if (iAmmoIndex == TF_AMMO_SECONDARY)
 	{
-		CALL_ATTRIB_HOOK_INT( iMax, mult_maxammo_secondary );
+		CALL_ATTRIB_HOOK_INT(iMax, mult_maxammo_secondary);
+		CALL_ATTRIB_HOOK_INT(iMax, maxammo_secondary_override);
 	}
-	else if ( iAmmoIndex == TF_AMMO_METAL )
+	else if (iAmmoIndex == TF_AMMO_METAL)
 	{
-		CALL_ATTRIB_HOOK_INT( iMax, mult_maxammo_metal );
+		CALL_ATTRIB_HOOK_INT(iMax, mult_maxammo_metal);
+		CALL_ATTRIB_HOOK_INT(iMax, maxammo_metal_override);
 	}
-	else if ( iAmmoIndex == TF_AMMO_GRENADES1 )
+	else if (iAmmoIndex == TF_AMMO_GRENADES1)
 	{
-		CALL_ATTRIB_HOOK_INT( iMax, mult_maxammo_grenades1 );
+		CALL_ATTRIB_HOOK_INT(iMax, mult_maxammo_grenades1);
+		CALL_ATTRIB_HOOK_INT(iMax, maxammo_grenades1_override);
 	}
-	else if ( iAmmoIndex == TF_AMMO_GRENADES3 )
+	else if (iAmmoIndex == TF_AMMO_GRENADES2)
 	{
-		// All classes by default can carry a max of 1 "Grenade3" which is being used as ACTIONSLOT Throwables
-		iMax = 1;
+		CALL_ATTRIB_HOOK_INT(iMax, mult_maxammo_grenades2);
+		CALL_ATTRIB_HOOK_INT(iMax, maxammo_grenades2_override);
+	}
+	else if (iAmmoIndex == TF_AMMO_GRENADES3)
+	{
+		CALL_ATTRIB_HOOK_INT(iMax, mult_maxammo_grenades3);
+		CALL_ATTRIB_HOOK_INT(iMax, maxammo_grenades3_override);
 	}
 
 	// Haste Powerup Rune adds multiplier to Max Ammo
-	if ( m_Shared.GetCarryingRuneType() == RUNE_HASTE )
+	if (m_Shared.GetCarryingRuneType() == RUNE_HASTE)
 	{
 		iMax *= 2.0f;
 	}

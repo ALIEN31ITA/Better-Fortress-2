@@ -1264,6 +1264,28 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
+        "5033"
+        {
+            "name"    "maxammo primary override"
+            "attribute_class"    "maxammo_primary_override"
+            "description_string"    "unused"
+            "hidden"    "0"
+            "description_format"    "value_is_from_lookup_table"
+            "effect_type"    "neutral"
+            "armory_desc"    "on_wearer"
+            "stored_as_integer"    "0"
+        }
+        "5034"
+        {
+            "name"    "maxammo secondary override"
+            "attribute_class"    "maxammo_secondary_override"
+            "description_string"    "unused"
+            "hidden"    "0"
+            "description_format"    "value_is_from_lookup_table"
+            "effect_type"    "neutral"
+            "armory_desc"    "on_wearer"
+            "stored_as_integer"    "0"
+        }
 	}
 	"items"
 	{
@@ -2385,6 +2407,193 @@
 					"value"	"1"
 				}
 			}
+		}
+		"32441"
+		{
+			"name" "Cleaner's Carbine"
+			"first_sale_date"	"2012/06/27"
+			"enabled"	"1"
+			"item_class"	"tf_weapon_charged_smg"
+			"craft_class"	"weapon"
+			"craft_material_type"	"weapon"
+			"capabilities"
+			{
+				"nameable"		"1"
+				"can_craft_count"	"1"
+			}
+			"tags"
+			{
+				"can_deal_damage"			"1"
+				"can_deal_critical_damage"	"1"
+				"can_deal_mvm_penetration_damage"	"1"
+				"can_deal_long_distance_damage"	"1"
+				"can_be_festivized"		"1"
+			}
+			"item_logname"	"pro_smg"
+			"item_iconname"	"pro_smg"
+			"show_in_armory"			"1"
+			"moditem"					"1"
+			"item_name"	"Cleaner's Carbine"
+			"item_description"	"You have to deal 150 damage with this weapon to charge it."
+			"item_slot"	"secondary"
+			"item_quality"		"rarity1"
+			"anim_slot"	"null"
+			"min_ilevel"	"1"
+			"max_ilevel"	"1"
+			"image_inventory"	"backpack/workshop/weapons/c_models/c_pro_smg/c_pro_smg"
+			"image_inventory_size_w"		"128"
+			"image_inventory_size_h"		"82"
+			"model_player"	"models/workshop/weapons/c_models/c_pro_smg/c_pro_smg.mdl"
+//			"model_player"	"models/weapons/c_models/c_revolver/c_revolver.mdl"
+			"attach_to_hands"	"1"
+			"attributes"
+			{
+				"clip size penalty"
+				{
+					"attribute_class"	"mult_clipsize"
+					"value"	"0.80"
+				}
+				"crit mod disabled"
+				{
+					"attribute_class"	"mult_crit_chance"
+					"value"	"0"
+				}
+				"minicrit_boost_charge_rate"
+				{
+					"attribute_class" "minicrit_boost_charge_rate"
+					"value" "0.66"
+				}
+				"minicrit_boost_when_charged"
+				{
+					"attribute_class" "minicrit_boost_when_charged"
+					"value" "8"
+				}
+			}
+			"used_by_classes"
+			{
+				"engineer"	"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"					"10 0 -7"							
+			}
+			"visuals"
+			{
+				"animation_replacement"
+				{
+					"ACT_VM_DRAW" 							"ACT_VM_DEPLOY_3"
+					"ACT_VM_IDLE" 							"ACT_VM_IDLE_3"
+					"ACT_VM_PRIMARYATTACK" 					"ACT_VM_PRIMARYATTACK_3"
+					"ACT_VM_RELOAD"						"ACT_VM_RELOAD_3"
+					"ACT_SECONDARY_VM_INSPECT_START"					"ACT_SECONDARY_VM_INSPECT_START_2"
+					"ACT_SECONDARY_VM_INSPECT_IDLE"					"ACT_SECONDARY_VM_INSPECT_START_2"
+					"ACT_SECONDARY_VM_INSPECT_END"					"ACT_SECONDARY_VM_INSPECT_END_2"
+				}
+				"sound_single_shot"	"Weapon_UrbanProfessional.Single"
+				"sound_burst"		"Weapon_UrbanProfessional.SingleCrit"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_pro_smg/c_pro_smg_festivizer.mdl"
+					}
+				}
+			}
+			"mouse_pressed_sound"	"ui/item_light_gun_pickup.wav"
+			"drop_sound"		"ui/item_light_gun_drop.wav"
+		}
+		"32442"
+		{
+			"enabled"	"1"
+			"item_class"	"tf_weapon_handgun_engineer_secondary"
+			"craft_class"	"weapon"
+			"craft_material_type"	"weapon"
+			"name"		"ShortStop Engineer"
+			"capabilities"
+			{
+				"nameable"		"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"					"10 0 -11"
+				"weapon_stattrak_module_scale"				"0.66"
+
+			}
+			"tags"
+			{
+				"can_deal_damage"			"1"
+				"can_deal_critical_damage"	"1"
+				"can_deal_mvm_penetration_damage"	"1"
+				"can_deal_long_distance_damage"	"1"
+			}
+			"show_in_armory"	"1"
+			"moditem"		"1"
+			"item_type_name"	"#TF_Weapon_Peppergun"
+			"item_description"	"#TF_TheShortstop_Desc"
+			"item_name"	"#TF_TheShortstop"
+			"item_slot"	"secondary"
+			"anim_slot"	"secondary"
+			"item_quality"	"unique"
+			"item_logname"	"shortstop"
+			"item_iconname"	"shortstop"
+			"propername"	"1"
+			"min_ilevel"	"1"
+			"max_ilevel"	"1"
+			"image_inventory"	"backpack/workshop/weapons/c_models/c_shortstop/c_shortstop"
+			"image_inventory_size_w"		"128"
+			"image_inventory_size_h"		"82"
+			"model_player"	"models/workshop/weapons/c_models/c_shortstop/c_shortstop.mdl"
+			"attach_to_hands" "1"
+			"inspect_panel_dist" "27"
+			"used_by_classes"
+			{
+				"engineer"	"1"
+			}
+			"attributes"
+			{
+ 				"maxammo secondary override"
+ 				{
+ 					"attribute_class"	"maxammo_secondary_override"
+ 					"value"				"32"
+ 				}
+				"reload time increased hidden"
+				{
+					"attribute_class"	"mult_reload_time_hidden"
+					"value"	"1.5"
+				}
+				"disable fancy class select anim"
+				{
+					"attribute_class"	"disable_fancy_class_select_anim"
+					"value"	"1"
+				}
+			}
+			"visuals"
+			{
+				"sound_single_shot"	"Weapon_Short_Stop.Single"
+				"sound_burst"	"Weapon_Short_Stop.SingleCrit"
+				"sound_reload"		"Weapon_Short_Stop.Reload"
+				"muzzle_flash"	"muzzle_bignasty"
+				"tracer_effect"	"bullet_bignasty_tracer01"
+				"animation_replacement"
+				{
+					"ACT_VM_IDLE"	"ACT_SECONDARY_VM_IDLE_2"
+					"ACT_VM_DRAW"	"ACT_SECONDARY_VM_DRAW_2"
+					"ACT_VM_PRIMARYATTACK"	"ACT_SECONDARY_VM_PRIMARYATTACK_2"
+//					"ACT_MP_ATTACK_STAND_SECONDARYFIRE" "ACT_MP_PUSH_STAND_SECONDARY"
+//					"ACT_MP_ATTACK_CROUCH_SECONDARYFIRE""ACT_MP_PUSH_CROUCH_SECONDARY"
+//					"ACT_MP_ATTACK_SWIM_SECONDARYFIRE"	"ACT_MP_PUSH_SWIM_SECONDARY"
+					"ACT_VM_RELOAD"	"ACT_SECONDARY_VM_RELOAD_2"
+//					"ACT_MP_RELOAD_STAND"	"ACT_MP_RELOAD_STAND_SECONDARY_2"
+//					"ACT_MP_RELOAD_CROUCH"	"ACT_MP_RELOAD_CROUCH_SECONDARY_2"
+//					"ACT_MP_RELOAD_SWIM"	"ACT_MP_RELOAD_SWIM_SECONDARY_2"
+//					"ACT_MP_RELOAD_AIRWALK"	"ACT_MP_RELOAD_AIRWALK_SECONDARY_2"
+					"ACT_SECONDARY_VM_INSPECT_START"		"ACT_PRIMARY_ALT1_VM_INSPECT_START"
+					"ACT_SECONDARY_VM_INSPECT_IDLE"		"ACT_PRIMARY_ALT1_VM_INSPECT_IDLE"
+					"ACT_SECONDARY_VM_INSPECT_END"		"ACT_PRIMARY_ALT1_VM_INSPECT_END"
+				}
+			}
+			"mouse_pressed_sound"	"ui/item_light_gun_pickup.wav"
+			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 		"32005"
 		{
