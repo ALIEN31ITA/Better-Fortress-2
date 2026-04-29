@@ -29,7 +29,7 @@
 		"Tooltip_DisableCosmetics"			"If set, all cosmetic items (hats and misc items) will be hidden from view."
 		"CF_DisableUnusualEffects"			"Wyłącz Nietypowe Efekty"
 		"Tooltip_DisableUnusualEffects"		"If set, all unusual particle effects will be hidden from view."
-		"CF_DisableWeaponSkins"				"Disable Weapon Skins"
+		"CF_DisableWeaponSkins"				"Wyłącz Skórki Broni"
 		"Tooltip_DisableWeaponSkins"		"If set, all weapon skins and warpaints will be disabled, showing default weapon textures."
 		"CF_DisableHolidayThemes"			"Disable Holiday Themes"
 		"Tooltip_DisableHolidayThemes"		"If set, holiday-themed main menu backgrounds (Halloween, Christmas, etc.) will be disabled."
@@ -161,14 +161,14 @@
 		"TFCW_TonsilClamp"		"The Tonsil Guillotines"
 		"TFCW_TonsilClamp_Desc"	"Open wide."
 
-		"TF_Default_Itemdef"				"INVALID ITEM! PLEASE RE-EQUIP! \n GAME MOST LIKELY UPDATED!"
+		"TF_Default_Itemdef"			"NIEPRAWIDŁOWY PRZEDMIOT! PROSZĘ WYPOSAŻYĆ SIĘ PONOWNIE! \n GRA NAJPRAWDOPODOBNIEJ ZAKTUALIZOWAŁA!"
 		
 		//Preset Names
 		"TF_ItemPresetName4"			"E"
 		"TF_ItemPresetName5"			"F"
 				
 		// ARMORY FILTERS
-		"ArmoryFilter_ModItems"			"Mod Items"
+		"ArmoryFilter_ModItems"			"Przedmioty Moda"
 		
 		//Tips [TEST]
 		"Tip_6_Count"				"21"
@@ -282,9 +282,9 @@
 		
 		// Taunts
 		"OFFSHORE_TauntDirtkick"				"Taunt: Boot Scootin' Brusier"
-		"OFFSHORE_TauntDirtkick_Desc"			"Eat my dust, dust eaters!"
+		"OFFSHORE_TauntDirtkick_Desc"			"Jedzcie mój pył, zjadacze pyłu!"
 		"OFFSHORE_TauntFishing"					"Taunt: Texan Tacklin'"
-		"OFFSHORE_TauntFishing_Desc"			"This ain't regular fishing son!"
+		"OFFSHORE_TauntFishing_Desc"			"To nie jest zwykłe wędkowanie, synu!"
 		
 		// Killfeed Messages
 		"Humiliation_Kill_Marlin"			"MARLIN KILL!"
@@ -297,10 +297,6 @@
 		"TFCW_HellSticky" 		"The Hell Beneath"		//Haau
 		"TFCW_HellSticky_Desc"	"Waves are not measured in feet or inches, they are measured in increments of fear."
 
-
-		// Killfeed Messages
-		"Humiliation_Kill_Marlin"			"MARLIN KILL!"
-		
 		//Crate and Keys - [DISPLAY ONLY]
 		"Offshore2025_Crate_sea"			"Offshore Murky Case"
 		"Offshore2025_Crate_sea_desc"		"This Case is locked and requires a\nOffshore Murky Key to open.\n\nContains a community made item\nfrom the Offshore Collection."
@@ -353,18 +349,18 @@
 		// LOADOUT SLOTS
 		//-----------------------------------------
 		"CF_Extra"					"DODATKI"
-		"LoadoutSlot_Skin"				"Skin"
-		"ItemSel_SKIN"					"- SKIN"
+		"LoadoutSlot_Skin"				"Skóra"
+		"ItemSel_SKIN"					"- Skóra"
 
 		//-----------------------------------------
 		// BETA WEAPONS
 		//-----------------------------------------
 		"TFCW_PadsPDA"		"The Solder Pad"
 		"TF_Object_SpeedPad"	"Speed Pad"
-		"TF_Object_JumpPad"	    "Jump Pad"
-		"Attrib_TeleporterPads" "Replaces Teleporters with a Speed Pad and a Jump Pad"
-		"Building_hud_speedpad_not_built" "Speed Pad\nNot Built"
-		"Building_hud_jumppad_not_built"  "Jump Pad\nNot Built"
+		"TF_Object_JumpPad"	    "Skocznia"
+		"Attrib_TeleporterPads" "Zamienia Teleporty na Speed Pad i Skocznie"
+		"Building_hud_speedpad_not_built" "Speed Pad\nNiezbudowane"
+		"Building_hud_jumppad_not_built"  "Skocznia\nNiezbudowane"
 		
 		//-----------------------------------------
 		// UI STRINGS
