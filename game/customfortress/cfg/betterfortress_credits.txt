@@ -13,19 +13,25 @@ DESCRIPTION INFO_OPTIONS
 	}
 	"credit1_1"
 	{
-		"by Alien31, main_thing
-		NOTICE :If we forgot someone to credit in our mod, reach us in the discord please :("
+		"by Alien31, main_thing"
 		{ BOOL }
 		{ "1" }
 	}	
 	"credit1_2"
 	{
-		"PracticeMedicine - Discord RPC, misc. Fixes
-		Vvis - Give_econ command, Mini-Dispenser cost"
+		"PracticeMedicine - Discord RPC, Misc. Fixes"
+		"https://github.com/practicemedicine"
 		{ BOOL }
 		{ "1" }
 	}	
 	"credit1_3"
+	{
+		"Vvis - give_econ command, Mini-Dispenser cost"
+		"https://github.com/Lambdagon"
+		{ BOOL }
+		{ "1" }
+	}	
+	"credit1_4"
 	{
 		"Published by MIXERRULES"
 		"https://wiki.tf2sm.info"
@@ -39,14 +45,14 @@ DESCRIPTION INFO_OPTIONS
 	}	
 	"credit2_1"
 	{
-		"BetaM - Custom Items, Credits menu, misc. fixes"
+		"BetaM - Custom Items, Credits menu, Misc. Fixes"
 		"https://www.youtube.com/BetaM"
 		{ BOOL }
 		{ "1" }
 	}	
 	"credit2_2"
 	{
-		"CTrigger_Hurt - MVM Robots (Viewmodels,Anim & Texture fixes)"
+		"CTrigger_Hurt - MVM Robots (Viewmodels, Anim and Texture fixes)"
 		"https://steamcommunity.com/profiles/76561198036209556"
 		{ BOOL }
 		{ "1" }
@@ -83,15 +89,25 @@ DESCRIPTION INFO_OPTIONS
 	}	
 	"credit4_1"
 	{
-		"Haau - The Hell Beneath Stickybomb launcher
-		Altranade - The Holy Merlin"
+		"Haau - The Hell Beneath Stickybomb launcher"
 		{ BOOL }
 		{ "1" }
 	}
 	"credit4_2"
 	{
-		"TheHypedScoot - Scout Sandkick taunt
-		Dansky - Crate and key models"
+		"Altranade - The Holy Merlin"
+		{ BOOL }
+		{ "1" }
+	}
+	"credit4_3"
+	{
+		"TheHypedScoot - Scout Sandkick taunt"
+		{ BOOL }
+		{ "1" }
+	}
+	"credit4_4"
+	{
+		"Dansky - Crate and key models"
 		{ BOOL }
 		{ "1" }
 	}
@@ -148,8 +164,7 @@ DESCRIPTION INFO_OPTIONS
 	}	
 	"credit7_1"
 	{
-		"995qa
-		Fixed the mainmenu being broken on resolutions other than 16:9"
+		"995qa - Fixed the mainmenu being broken on resolutions other than 16:9"
 		{ BOOL }
 		{ "1" }
 	}

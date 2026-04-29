@@ -36,17 +36,14 @@
 			game+mod+custom_mod    |gameinfo_path|custom/*
 			// Enable this if you want to load your TF custom content.
 			//game+mod	|appid_440|tf/custom/*
-			
-			// Mount Workshop content (maps, models, materials, etc.)
-			game+mod				"|gameinfo_path|..\..\..\workshop\content\3768450\*"
 
 			// Now search loose files.  We'll set the directory containing the gameinfo.txt file
 			// as the first "mod" search path (after any user customizations).  This is also the one
 			// that's used when writing to the "mod" path.
-			mod+mod_write		|gameinfo_path|.
-			game+game_write		|gameinfo_path|.
-			vgui+vgui_write		|gameinfo_path|.
-			default_write_path	|gameinfo_path|.
+			mod+mod_write			|gameinfo_path|.
+			game+game_write			|gameinfo_path|.
+			vgui+vgui_write			|gameinfo_path|.
+			default_write_path		|gameinfo_path|.
 			gamebin				|gameinfo_path|bin
 
 			// We search VPK files before ordinary folders, because most files will be found in
@@ -62,7 +59,7 @@
 			game				|appid_440|hl2/hl2_sound_vo_english.vpk
 			game				|appid_440|hl2/hl2_sound_misc.vpk
 			game+vgui			|appid_440|hl2/hl2_misc.vpk
-			platform+vgui		|appid_440|platform/platform_misc.vpk
+			platform+vgui			|appid_440|platform/platform_misc.vpk
 
 			// Last, mount in shared HL2 and TF2 loose files
 			game				|appid_440|tf

@@ -13,6 +13,7 @@
 #include "tier1/strtools.h"
 
 #if defined( _WIN32 )
+#pragma warning ( disable : 4005 )
 #include <windows.h>
 #include <wininet.h>
 #pragma comment(lib, "wininet.lib")
@@ -397,7 +398,7 @@ bool CCrashUploadManager::SendHTTPPost( const char *pszURL, const char *pszMinid
 	
 	// For now, just send metadata as JSON in body
 	// In production, properly encode minidump + metadata as multipart/form-data
-	bool bResult = HttpSendRequest( hRequest, szHeaders, -1, 
+	bool bResult = HttpSendRequest( hRequest, szHeaders, static_cast<DWORD>(-1),
 		(void*)metadataData.Base(), metadataData.TellPut() );
 	
 	if ( bResult )

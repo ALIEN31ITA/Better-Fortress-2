@@ -25,6 +25,7 @@
 #include "tier0/memdbgon.h"
 
 ConVar tf_obj_build_rotation_speed( "tf_obj_build_rotation_speed", "250", FCVAR_REPLICATED | FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY, "Degrees per second to rotate building when player alt-fires during placement." );
+ConVar cf_obj_allow_build_on_dynamic( "cf_obj_allow_build_on_dynamic", "0", FCVAR_REPLICATED, "Allows Engineers to build on top of Dynamic entities, instead of World/BSP only." );
 
 //-----------------------------------------------------------------------------
 // Purpose: Parse our model and create the buildpoints in it
@@ -573,7 +574,7 @@ bool CBaseObject::CalculatePlacementPos( void )
 		UTIL_TraceHull( 
 			Vector( m_vecBuildOrigin.x, m_vecBuildOrigin.y, topZ ), 
 			Vector( m_vecBuildOrigin.x, m_vecBuildOrigin.y, flBoxBottomZ ), 
-			-vHalfBuildDimsXY, vHalfBuildDimsXY, MASK_PLAYERSOLID_BRUSHONLY, this, COLLISION_GROUP_PLAYER_MOVEMENT, &tr );
+			-vHalfBuildDimsXY, vHalfBuildDimsXY, MASK_PLAYERSOLID, this, COLLISION_GROUP_PLAYER_MOVEMENT, &tr );
 		bottomZ = tr.endpos.z;
 
 		// If there is no ground, then we can't place here.
@@ -606,11 +607,12 @@ bool CBaseObject::CalculatePlacementPos( void )
 	}
 
 	// Don't allow buildables on the train just yet.
-	if ( tr.m_pEnt && tr.m_pEnt->IsBSPModel() )
-	{
-		if ( FClassnameIs( tr.m_pEnt, "func_tracktrain" ) )
-			return false;
-	}
+	// OLD CODE: Why the check before actually seeing if you touch the floor?
+	//if ( tr.m_pEnt && tr.m_pEnt->IsBSPModel() )
+	//{
+	//	if ( FClassnameIs( tr.m_pEnt, "func_tracktrain" ) )
+	//		return false;
+	//}
 
 	// Verify that it's not on too much of a slope by seeing how far the corners are from the ground.
 	Vector vBottomCenter( m_vecBuildOrigin.x, m_vecBuildOrigin.y, bottomZ );
@@ -629,6 +631,21 @@ bool CBaseObject::CalculatePlacementPos( void )
 	m_vecBuildOrigin = vBottomLeft - m_vecBuildMins;
 
 	m_vecBuildCenterOfMass = m_vecBuildOrigin + Vector( 0, 0, vHalfBuildDims.z );
+
+	// Check if you Can Build on it
+	if ( tr.m_pEnt )
+	{
+		if ( cf_obj_allow_build_on_dynamic.GetBool() )
+			return true;
+
+		if ( tr.m_pEnt->IsWorld() )
+			 return true;
+
+		if ( tr.m_pEnt->m_nTFFlags & TFFLAG_SUPPORTS_ENGINEER_BUILDINGS )
+			return true;
+
+		return false;
+	}
 
 	return true;
 }
@@ -649,7 +666,7 @@ bool CBaseObject::VerifyCorner( const Vector &vBottomCenter, float xOffset, floa
 	UTIL_TraceLine( 
 		vStart, 
 		vStart - Vector( 0, 0, TF_OBJ_GROUND_CLEARANCE ), 
-		MASK_PLAYERSOLID_BRUSHONLY, this, COLLISION_GROUP_PLAYER_MOVEMENT, &tr );
+		MASK_PLAYERSOLID, this, COLLISION_GROUP_PLAYER_MOVEMENT, &tr ); //MASK_PLAYERSOLID_BRUSHONLY || COLLISION_GROUP_PLAYER_MOVEMENT
 
 	// Cannot build on very steep slopes ( > 45 degrees )
 	if ( tr.fraction < 1.0f )
@@ -701,7 +718,7 @@ bool CBaseObject::IsPlacementPosValid( void )
 		return false;
 
 	// Make sure we can see the final position (using a small hull to catch being able to build through seams in the map)
-	UTIL_TraceHull( pPlayer->EyePosition(), m_vecBuildOrigin + Vector( 0, 0, m_vecBuildMaxs[2] * 0.5 ), Vector( -2, -2, -2 ), Vector( 2, 2, 2 ), MASK_PLAYERSOLID_BRUSHONLY, pPlayer, COLLISION_GROUP_NONE, &tr );
+	UTIL_TraceHull( pPlayer->EyePosition(), m_vecBuildOrigin + Vector( 0, 0, m_vecBuildMaxs[2] * 0.5 ), Vector( -2, -2, -2 ), Vector( 2, 2, 2 ), MASK_PLAYERSOLID, pPlayer, COLLISION_GROUP_NONE, &tr );
 	if ( tr.fraction < 1.0 )
 	{
 		return false;

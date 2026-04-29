@@ -1525,7 +1525,6 @@ const char *g_szLoadoutStrings[] =
 	"head",			// LOADOUT_POSITION_HEAD,
 	"misc",			// LOADOUT_POSITION_MISC,
 	"action",		// LOADOUT_POSITION_ACTION,
-	"skin",			// LOADOUT_POSITION_SKIN,
 	"",				// LOADOUT_POSITION_MISC2
 
 	"taunt",		// LOADOUT_POSITION_TAUNT
@@ -1537,6 +1536,7 @@ const char *g_szLoadoutStrings[] =
 	"",				// LOADOUT_POSITION_TAUNT7
 	"",				// LOADOUT_POSITION_TAUNT8
 
+	"skin",			// LOADOUT_POSITION_SKIN,
 	"throwable",	// LOADOUT_POSITION_THROWABLE
 	"",				// LOADOUT_POSITION_THROWABLE2
 	"",				// LOADOUT_POSITION_THROWABLE3
@@ -1561,7 +1561,6 @@ const char *g_szLoadoutStringsForDisplay[] =
 	"#LoadoutSlot_Misc",		// LOADOUT_POSITION_HEAD
 	"#LoadoutSlot_Misc",		// LOADOUT_POSITION_MISC
 	"#LoadoutSlot_Action",		// LOADOUT_POSITION_ACTION
-	"#LoadoutSlot_Skin",		// LOADOUT_POSITION_SKIN
 	"#LoadoutSlot_Misc",		// LOADOUT_POSITION_MISC2
 	
 	"#LoadoutSlot_Taunt",		// LOADOUT_POSITION_TAUNT,
@@ -1572,6 +1571,8 @@ const char *g_szLoadoutStringsForDisplay[] =
 	"#LoadoutSlot_Taunt6",		// LOADOUT_POSITION_TAUNT6,
 	"#LoadoutSlot_Taunt7",		// LOADOUT_POSITION_TAUNT7,
 	"#LoadoutSlot_Taunt8",		// LOADOUT_POSITION_TAUNT8,
+
+	"#LoadoutSlot_Skin",		// LOADOUT_POSITION_SKIN
 
 	"#LoadoutSlot_Taunt",		// LOADOUT_POSITION_THROWABLE,
 	"#LoadoutSlot_Taunt2",		// LOADOUT_POSITION_THROWABLE2,

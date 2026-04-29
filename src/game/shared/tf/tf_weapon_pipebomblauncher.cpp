@@ -164,7 +164,7 @@ void CTFPipebombLauncher::ItemPostFrame( void )
 			return;
 
 		// If we're not holding down the attack button, launch our grenade
-		if ( m_iClip1 > 0  && !(pPlayer->m_nButtons & IN_ATTACK) && (pPlayer->m_afButtonReleased & IN_ATTACK) )
+		if ( ( m_iClip1 > 0 || m_iClip1 == -1 ) && !(pPlayer->m_nButtons & IN_ATTACK) && (pPlayer->m_afButtonReleased & IN_ATTACK) )
 		{
 			LaunchGrenade();
 		}
@@ -254,9 +254,9 @@ void CTFPipebombLauncher::WeaponIdle( void )
 	if ( !pPlayer )
 		return;
 
-	if ( m_flChargeBeginTime > 0 && m_iClip1 > 0 && (pPlayer->m_afButtonReleased & IN_ATTACK) )
+	if ( m_flChargeBeginTime > 0 && ( m_iClip1 > 0 || m_iClip1 == -1 ) && (pPlayer->m_afButtonReleased & IN_ATTACK) )
 	{
-		if ( m_iClip1 > 0 )
+		if ( m_iClip1 > 0 || m_iClip1 == -1 )
 		{
 			m_bWantsToShoot = true;
 		}

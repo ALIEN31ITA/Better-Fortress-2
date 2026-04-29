@@ -78,6 +78,8 @@ private:
 	bool m_bIsMVMTeleporter;
 	bool m_bOldMatchBuilding;
 
+	CHandle<C_ObjectTeleporter> m_hMatchingTeleporter;
+
 	int m_iDirectionArrowPoseParam;
 
 	HPARTICLEFFECT	m_hChargedEffect;

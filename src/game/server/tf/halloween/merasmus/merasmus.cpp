@@ -1221,7 +1221,7 @@ void CollectTargets( CBaseCombatCharacter *pCaster, float flSpellRange, int nTar
 void CastSpell( CMerasmus* pCaster, const char* pszCastingAttachmentName, float flSpellRange, float flMinDamage, float flMaxDamage, CBaseEntity* pTarget, int iSpellType )
 {
 	float flSpellTime = 5.f;
-	CMerasmus * pMerasmus = pCaster;
+	//CMerasmus * pMerasmus = pCaster;
 	pCaster->m_OnCastSpell.FireOutput( pTarget , pCaster );
 	if ( pTarget->IsPlayer() )
 	{

@@ -100,7 +100,12 @@ struct LoadoutPanelPositioningInstance
 
 bool IsTauntPanelPosition( int iButtonPos )
 {
-	return iButtonPos >= 10 && iButtonPos <= 17;
+	return iButtonPos >= 9 && iButtonPos <= 16;
+}
+
+bool IsExtraPanelPosition( int iButtonPos )
+{
+	return iButtonPos >= 20 && iButtonPos <= 24;
 }
 
 const LoadoutPanelPositioningInstance g_DefaultLoadoutPanelPositioning =
@@ -116,17 +121,20 @@ const LoadoutPanelPositioningInstance g_DefaultLoadoutPanelPositioning =
 		5,	// LOADOUT_POSITION_HEAD,
 		6,	// LOADOUT_POSITION_MISC,
 		8,	// LOADOUT_POSITION_ACTION,
-		8,	// LOADOUT_POSITION_SKIN, (same row as ACTION)
 		7,	// LOADOUT_POSITION_MISC2,
-		10,	// LOADOUT_POSITION_TAUNT,
-		11,	// LOADOUT_POSITION_TAUNT2,
-		12,	// LOADOUT_POSITION_TAUNT3,
-		13,	// LOADOUT_POSITION_TAUNT4,
-		14,	// LOADOUT_POSITION_TAUNT5,
-		15,	// LOADOUT_POSITION_TAUNT6,
-		16,	// LOADOUT_POSITION_TAUNT7,
-		17,	// LOADOUT_POSITION_TAUNT8,
-
+		9,	// LOADOUT_POSITION_TAUNT,
+		10,	// LOADOUT_POSITION_TAUNT2,
+		11,	// LOADOUT_POSITION_TAUNT3,
+		12,	// LOADOUT_POSITION_TAUNT4,
+		13,	// LOADOUT_POSITION_TAUNT5,
+		14,	// LOADOUT_POSITION_TAUNT6,
+		15,	// LOADOUT_POSITION_TAUNT7,
+		16,	// LOADOUT_POSITION_TAUNT8,
+		20, // LOADOUT_POSITION_SKIN
+		//21, // LOADOUT_POSITION_THROWABLE
+		//22, // LOADOUT_POSITION_THROWABLE2
+		//23, // LOADOUT_POSITION_THROWABLE3
+		//24, // LOADOUT_POSITION_THROWABLE4
 	}
 };
 
@@ -143,16 +151,20 @@ const LoadoutPanelPositioningInstance g_LoadoutPanelPositioning_Spy =
 		5,	// LOADOUT_POSITION_HEAD,
 		6,	// LOADOUT_POSITION_MISC,
 		8,	// LOADOUT_POSITION_ACTION,
-		8,	// LOADOUT_POSITION_SKIN, (same row as ACTION)
 		7,	// LOADOUT_POSITION_MISC2,
-		10,	// LOADOUT_POSITION_TAUNT,
-		11,	// LOADOUT_POSITION_TAUNT2,
-		12,	// LOADOUT_POSITION_TAUNT3,
-		13,	// LOADOUT_POSITION_TAUNT4,
-		14,	// LOADOUT_POSITION_TAUNT5,
-		15,	// LOADOUT_POSITION_TAUNT6,
-		16,	// LOADOUT_POSITION_TAUNT7,
-		17,	// LOADOUT_POSITION_TAUNT8,
+		9,	// LOADOUT_POSITION_TAUNT,
+		10,	// LOADOUT_POSITION_TAUNT2,
+		11,	// LOADOUT_POSITION_TAUNT3,
+		12,	// LOADOUT_POSITION_TAUNT4,
+		13,	// LOADOUT_POSITION_TAUNT5,
+		14,	// LOADOUT_POSITION_TAUNT6,
+		15,	// LOADOUT_POSITION_TAUNT7,
+		16,	// LOADOUT_POSITION_TAUNT8,
+		20, // LOADOUT_POSITION_SKIN
+		//21, // LOADOUT_POSITION_THROWABLE
+		//22, // LOADOUT_POSITION_THROWABLE2
+		//23, // LOADOUT_POSITION_THROWABLE3
+		//24, // LOADOUT_POSITION_THROWABLE4
 	}
 };
 
@@ -169,16 +181,20 @@ const LoadoutPanelPositioningInstance g_LoadoutPanelPositioning_Engineer =
 		5,	// LOADOUT_POSITION_HEAD,
 		6,	// LOADOUT_POSITION_MISC,
 		8,	// LOADOUT_POSITION_ACTION,
-		8,	// LOADOUT_POSITION_SKIN, (same row as ACTION)
 		7,	// LOADOUT_POSITION_MISC2,
-		10,	// LOADOUT_POSITION_TAUNT,
-		11,	// LOADOUT_POSITION_TAUNT2,
-		12,	// LOADOUT_POSITION_TAUNT3,
-		13,	// LOADOUT_POSITION_TAUNT4,
-		14,	// LOADOUT_POSITION_TAUNT5,
-		15,	// LOADOUT_POSITION_TAUNT6,
-		16,	// LOADOUT_POSITION_TAUNT7,
-		17,	// LOADOUT_POSITION_TAUNT8,
+		9,	// LOADOUT_POSITION_TAUNT,
+		10,	// LOADOUT_POSITION_TAUNT2,
+		11,	// LOADOUT_POSITION_TAUNT3,
+		12,	// LOADOUT_POSITION_TAUNT4,
+		13,	// LOADOUT_POSITION_TAUNT5,
+		14,	// LOADOUT_POSITION_TAUNT6,
+		15,	// LOADOUT_POSITION_TAUNT7,
+		16,	// LOADOUT_POSITION_TAUNT8,
+		20, // LOADOUT_POSITION_SKIN
+		//21, // LOADOUT_POSITION_THROWABLE
+		//22, // LOADOUT_POSITION_THROWABLE2
+		//23, // LOADOUT_POSITION_THROWABLE3
+		//24, // LOADOUT_POSITION_THROWABLE4
 	}
 };
 
@@ -443,6 +459,8 @@ CClassLoadoutPanel::CClassLoadoutPanel( vgui::Panel *parent )
 	m_pTauntHintLabel = NULL;
 	m_pTauntLabel = NULL;
 	m_pTauntCaratLabel = NULL;
+	m_pExtraLabel = NULL;
+	m_pExtraCaratLabel = NULL;
 	m_pPassiveAttribsLabel = NULL;
 	m_pLoadoutPresetPanel = NULL;
 	m_pPresetsExplanationPopup = NULL;
@@ -451,10 +469,12 @@ CClassLoadoutPanel::CClassLoadoutPanel( vgui::Panel *parent )
 	
 	m_pCharacterLoadoutButton = NULL;
 	m_pTauntLoadoutButton = NULL;
+	m_pExtraLoadoutButton = NULL;
 	m_pRedSkinButton = NULL;
 	m_pBluSkinButton = NULL;
 
 	m_bInTauntLoadoutMode = false;
+	m_bInExtraLoadoutMode = false;
 	m_iCurrentPreviewSkin = 0;  // Default to RED skin
 
 	g_pClassLoadoutPanel = this;
@@ -484,9 +504,12 @@ void CClassLoadoutPanel::ApplySchemeSettings( vgui::IScheme *pScheme )
 	m_pTauntHintLabel = dynamic_cast<vgui::Label*>( FindChildByName("TauntHintLabel") );
 	m_pTauntLabel = dynamic_cast<CExLabel*>( FindChildByName("TauntLabel") );
 	m_pTauntCaratLabel = dynamic_cast<CExLabel*>( FindChildByName("TauntCaratLabel") );
+	m_pExtraLabel = dynamic_cast<CExLabel*>( FindChildByName("ExtraLabel") );
+	m_pExtraCaratLabel = dynamic_cast<CExLabel*>( FindChildByName("ExtraCaratLabel") );
 	m_pBuildablesButton = dynamic_cast<CExButton*>( FindChildByName("BuildablesButton") );
 	m_pCharacterLoadoutButton = dynamic_cast<CExImageButton*>( FindChildByName("CharacterLoadoutButton") );
 	m_pTauntLoadoutButton = dynamic_cast<CExImageButton*>( FindChildByName("TauntLoadoutButton") );
+	m_pExtraLoadoutButton = dynamic_cast<CExImageButton*>( FindChildByName("ExtraLoadoutButton") );
 	m_pRedSkinButton = dynamic_cast<CExImageButton*>( FindChildByName("RedSkinButton") );
 	m_pBluSkinButton = dynamic_cast<CExImageButton*>( FindChildByName("BluSkinButton") );
 	m_pPassiveAttribsLabel = dynamic_cast<CExLabel*>( FindChildByName("PassiveAttribsLabel") );
@@ -547,24 +570,6 @@ void CClassLoadoutPanel::PerformLayout( void )
 {
 	BaseClass::PerformLayout();
 
-	// Apply custom sizing immediately after base class layout to override default sizes
-	for ( int i = 0; i < m_pItemModelPanels.Count(); i++ )
-	{
-		// Make the cosmetic slots (HEAD, MISC, MISC2) wider
-		if ( i == LOADOUT_POSITION_HEAD || i == LOADOUT_POSITION_MISC || i == LOADOUT_POSITION_MISC2 )
-		{
-			// Use fixed original dimensions
-			const int ORIGINAL_ITEM_PANEL_WIDTH = 140;
-			const int ORIGINAL_ITEM_PANEL_HEIGHT = 124;
-			
-			// Make cosmetic slots a bit wider
-			int cosmeticWidth = ORIGINAL_ITEM_PANEL_WIDTH + 210;
-			int cosmeticHeight = ORIGINAL_ITEM_PANEL_HEIGHT + 30;
-			m_pItemModelPanels[i]->SetSize( cosmeticWidth, cosmeticHeight );
-			m_pItemModelPanels[i]->InvalidateLayout( true );
-		}
-	}
-
 	// This is disabled by default in res file. IF we turn it on again, uncomment this.
 	/*if ( m_pPassiveAttribsLabel )
 	{
@@ -591,13 +596,25 @@ void CClassLoadoutPanel::PerformLayout( void )
 	{
 		m_pTauntCaratLabel->SetVisible( m_bInTauntLoadoutMode );
 	}
+	if ( m_pExtraLabel )
+	{
+		m_pExtraLabel->SetVisible( m_bInExtraLoadoutMode );
+	}
+	if ( m_pExtraCaratLabel )
+	{
+		m_pExtraCaratLabel->SetVisible( m_bInExtraLoadoutMode );
+	}
 	if ( m_pCharacterLoadoutButton )
 	{
-		UpdatePageButtonColor( m_pCharacterLoadoutButton, !m_bInTauntLoadoutMode );
+		UpdatePageButtonColor( m_pCharacterLoadoutButton, !m_bInTauntLoadoutMode && !m_bInExtraLoadoutMode );
 	}
 	if ( m_pTauntLoadoutButton )
 	{
 		UpdatePageButtonColor( m_pTauntLoadoutButton, m_bInTauntLoadoutMode );
+	}
+	if ( m_pExtraLoadoutButton )
+	{
+		UpdatePageButtonColor( m_pExtraLoadoutButton, m_bInExtraLoadoutMode );
 	}
 
 	UpdateSkinButtonColors();
@@ -605,18 +622,18 @@ void CClassLoadoutPanel::PerformLayout( void )
 	// Show skin buttons only in character loadout mode
 	if ( m_pRedSkinButton )
 	{
-		m_pRedSkinButton->SetVisible( !m_bInTauntLoadoutMode );
+		m_pRedSkinButton->SetVisible( !m_bInTauntLoadoutMode && !m_bInExtraLoadoutMode );
 	}
 	if ( m_pBluSkinButton )
 	{
-		m_pBluSkinButton->SetVisible( !m_bInTauntLoadoutMode );
+		m_pBluSkinButton->SetVisible( !m_bInTauntLoadoutMode && !m_bInExtraLoadoutMode );
 	}
 
 	FOR_EACH_VEC( m_vecItemOptionButtons, i )
 	{
 		m_vecItemOptionButtons[i]->SetVisible( false );
 	}
-	
+
 	for ( int i = 0; i < m_pItemModelPanels.Count(); i++ )
 	{
 		// Viewing a class loadout. Layout the buttons & the class image.
@@ -632,10 +649,26 @@ void CClassLoadoutPanel::PerformLayout( void )
 			iButtonPos = g_VisibleLoadoutSlotsPerClass[m_iCurrentClassIndex]->m_iPos[i];
 		}
 
+		DevMsg("Slot %2d -> Pos %2d | Taunt:%d Extra:%d\n",
+			i,
+			iButtonPos,
+			IsTauntPanelPosition(iButtonPos),
+			IsExtraPanelPosition(iButtonPos)
+		);
+
 		bool bIsVisible = false;
-		if ( iButtonPos > 0 )
+		if (iButtonPos > 0)
 		{
-			bIsVisible = m_bInTauntLoadoutMode ? IsTauntPanelPosition( iButtonPos ) : !IsTauntPanelPosition( iButtonPos );
+			const bool isExtra = IsExtraPanelPosition(iButtonPos);
+			const bool isTaunt = IsTauntPanelPosition(iButtonPos);
+
+			if (m_bInTauntLoadoutMode) {
+				bIsVisible = isTaunt;
+			} else if (m_bInExtraLoadoutMode) {
+				bIsVisible = isExtra;
+			} else {
+				bIsVisible = !isTaunt && !isExtra;
+			}
 		}
 		m_pItemModelPanels[i]->SetVisible( bIsVisible );
 
@@ -645,12 +678,15 @@ void CClassLoadoutPanel::PerformLayout( void )
 			{
 				iButtonPos -= g_VisibleLoadoutSlotsPerClass[m_iCurrentClassIndex]->m_iPos[LOADOUT_POSITION_TAUNT];
 			}
+			else if ( m_bInExtraLoadoutMode )
+			{
+				iButtonPos -= g_VisibleLoadoutSlotsPerClass[m_iCurrentClassIndex]->m_iPos[LOADOUT_POSITION_SKIN];
+			}
 			else
 			{
 				iButtonPos--;
 			}
 			
-
 			m_pItemModelPanels[i]->SetNoItemText( ItemSystem()->GetItemSchema()->GetLoadoutStringsForDisplay( EEquipType_t::EQUIP_TYPE_CLASS )[i] );
 
 			int iCenter = GetWide() * 0.5;
@@ -662,105 +698,11 @@ void CClassLoadoutPanel::PerformLayout( void )
 			int	iXPos = iCenter + iOffset;
 			int	iYPos = m_iItemYPos + (m_iItemYDelta * iYButtonPos);
 
-			// Special positioning for Action and Skin slots to be side by side
-			if ( i == LOADOUT_POSITION_ACTION || i == LOADOUT_POSITION_SKIN )
-			{
-				// Both slots are at position 8, so they'll have the same base coordinates
-				// Place Action slot on the left, Skin slot on the right (but smaller)
-				int actionSkinBaseX = iXPos;
-				int actionSkinBaseY = iYPos;
-				
-				if ( i == LOADOUT_POSITION_ACTION )
-				{
-					// Action slot: normal position
-					m_pItemModelPanels[i]->SetPos( actionSkinBaseX, actionSkinBaseY );
-				}
-				else // LOADOUT_POSITION_SKIN
-				{
-					// Skin slot: positioned to the right of action slot, with more spacing
-					int actionSlotWidth = (int)(140 * 1.15f); // Use the actual scaled width
-					int skinSlotSpacing = 35;  // Increased gap between slots (was 10)
-					int skinSlotX = actionSkinBaseX + actionSlotWidth + skinSlotSpacing;
-					m_pItemModelPanels[i]->SetPos( skinSlotX, actionSkinBaseY );
-				}
-			}
-			else
-			{
-				// Normal positioning for all other slots
-				m_pItemModelPanels[i]->SetPos( iXPos, iYPos );
-			}
-
-			// Make the skin slot slightly smaller than other panels
-			if ( i == LOADOUT_POSITION_HEAD || i == LOADOUT_POSITION_MISC || i == LOADOUT_POSITION_MISC2 )
-			{	
-				// Apply custom positioning settings to pan icons and text to the left
-				KeyValues *pKVs = new KeyValues( "CosmeticSlotSettings" );
-				pKVs->SetInt( "text_center", 0 );     // Disable text centering
-				pKVs->SetInt( "text_xpos", 20 );      // Position text towards left
-				m_pItemModelPanels[i]->ApplySettings( pKVs );
-				pKVs->deleteThis();		
-				
-				// Force layout recalculation to let the panel auto-scale its contents
-				m_pItemModelPanels[i]->InvalidateLayout( true );
-			}
-
-			// Make the skin slot slightly smaller than other panels
-			if ( i == LOADOUT_POSITION_SKIN )
-			{
-				// Use fixed original dimensions to prevent progressive shrinking
-				// Based on the default item panel size from resource files
-				const int ORIGINAL_ITEM_PANEL_WIDTH = 140;
-				const int ORIGINAL_ITEM_PANEL_HEIGHT = 124;
-				
-				// Set to slightly smaller size (85% of original, up from 75%)
-				int skinWidth = (int)(ORIGINAL_ITEM_PANEL_WIDTH * 1.15f);
-				int skinHeight = (int)(ORIGINAL_ITEM_PANEL_HEIGHT * 1.25f);
-				m_pItemModelPanels[i]->SetSize( skinWidth, skinHeight );
-				
-				// Apply custom positioning settings to pan icons and text to the left
-				KeyValues *pKVs = new KeyValues( "SkinSlotSettings" );
-				pKVs->SetInt( "model_center_x", 0 );  // Disable centering
-				pKVs->SetInt( "model_xpos", -10 );     // Position icon towards left
-				pKVs->SetInt( "text_center", 0 );     // Disable text centering
-				pKVs->SetInt( "text_xpos", -30 );      // Position text towards left
-				m_pItemModelPanels[i]->ApplySettings( pKVs );
-				pKVs->deleteThis();
-				
-				// Force layout recalculation to let the panel auto-scale its contents
-				m_pItemModelPanels[i]->InvalidateLayout( true );
-			}
-
-			// Make the action slot the same size as the skin slot
-			if ( i == LOADOUT_POSITION_ACTION )
-			{
-				// Use fixed original dimensions to prevent progressive shrinking
-				// Based on the default item panel size from resource files
-				const int ORIGINAL_ITEM_PANEL_WIDTH = 140;
-				const int ORIGINAL_ITEM_PANEL_HEIGHT = 124;
-				
-				// Set to same size as skin slot
-				int actionWidth = (int)(ORIGINAL_ITEM_PANEL_WIDTH * 1.15f);
-				int actionHeight = (int)(ORIGINAL_ITEM_PANEL_HEIGHT * 1.25f);
-				m_pItemModelPanels[i]->SetSize( actionWidth, actionHeight );
-				
-				// Apply custom positioning settings to pan icons and text to the left
-				KeyValues *pKVs = new KeyValues( "ActionSlotSettings" );
-				pKVs->SetInt( "model_center_x", 0 );  // Disable centering
-				pKVs->SetInt( "model_xpos", -10 );     // Position icon towards left
-				pKVs->SetInt( "text_center", 0 );     // Disable text centering
-				pKVs->SetInt( "text_xpos", -30 );      // Position text towards left
-				m_pItemModelPanels[i]->ApplySettings( pKVs );
-				pKVs->deleteThis();
-				
-				// Force layout recalculation to let the panel auto-scale its contents
-				m_pItemModelPanels[i]->InvalidateLayout( true );
-			}
-
 			// Update position and visibility of the item option buttons
 			if ( i < m_vecItemOptionButtons.Count() )
 			{
 				// Place the button just inside the item model panel
-				CExButton* pItemOptionsPanel = m_vecItemOptionButtons[iButtonPos];
+				CExButton* pItemOptionsPanel = m_vecItemOptionButtons[i];
 				int iButtonWide = m_pItemModelPanels[i]->GetWide();
 				int iMyWide = pItemOptionsPanel->GetWide();
 				int iOptionsXPos = iColumn == 0 
@@ -770,9 +712,11 @@ void CClassLoadoutPanel::PerformLayout( void )
 
 				CEconItemView *pItemData = TFInventoryManager()->GetItemInLoadoutForClass( m_iCurrentClassIndex, i );
 				// Enable or disable the item options button for this item model panel
-				pItemOptionsPanel->SetVisible( !m_bInTauntLoadoutMode && AnyOptionsAvailableForItem( pItemData ) );
+				pItemOptionsPanel->SetVisible( !m_bInTauntLoadoutMode && !m_bInExtraLoadoutMode && AnyOptionsAvailableForItem( pItemData ) );
 				pItemOptionsPanel->SetCommand( CFmtStr( "options%d", i ) );
 			}
+
+			m_pItemModelPanels[i]->SetPos(iXPos, iYPos);
 		}
 
 		m_pItemModelPanels[ i ]->SetSelected( false );
@@ -1315,11 +1259,19 @@ void CClassLoadoutPanel::SetLoadoutPage( classloadoutpage_t loadoutPage )
 		case CHARACTER_LOADOUT_PAGE:
 		{
 			m_bInTauntLoadoutMode = false;
+			m_bInExtraLoadoutMode = false;
 		}
 		break;
 		case TAUNT_LOADOUT_PAGE:
 		{
 			m_bInTauntLoadoutMode = true;
+			m_bInExtraLoadoutMode = false;
+		}
+		break;
+		case EXTRA_LOADOUT_PAGE:
+		{
+			m_bInTauntLoadoutMode = false;
+			m_bInExtraLoadoutMode = true;
 		}
 		break;
 		default:
@@ -1345,6 +1297,11 @@ void CClassLoadoutPanel::OnCommand( const char *command )
 	else if ( FStrEq( command, "tauntloadout" ) )
 	{
 		SetLoadoutPage( TAUNT_LOADOUT_PAGE );
+		return;
+	}
+	else if ( FStrEq( command, "extraloadout" ) )
+	{
+		SetLoadoutPage( EXTRA_LOADOUT_PAGE );
 		return;
 	}
 	else if ( FStrEq( command, "skinred" ) )

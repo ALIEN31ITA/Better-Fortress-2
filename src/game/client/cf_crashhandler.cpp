@@ -18,6 +18,7 @@
 #include <time.h>
 
 #if defined( _WIN32 )
+#pragma warning ( disable : 4005 )
 #include <windows.h>
 #include <dbghelp.h>
 #include <shlobj.h>

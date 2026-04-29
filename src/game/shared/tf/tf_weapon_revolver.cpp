@@ -41,6 +41,7 @@ END_DATADESC()
 #endif
 
 CREATE_SIMPLE_WEAPON_TABLE( TFRevolver_Secondary, tf_weapon_revolver_secondary )
+CREATE_SIMPLE_WEAPON_TABLE( TFRevolver_Melee, tf_weapon_revolver_melee )
 
 //=============================================================================
 //
@@ -338,12 +339,14 @@ float CTFRevolver::GetProjectileDamage( void )
 	float flDamageMod = 1.0f;
 	int iExtraDamageOnHit = 0;
 	CALL_ATTRIB_HOOK_INT( iExtraDamageOnHit, extra_damage_on_hit );
+	int iExtraDamageOnHitPenalty = 0;
+	CALL_ATTRIB_HOOK_INT(iExtraDamageOnHitPenalty, extra_damage_on_hit_penalty);
 	if ( iExtraDamageOnHit )
 	{
 		CTFPlayer *pOwner = ToTFPlayer( GetOwner() );
 		if ( pOwner )
 		{
-			flDamageMod = 1.0f + ( Min( 200, pOwner->m_Shared.GetDecapitations() ) * 0.01f );
+			flDamageMod = 1.0f + ( Min( 200, pOwner->m_Shared.GetDecapitations() + iExtraDamageOnHitPenalty) * 0.01f );
 		}
 	}
 

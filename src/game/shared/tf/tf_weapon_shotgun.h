@@ -193,4 +193,14 @@ public:
 	virtual bool	IsViewModelFlipped( void );
 };
 
+//=============================================================================
+// Leech Shotgun (Possibly Specialist?)
+class CTFLeech : public CTFScatterGun
+{
+public:
+	DECLARE_CLASS( CTFLeech, CTFScatterGun );
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+};
+
 #endif // TF_WEAPON_SHOTGUN_H

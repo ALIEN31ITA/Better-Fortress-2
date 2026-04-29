@@ -2150,6 +2150,57 @@ int Script_PrecacheModel( const char *modelname )
 	return nModelIndex;
 }
 
+int Script_PrecacheModelWithGibs( const char *modelname )
+{
+	if ( !modelname || !*modelname )
+	{
+		Log_Warning( LOG_VScript, "Script_PrecacheModelWithGibs: NULL/empty modelname\n" );
+		return -1;
+	}
+
+	const bool bPrecacheAllowed = CBaseEntity::IsPrecacheAllowed();
+	CBaseEntity::SetAllowPrecache( true );
+
+	int nModelIndex = CBaseEntity::PrecacheModel( modelname ); 
+	PrecacheGibsForModel( nModelIndex );
+
+	CBaseEntity::SetAllowPrecache( bPrecacheAllowed );
+
+	return nModelIndex;
+}
+
+void Script_PrecacheMaterial( const char *pMaterialName )
+{
+    if ( !pMaterialName || !*pMaterialName )
+	{
+		Log_Warning( LOG_VScript, "Script_PrecacheMaterial: NULL/empty material\n" );
+		return;
+	}
+
+    const bool bPrecacheAllowed = CBaseEntity::IsPrecacheAllowed();
+    CBaseEntity::SetAllowPrecache( true );
+
+    PrecacheMaterial( pMaterialName );
+
+    CBaseEntity::SetAllowPrecache( bPrecacheAllowed );
+}
+
+void Script_PrecacheParticleSystem( const char *pParticleSystemName )
+{
+    if ( !pParticleSystemName || !*pParticleSystemName )
+	{
+		Log_Warning( LOG_VScript, "Script_PrecacheParticleSystem: NULL/empty particle system\n" );
+		return;
+	}
+
+    const bool bPrecacheAllowed = CBaseEntity::IsPrecacheAllowed();
+    CBaseEntity::SetAllowPrecache( true );
+
+    PrecacheParticleSystem( pParticleSystemName );
+
+    CBaseEntity::SetAllowPrecache( bPrecacheAllowed );
+}
+
 extern bool g_bPermitDirectSoundPrecache;
 
 bool Script_PrecacheSound( const char *soundname )
@@ -2828,6 +2879,9 @@ bool VScriptServerInit()
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_ScreenFade, "ScreenFade", "Start a screenfade with the following parameters. player, red, green, blue, alpha, flFadeTime, flFadeHold, flags" );
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_ChangeLevel, "ChangeLevel", "Tell engine to change level." );
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_PrecacheModel, "PrecacheModel", "Precache a model. Returns the modelindex." );
+				ScriptRegisterFunctionNamed( g_pScriptVM, Script_PrecacheModelWithGibs, "PrecacheModelWithGibs", "Precache a model that has gibs inside. Returns the modelindex." );
+				ScriptRegisterFunctionNamed( g_pScriptVM, Script_PrecacheMaterial, "PrecacheMaterial", "Precache a material." );
+				ScriptRegisterFunctionNamed( g_pScriptVM, Script_PrecacheParticleSystem, "PrecacheParticleSystem", "Precache a particle." );
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_PrecacheSound, "PrecacheSound", "Precache a sound." );
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_PrecacheScriptSound, "PrecacheScriptSound", "Precache a sound." );
 				ScriptRegisterFunctionNamed( g_pScriptVM, Script_IsModelPrecached, "IsModelPrecached", "Checks if the modelname is precached." );
@@ -3259,6 +3313,22 @@ DECLARE_SCRIPT_CONST( FDmgType, DMG_BLAST_SURFACE )
 DECLARE_SCRIPT_CONST( FDmgType, DMG_DIRECT )
 DECLARE_SCRIPT_CONST( FDmgType, DMG_BUCKSHOT )
 REGISTER_SCRIPT_CONST_TABLE( FDmgType )
+
+DECLARE_SCRIPT_CONST_TABLE( PhysFlag )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_DMG_SLICE )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_CONSTRAINT_STATIC )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_PLAYER_HELD )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_PART_OF_RAGDOLL )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_MULTIOBJECT_ENTITY )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_HEAVY_OBJECT )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_PENETRATING )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_NO_PLAYER_PICKUP )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_WAS_THROWN )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_DMG_DISSOLVE )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_NO_IMPACT_DMG )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_NO_NPC_IMPACT_DMG )
+DECLARE_SCRIPT_CONST( PhysFlag, FVPHYSICS_NO_SELF_COLLISIONS )
+REGISTER_SCRIPT_CONST_TABLE( PhysFlag )
 
 DECLARE_SCRIPT_CONST_TABLE( ESpectatorMode )
 DECLARE_SCRIPT_CONST( ESpectatorMode, OBS_MODE_NONE )

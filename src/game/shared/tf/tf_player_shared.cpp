@@ -3045,7 +3045,7 @@ void CTFPlayerShared::ConditionGameRulesThink( void )
 	TestAndExpireChargeEffect( MEDIGUN_CHARGE_INVULN );
 	TestAndExpireChargeEffect( MEDIGUN_CHARGE_CRITICALBOOST );
 	TestAndExpireChargeEffect( MEDIGUN_CHARGE_MEGAHEAL );
-	TestAndExpireChargeEffect( MEDIGUN_CHARGE_CLOAK );
+	//TestAndExpireChargeEffect( MEDIGUN_CHARGE_CLOAK );
 	//TestAndExpireChargeEffect( MEDIGUN_CHARGE_BULLET_RESIST );
 	//TestAndExpireChargeEffect( MEDIGUN_CHARGE_BLAST_RESIST );
 	//TestAndExpireChargeEffect( MEDIGUN_CHARGE_FIRE_RESIST );
@@ -9041,7 +9041,7 @@ void CTFPlayerShared::RecalculateChargeEffects( bool bInstantRemove )
 	SetChargeEffect( MEDIGUN_CHARGE_BULLET_RESIST,	aCharges[MEDIGUN_CHARGE_BULLET_RESIST].bActive,	bInstantRemove, g_MedigunEffects[ MEDIGUN_CHARGE_BULLET_RESIST ],	0.0f,						aCharges[MEDIGUN_CHARGE_BULLET_RESIST].pProvider );
 	SetChargeEffect( MEDIGUN_CHARGE_BLAST_RESIST,	aCharges[MEDIGUN_CHARGE_BLAST_RESIST].bActive,	bInstantRemove, g_MedigunEffects[ MEDIGUN_CHARGE_BLAST_RESIST ],	0.0f,						aCharges[MEDIGUN_CHARGE_BLAST_RESIST].pProvider );
 	SetChargeEffect( MEDIGUN_CHARGE_FIRE_RESIST,	aCharges[MEDIGUN_CHARGE_FIRE_RESIST].bActive,	bInstantRemove, g_MedigunEffects[ MEDIGUN_CHARGE_FIRE_RESIST ],		0.0f,						aCharges[MEDIGUN_CHARGE_FIRE_RESIST].pProvider );
-	SetChargeEffect( MEDIGUN_CHARGE_CLOAK,	        aCharges[MEDIGUN_CHARGE_CLOAK].bActive,     	bInstantRemove, g_MedigunEffects[ MEDIGUN_CHARGE_CLOAK ],			0.5f,					aCharges[MEDIGUN_CHARGE_CLOAK].pProvider );
+	SetChargeEffect( MEDIGUN_CHARGE_CLOAK,	        aCharges[MEDIGUN_CHARGE_CLOAK].bActive,     	bInstantRemove, g_MedigunEffects[ MEDIGUN_CHARGE_CLOAK ],			0.0f,					aCharges[MEDIGUN_CHARGE_CLOAK].pProvider );
 }
 
 //-----------------------------------------------------------------------------

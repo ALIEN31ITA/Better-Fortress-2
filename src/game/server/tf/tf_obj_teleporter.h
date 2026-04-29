@@ -138,7 +138,8 @@ protected:
 	CNetworkVar( bool, m_bMatchBuilding );
 	CNetworkVar( bool, m_bIsMVMTeleporter );
 
-	CHandle<CObjectTeleporter> m_hMatchingTeleporter;
+	//CHandle<CObjectTeleporter> m_hMatchingTeleporter;
+	CNetworkHandle( CObjectTeleporter, m_hMatchingTeleporter );
 
 	float m_flLastStateChangeTime;
 

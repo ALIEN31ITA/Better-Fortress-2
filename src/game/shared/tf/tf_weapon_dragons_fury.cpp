@@ -157,7 +157,6 @@ CBaseEntity* CTFWeaponFlameBall::FireProjectile( CTFPlayer *pPlayer )
 	Vector vecShootPos = pPlayer->Weapon_ShootPosition();
 	// Shoot from the right location
 	Vector vecSrc = vecShootPos + ( vecUp * -9.0f ) + ( vecRight * fRight ) + ( vecForward * 3.0f );
-	
 	CTFProjectile_Rocket *pRocket = static_cast<CTFProjectile_Rocket*>( CBaseEntity::CreateNoSpawn( "tf_projectile_balloffire", vecSrc, angForward, pPlayer ) );
 	if ( pRocket )
 	{

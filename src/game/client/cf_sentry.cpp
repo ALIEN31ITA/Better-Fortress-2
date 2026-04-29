@@ -9,9 +9,10 @@
 
 #if USE_SENTRY
 
-// Include Sentry Native SDK
-// Download from: https://github.com/getsentry/sentry-native
-// Or install via: vcpkg install sentry-native
+#ifdef _WIN32
+#pragma warning ( disable : 4005 )
+#endif // _WIN32
+
 #include "sentry.h"
 
 #include "tier1/convar.h"

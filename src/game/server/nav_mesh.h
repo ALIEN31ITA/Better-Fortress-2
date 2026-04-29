@@ -856,7 +856,7 @@ public:
 			float yMax = yMin + area->GetSizeY();
 
 			// clip ray to area
-			Vector exit;
+			Vector exit(0.0f, 0.0f, 0.0f);
 			NavDirType edge = NUM_DIRECTIONS;
 
 			if ( to.x < 0.0f )

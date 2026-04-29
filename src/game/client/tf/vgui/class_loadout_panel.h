@@ -101,7 +101,8 @@ public:
 	enum classloadoutpage_t
 	{
 		CHARACTER_LOADOUT_PAGE,
-		TAUNT_LOADOUT_PAGE
+		TAUNT_LOADOUT_PAGE,
+		EXTRA_LOADOUT_PAGE
 	};
 	void			SetLoadoutPage( classloadoutpage_t loadoutPage );
 
@@ -120,17 +121,21 @@ protected:
 	int						m_iCurrentPreviewSkin;	// 0 = RED, 1 = BLU
 	bool					m_bLoadoutHasChanged;
 	bool					m_bInTauntLoadoutMode;
+	bool					m_bInExtraLoadoutMode;
 	CTFPlayerModelPanel		*m_pPlayerModelPanel;
 	CEquipSlotItemSelectionPanel	*m_pSelectionPanel;
 	vgui::Label				*m_pTauntHintLabel;
 	CExLabel				*m_pTauntLabel;
 	CExLabel				*m_pTauntCaratLabel;
+	CExLabel				*m_pExtraLabel;
+	CExLabel				*m_pExtraCaratLabel;
 	CExLabel				*m_pPassiveAttribsLabel;
 	Panel					*m_pTopLinePanel;
 
 	CExButton				*m_pBuildablesButton;
 	CExImageButton			*m_pCharacterLoadoutButton;
 	CExImageButton			*m_pTauntLoadoutButton;
+	CExImageButton			*m_pExtraLoadoutButton;
 	CExImageButton			*m_pRedSkinButton;
 	CExImageButton			*m_pBluSkinButton;
 

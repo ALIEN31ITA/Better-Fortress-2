@@ -356,6 +356,7 @@ public:
 
 	//Inputs
 	void InputStopAndUseComputer( inputdata_t &inputdata );
+	void InputSetPath( inputdata_t &inputdata );
 
 	const char* m_iszDeathSound;
 	const char* m_iszHurtSound;

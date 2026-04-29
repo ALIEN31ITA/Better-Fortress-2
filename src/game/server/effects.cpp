@@ -1210,7 +1210,13 @@ void CBlood::InputEmitBlood( inputdata_t &inputdata )
 			nFlags |= FX_BLOODSPRAY_GORE;
 		}
 
+#ifdef TF_DLL
+		const char *pszParticle = "blood_impact_red_01";
+		DispatchParticleEffect( pszParticle, GetAbsOrigin(), GetAbsAngles() );
+#else
 		UTIL_BloodSpray(GetAbsOrigin(), Direction(), Color(), BloodAmount(), nFlags);
+#endif
+
 	}
 }
 

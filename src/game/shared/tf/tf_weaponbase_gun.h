@@ -53,6 +53,7 @@ public:
 	virtual void PrimaryAttack();
 	virtual void SecondaryAttack( void );
 	virtual bool Holster( CBaseCombatWeapon *pSwitchingTo );
+	float GetCorrectedNextAttackTime(float flAttackTime, float flFireDelay) const;
 
 	// Derived classes call this to fire a bullet.
 	//bool TFBaseGunFire( void );

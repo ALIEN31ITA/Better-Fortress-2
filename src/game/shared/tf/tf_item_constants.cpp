@@ -24,9 +24,6 @@ static const char *s_loadout_position_names[] =
 	
 	// other
 	"LOADOUT_POSITION_ACTION",
-
-	// Special skin slot for whole body cosmetics
-	"LOADOUT_POSITION_SKIN",
 	
 	// More wearables, yay!
 	"LOADOUT_POSITION_MISC2",
@@ -40,6 +37,9 @@ static const char *s_loadout_position_names[] =
 	"LOADOUT_POSITION_TAUNT6",
 	"LOADOUT_POSITION_TAUNT7",
 	"LOADOUT_POSITION_TAUNT8",
+
+	// Custom Fortress 2 (Extra) Slots
+	"LOADOUT_POSITION_SKIN",
 
 	// Throwables
 	"LOADOUT_POSITION_THROWABLE",

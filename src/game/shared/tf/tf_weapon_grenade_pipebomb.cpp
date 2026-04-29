@@ -777,7 +777,7 @@ void CTFGrenadePipebombProjectile::PipebombTouch( CBaseEntity *pOther )
 	bool bExploded = false;
 
 	// Blow up if we hit an enemy we can damage
-	if ( pOther->GetTeamNumber() && ( pOther->GetTeamNumber() != GetTeamNumber() || friendlyfire.GetBool() ) && pOther->m_takedamage != DAMAGE_NO || pOther->m_bExplodesProjectiles )
+	if ( pOther->GetTeamNumber() && ( pOther->GetTeamNumber() != GetTeamNumber() || friendlyfire.GetBool() ) && pOther->m_takedamage != DAMAGE_NO || (pOther->m_nTFFlags & TFFLAG_PROJECTILES_EXPLODE_ON_TOUCH) )
 	{
 		// Check to see if this is a respawn room.
 		if ( !pOther->IsPlayer() )
@@ -895,7 +895,7 @@ void CTFGrenadePipebombProjectile::VPhysicsCollision( int index, gamevcollisione
 			}
 		}
 		// Blow up if we hit an enemy we can damage
-		else if ( pHitEntity->GetTeamNumber() && ( pHitEntity->GetTeamNumber() != GetTeamNumber() || friendlyfire.GetBool() ) && pHitEntity->m_takedamage != DAMAGE_NO || pHitEntity->m_bExplodesProjectiles )
+		else if ( pHitEntity->GetTeamNumber() && ( pHitEntity->GetTeamNumber() != GetTeamNumber() || friendlyfire.GetBool() ) && pHitEntity->m_takedamage != DAMAGE_NO /*|| pHitEntity->m_nTFFlags & TFFLAG_PROJECTILES_EXPLODE_ON_TOUCH*/)
 		{
 			// Check if we should allow direct hits after bouncing
 			if ( m_bTouched == false || cf_demoman_wall_bounce_directs.GetBool() )
@@ -950,11 +950,11 @@ void CTFGrenadePipebombProjectile::VPhysicsCollision( int index, gamevcollisione
 	}
 
 	// Pipebombs stick to the world when they touch it
-	if ( pHitEntity && ( pHitEntity->IsWorld() || bIsDynamicProp || pHitEntity->m_bSticksProjectiles ) && gpGlobals->curtime > m_flMinSleepTime )
+	if ( pHitEntity && ( pHitEntity->IsWorld() || bIsDynamicProp || (pHitEntity->m_nTFFlags & TFFLAG_STICKS_PROJECTILES) ) && gpGlobals->curtime > m_flMinSleepTime )
 	{
 		m_bTouched = true;
 
-		if ( pHitEntity->m_bSticksProjectiles )
+		if ( pHitEntity->m_nTFFlags & TFFLAG_STICKS_PROJECTILES )
 			SetParent( pHitEntity );
 
 		g_PostSimulationQueue.QueueCall( VPhysicsGetObject(), &IPhysicsObject::EnableMotion, false );

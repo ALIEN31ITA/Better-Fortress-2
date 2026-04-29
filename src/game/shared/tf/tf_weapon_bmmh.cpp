@@ -23,6 +23,8 @@
 #define TF_WEAPON_BMMH_MODEL		"models/weapons/w_models/w_stickybomb_d.mdl"
 #define POSEPARAM_METER				"weapon_meter"
 #define TF_WEAPON_BMMH_CHARGE_SOUND	"Weapon_StickyBombLauncher.ChargeUp"
+#define TF_WEAPON_BMMH_MIN_COST		30.0f
+#define TF_WEAPON_BMMH_MAX_COST		75.0f
 
 //=============================================================================
 //
@@ -100,11 +102,10 @@ int CTFBMMH::GetAmmoPerShot( void )
 {
 	float flChargeTime = gpGlobals->curtime - GetInternalChargeBeginTime();
 	float flMaxChargeTime = GetChargeMaxTime();
+	if ( flChargeTime <= 0.0f || flChargeTime > ( flMaxChargeTime + 0.01f ) || flMaxChargeTime <= 0.0f )
+		return TF_WEAPON_BMMH_MIN_COST;
 	
-	if ( flChargeTime < 0.0f || flMaxChargeTime <= 0.0f )
-		return 0;
-	
-	return (int)RemapValClamped( flChargeTime, 0.0f, flMaxChargeTime, 0.0f, 100.0f );
+	return (int)RemapValClamped( flChargeTime, 0.0f, flMaxChargeTime, TF_WEAPON_BMMH_MIN_COST, TF_WEAPON_BMMH_MAX_COST);
 }
 
 //-----------------------------------------------------------------------------
@@ -112,6 +113,7 @@ int CTFBMMH::GetAmmoPerShot( void )
 //-----------------------------------------------------------------------------
 void CTFBMMH::PrimaryAttack( void )
 {
+	int iMaxChargeLimit = clamp(GetOwner()->GetAmmoCount( m_iPrimaryAmmoType ), TF_WEAPON_BMMH_MIN_COST, TF_WEAPON_BMMH_MAX_COST);
 	// Check if we're still in the charge cancel delay period
 	if ( m_flChargeCancelTime > gpGlobals->curtime )
 	{
@@ -120,7 +122,43 @@ void CTFBMMH::PrimaryAttack( void )
 		return;
 	}
 	
-	BaseClass::PrimaryAttack();
+	// Check for ammunition.
+	if (m_iClip1 <= 0 && m_iClip1 != -1 || GetOwner()->GetAmmoCount(m_iPrimaryAmmoType) < TF_WEAPON_BMMH_MIN_COST)
+		return;
+
+	// Are we capable of firing again?
+	if (m_flNextPrimaryAttack > gpGlobals->curtime)
+		return;
+
+	if (!CanAttack())
+	{
+		SetInternalChargeBeginTime(0);
+		return;
+	}
+
+	if (GetInternalChargeBeginTime() <= 0)
+	{
+		// Set the weapon mode.
+		m_iWeaponMode = TF_WEAPON_PRIMARY_MODE;
+
+		// save that we had the attack button down
+		SetInternalChargeBeginTime ( gpGlobals->curtime );
+
+		SendWeaponAnim(ACT_VM_PULLBACK);
+
+#ifdef CLIENT_DLL
+		EmitSound( TF_WEAPON_BMMH_CHARGE_SOUND );
+#endif // CLIENT_DLL
+	}
+	else
+	{
+		float flTotalChargeTime = gpGlobals->curtime - GetInternalChargeBeginTime();
+
+		if (flTotalChargeTime >= (GetChargeMaxTime() * ((iMaxChargeLimit - TF_WEAPON_BMMH_MIN_COST) / (TF_WEAPON_BMMH_MAX_COST - TF_WEAPON_BMMH_MIN_COST))))
+		{
+			LaunchGrenade();
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -159,15 +197,15 @@ CBaseEntity *CTFBMMH::FireProjectile( CTFPlayer *pPlayer )
 {
 	if ( !pPlayer )
 		return NULL;
-
-	// Calculate and store the metal cost before firing
-	int iMetalCost = GetAmmoPerShot();
 	
 	// Call the gun base class, NOT the pipebomb launcher base class
 	// This avoids the pipebomb tracking code which doesn't apply to scrapballs
 	CBaseEntity *pProjectile = CTFWeaponBaseGun::FireProjectile( pPlayer );
 	
 #ifndef CLIENT_DLL
+	// Calculate and store the metal cost before firing
+	int iMetalCost = GetAmmoPerShot();
+
 	// Store the metal cost in the projectile
 	if ( pProjectile )
 	{

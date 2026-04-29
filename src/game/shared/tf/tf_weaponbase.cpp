@@ -5110,7 +5110,7 @@ bool CTFWeaponBase::OnFireEvent( C_BaseViewModel *pViewModel, const Vector& orig
 		data.m_nDamageType = GetAttributeContainer()->GetItem() ? GetAttributeContainer()->GetItem()->GetItemDefIndex() : 0;
 		data.m_nHitBox = GetWeaponID();
 		
-		if ( ( data.m_nHitBox != TF_WEAPON_PISTOL && data.m_nHitBox != TF_WEAPON_PISTOL_SCOUT ) && ( cl_tf_ejectbrass.GetBool() == true ) ) //Disable Ejection for pistol, since that was added to the animation afterward.
+		if ( ( data.m_nHitBox != TF_WEAPON_PISTOL && data.m_nHitBox != TF_WEAPON_PISTOL_SCOUT && data.m_nHitBox != TF_WEAPON_HANDGUN_SCOUT_SECONDARY ) && ( cl_tf_ejectbrass.GetBool() == true ) ) //Disable Ejection for pistol, since that was added to the animation afterward.
 		{
 		DispatchEffect( "TF_EjectBrass", data );
 		} else if ( cl_tf_ejectbrass.GetBool() == false )

@@ -14,6 +14,7 @@
 #ifdef CLIENT_DLL
 #define CTFRevolver C_TFRevolver
 #define CTFRevolver_Secondary C_TFRevolver_Secondary
+#define CTFRevolver_Melee C_TFRevolver_Melee
 #endif
 
 //=============================================================================
@@ -79,6 +80,16 @@ class CTFRevolver_Secondary : public CTFRevolver
 {
 public:
 	DECLARE_CLASS( CTFRevolver_Secondary, CTFRevolver );
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+};
+
+//=============================================================================
+// Melee Revolver (Inside Jab)
+class CTFRevolver_Melee : public CTFRevolver
+{
+public:
+	DECLARE_CLASS( CTFRevolver_Melee, CTFRevolver );
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 };

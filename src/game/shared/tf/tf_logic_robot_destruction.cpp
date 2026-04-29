@@ -47,13 +47,14 @@ void cc_tf_rd_score_red_points( const CCommand &args )
 }
 ConCommand tf_rd_score_red_points( "tf_rd_score_red_points", cc_tf_rd_score_red_points, "Give red points.", FCVAR_CHEAT );
 #endif
-
-ConVar tf_rd_robot_attack_notification_cooldown( "tf_rd_robot_attack_notification_cooldown", "10", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );
-ConVar tf_rd_steal_rate( "tf_rd_steal_rate", "0.5", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );
-ConVar tf_rd_points_per_steal( "tf_rd_points_per_steal", "5", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );
-ConVar tf_rd_points_approach_interval( "tf_rd_points_approach_interval", "0.1f", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );
-ConVar tf_rd_points_per_approach( "tf_rd_points_per_approach", "5", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );
-ConVar tf_rd_min_points_to_steal( "tf_rd_min_points_to_steal", "25", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );
+//Start FCVAR_DEVELOPMENTONLY
+ConVar tf_rd_robot_attack_notification_cooldown( "tf_rd_robot_attack_notification_cooldown", "10", FCVAR_REPLICATED );
+ConVar tf_rd_steal_rate( "tf_rd_steal_rate", "0.5", FCVAR_REPLICATED );
+ConVar tf_rd_points_per_steal( "tf_rd_points_per_steal", "5", FCVAR_REPLICATED );
+ConVar tf_rd_points_approach_interval( "tf_rd_points_approach_interval", "0.1f", FCVAR_REPLICATED );
+ConVar tf_rd_points_per_approach( "tf_rd_points_per_approach", "5", FCVAR_REPLICATED );
+ConVar tf_rd_min_points_to_steal( "tf_rd_min_points_to_steal", "25", FCVAR_REPLICATED  );
+//End FCVAR_DEVELOPMENTONLY
 
 #ifdef CLIENT_DLL
 ConVar tf_rd_finale_beep_time( "tf_rd_finale_beep_time", "10", FCVAR_ARCHIVE );

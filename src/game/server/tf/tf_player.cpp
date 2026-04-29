@@ -183,6 +183,7 @@ extern ConVar	halloween_starting_souls;
 extern ConVar tf_mvm_miniboss_scale;
 
 extern ConVar tf_powerup_mode_killcount_timer_length;
+extern ConVar cf_instantrespawn;
 
 float GetCurrentGravity( void );
 
@@ -307,6 +308,10 @@ ConVar tf_maxhealth_drain_deploy_cost( "tf_maxhealth_drain_deploy_cost", "20", F
 extern ConVar sv_vote_allow_spectators;
 ConVar sv_vote_late_join_time( "sv_vote_late_join_time", "90", FCVAR_NONE, "Grace period after the match starts before players who join the match receive a vote-creation cooldown" );
 ConVar sv_vote_late_join_cooldown( "sv_vote_late_join_cooldown", "300", FCVAR_NONE, "Length of the vote-creation cooldown when joining the server after the grace period has expired" );
+
+// Taunt Cvars
+ConVar cf_disable_taunt_kills("cf_disable_taunt_kills", "0", FCVAR_NOTIFY, "If set to 1, disables taunt kills.");
+ConVar cf_disable_taunts("cf_disable_taunts", "0", FCVAR_NOTIFY, "If set to 1, disables taunts.");
 
 extern ConVar tf_voice_command_suspension_mode;
 extern ConVar tf_feign_death_duration;
@@ -917,7 +922,9 @@ bool ApplySpawnerTemplate( CTFPlayer *pPlayer, IPopulationSpawner *pSpawner )
 	{
 		// Store current class to see if it's changing
 		int nOldClass = pPlayer->GetPlayerClass()->GetClassIndex();
-		pPlayer->HandleCommand_JoinClass( g_aRawPlayerClassNamesShort[pBotSpawner->m_class] );
+		if (pBotSpawner->m_class != nOldClass) {
+			pPlayer->HandleCommand_JoinClass(g_aRawPlayerClassNamesShort[pBotSpawner->m_class]);
+		}
 	}
 
 	// Apply scale if specified - do this AFTER class change
@@ -933,8 +940,11 @@ bool ApplySpawnerTemplate( CTFPlayer *pPlayer, IPopulationSpawner *pSpawner )
 	if ( pBotSpawner->m_health > 0 )
 	{
 		// Apply the popfile health directly
-		pPlayer->SetMaxHealth( pBotSpawner->m_health );
-		pPlayer->SetHealth( pBotSpawner->m_health );
+		if (nCurrentMaxHealth != pBotSpawner->m_health)
+			pPlayer->SetMaxHealth( pBotSpawner->m_health );
+
+		if (nCurrentHealth != pBotSpawner->m_health)
+			pPlayer->SetHealth( pBotSpawner->m_health );
 	}
 
 	// Apply character attributes (like damage bonus, speed bonus, etc.)
@@ -4797,9 +4807,9 @@ void CTFPlayer::Spawn()
 				case 0: // Classic - Spawn with loadout, random chances for giants/gatebots
 				{
 					// Get current counts for bosses and giants
-					int iCurrentBosses = CountBossRobots( TF_TEAM_PVE_INVADERS );
+					//int iCurrentBosses = CountBossRobots( TF_TEAM_PVE_INVADERS );
 					int iCurrentGiants = CountGiantRobots( TF_TEAM_PVE_INVADERS );
-					int iMaxBosses = cf_mvmvs_max_bosses.GetInt();
+					//int iMaxBosses = cf_mvmvs_max_bosses.GetInt();
 					int iMaxGiants = cf_mvmvs_max_giants.GetInt();
 					
 					//Spawn the player as Gatebot | 50% chance
@@ -11204,7 +11214,7 @@ int CTFPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		}
 	}
 
-	CTFWeaponScripted *pScriptedWeapon = dynamic_cast<CTFWeaponScripted*>(info.GetWeapon());
+	//CTFWeaponScripted *pScriptedWeapon = dynamic_cast<CTFWeaponScripted*>(info.GetWeapon());
 	
 	// TODO: IMPLEMENT if(pScriptedWeapon && pScriptedWeapon->GetWeaponFlags() & SCRIPTED_WEAPON_HAS_DEATH_NOTICE)
 
@@ -12173,19 +12183,37 @@ int CTFPlayer::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		}
 
 		// For lifeleech, calculate how much damage we actually inflicted.
-		if ( pTFAttacker && pTFAttacker->GetActiveWeapon() )
+		if ( pTFAttacker && pTFAttacker->GetActiveWeapon() && pTFAttacker != this)
 		{
 			float fLifeleechOnDamage = 0.0f;
+			float fLifeleechOnDamage_w = 0.0f;
+			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER(pTFAttacker, fLifeleechOnDamage_w, lifeleech_on_damage_w );
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFAttacker->GetActiveWeapon(), fLifeleechOnDamage, lifeleech_on_damage );
-			if ( fLifeleechOnDamage > 0.0f )
+			if ( fLifeleechOnDamage > 0.0f || fLifeleechOnDamage_w > 0.0f)
 			{
 				const float fActualDamageDealt = iOldHealth - m_iHealth;
-				const float fHealAmount = fActualDamageDealt * fLifeleechOnDamage;
+				const float fHealAmount = clamp( fActualDamageDealt, 0, iOldHealth * 1.25f + 20.0f) * ( fLifeleechOnDamage + fLifeleechOnDamage_w );
 
 				if ( fHealAmount >= 0.5f )
 				{
-					const int iHealthToAdd = MIN( (int)(fHealAmount + 0.5f), pTFAttacker->m_Shared.GetMaxBuffedHealth() - pTFAttacker->GetHealth() );
+					const int iHealthToAdd = MIN( (int)(fHealAmount + 0.5f), pTFAttacker->m_Shared.GetMaxBuffedHealth() - pTFAttacker->GetHealth());
 					pTFAttacker->TakeHealth( iHealthToAdd, DMG_GENERIC );
+
+					CTF_GameStats.Event_PlayerHealedOther(pTFAttacker, iHealthToAdd);
+
+					IGameEvent* event = gameeventmanager->CreateEvent("player_healonhit");
+					if (event)
+					{
+						event->SetInt("amount", iHealthToAdd);
+						event->SetInt("entindex", pTFAttacker->entindex());
+						item_definition_index_t healingItemDef = INVALID_ITEM_DEF_INDEX;
+						if (GetAttributeContainer() && GetAttributeContainer()->GetItem())
+						{
+							healingItemDef = GetAttributeContainer()->GetItem()->GetItemDefIndex();
+						}
+						event->SetInt("weapon_def_index", healingItemDef);
+						gameeventmanager->FireEvent(event);
+					}
 				}
 			}
 		}
@@ -14811,6 +14839,11 @@ void CTFPlayer::DropCurrencyPack( CurrencyRewards_t nSize /* = TF_CURRENCY_PACK_
 //-----------------------------------------------------------------------------
 void CTFPlayer::PlayerDeathThink( void )
 {
+	//If there's a better way... improve it.
+	if ( cf_instantrespawn.GetBool() )
+    {
+        ForceRespawn(); 
+    }
 	// We're doing this here to avoid getting stuck
 	// in a recursive loop if we do it in Event_Killed
 	if ( m_bPendingMerasmusPlayerBombExplode )
@@ -17754,8 +17787,12 @@ static ConCommand dropitem( "dropitem", CC_DropItem, "Drop the flag." );
 // Purpose: 
 //-----------------------------------------------------------------------------
 CObserverPoint::CObserverPoint()
+	: m_bMatchSummary( false )
+	, m_bDefaultWelcome( false )
+	, m_bDisabled( false )
+	, m_flFOV( 0.0f )
+	, m_iszAssociateTeamEntityName( NULL_STRING )
 {
-	m_bMatchSummary = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -17973,7 +18010,7 @@ int CTFPlayer::BuildObservableEntityList( void )
 	CBaseEntity *pEntity = gEntList.FirstEnt();
 	while ( pEntity )
 	{
-		if( pEntity->m_bCanBeObserved )
+		if( pEntity->m_nTFFlags & TFFLAG_OBSERVABLE )
 		{
 			m_hObservableEntities.AddToTail( pEntity );
 
@@ -18377,7 +18414,7 @@ void CTFPlayer::ValidateCurrentObserverTarget( void )
 			ForceObserverMode( OBS_MODE_CHASE );
 		}
 		//[VSCRIPT] Generic Observable
-		if ( !m_hObserverTarget->m_bCanBeObserved && !IsValidObserverTarget( m_hObserverTarget ))
+		if ( !(m_hObserverTarget->m_nTFFlags & TFFLAG_OBSERVABLE) && !IsValidObserverTarget(m_hObserverTarget))
 			FindInitialObserverTarget();
 	}
 
@@ -20125,6 +20162,9 @@ void CTFPlayer::HandleTauntCommand( int iTauntSlot )
 	if ( !IsAllowedToTaunt() )
 		return;
 
+	if ( cf_disable_taunts.GetBool() )
+		return;
+
 	m_nActiveTauntSlot = LOADOUT_POSITION_INVALID;
 	if ( iTauntSlot > 0 && iTauntSlot <= 8 )
 	{
@@ -20264,6 +20304,9 @@ static void DispatchRPSEffect( const CTFPlayer *pPlayer, const char* pszParticle
 //-----------------------------------------------------------------------------
 void CTFPlayer::DoTauntAttack( void )
 {
+	if ( cf_disable_taunt_kills.GetBool() )
+		return;
+
 	// Handle Sentry Buster detonation via taunting - check this first
 	// Note: For Sentry Busters, the detonation is handled by the timer set in Taunt()
 	// so we don't need to do anything here - just return
@@ -22582,7 +22625,7 @@ void CTFPlayer::MVM_SetMinibossType(void)
     {
         AddTag("bot_giant");
         int iClass = GetPlayerClass()->GetClassIndex();
-		int iSentryBuster = m_Shared.InCond( TF_COND_SENTRY_BUSTER );
+		//int iSentryBuster = m_Shared.InCond( TF_COND_SENTRY_BUSTER );
         switch(iClass)
         {
             case TF_CLASS_HEAVYWEAPONS:

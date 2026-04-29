@@ -46,6 +46,9 @@ private:
 	const char* m_szUserId;
 };
 
+/**
+ * @brief Discord RPC implementation.
+ */
 class CTFDiscordRPC : public CAutoGameSystemPerFrame
 {
 public:
@@ -77,7 +80,7 @@ private:
 	bool ShouldReallyUpdate();
 	void SetMapImage();
 	void SetGameTypeImage(const char *gameType);
-	DiscordRichPresence m_pRpc;
+	DiscordRichPresence m_Rpc;
 
 	char m_szMapName[MAX_MAP_NAME];
 	float m_flLastUpdateTime;

@@ -526,7 +526,7 @@ void CTFProjectile_Jar::PipebombTouch( CBaseEntity *pOther )
 	if ( !pOther->IsSolid() || pOther->IsSolidFlagSet( FSOLID_VOLUME_CONTENTS ) )
 		return;
 
-	if ( !pOther->IsWorld() && !pOther->IsPlayer() && !pOther->m_bExplodesProjectiles )
+	if ( !pOther->IsWorld() && !pOther->IsPlayer() && !(pOther->m_nTFFlags & TFFLAG_PROJECTILES_EXPLODE_ON_TOUCH) )
 		return;
 
 	// Don't collide with teammate if we're still in the grace period.

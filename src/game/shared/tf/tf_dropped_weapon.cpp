@@ -785,7 +785,7 @@ float CTFDroppedWeapon::ScriptGetAttribute( const char *pszAttributeName, float 
 //-----------------------------------------------------------------------------
 void CTFDroppedWeapon::ScriptAddAttribute( const char *pszAttributeName, float flVal, float flDuration )
 {
-	CEconItemView *pItem = GetItem();
+	//CEconItemView *pItem = GetItem();
 	const CEconItemAttributeDefinition *pDef = GetItemSchema()->GetAttributeDefinitionByName( pszAttributeName );
 	if ( !pDef )
 		return;
@@ -798,7 +798,7 @@ void CTFDroppedWeapon::ScriptAddAttribute( const char *pszAttributeName, float f
 //-----------------------------------------------------------------------------
 void CTFDroppedWeapon::ScriptRemoveAttribute( const char *pszAttributeName )
 {
-	CEconItemView *pItem = GetItem();
+	//CEconItemView *pItem = GetItem();
 	const CEconItemAttributeDefinition *pDef = GetItemSchema()->GetAttributeDefinitionByName( pszAttributeName );
 	if ( !pDef )
 		return;

@@ -287,6 +287,7 @@ void FX_FireBullets( CTFWeaponBase *pWpn, int iPlayer, const Vector &vecOrigin, 
 	{
 		if ( iWeapon == TF_WEAPON_PISTOL || 
 			 iWeapon == TF_WEAPON_PISTOL_SCOUT ||
+			 iWeapon == TF_WEAPON_HANDGUN_SCOUT_SECONDARY ||
 			 iWeapon == TF_WEAPON_REVOLVER ||
 			 iWeapon == TF_WEAPON_SMG )
 		{

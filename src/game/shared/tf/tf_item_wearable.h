@@ -86,6 +86,8 @@ private:
 #endif // GAME_DLL
 
 #if defined( CLIENT_DLL )
+	bool		ShouldHideWearable(C_BasePlayer *pPlayer);
+
 	enum eParticleSystemVisibility
 	{
 		kParticleSystemVisibility_Undetermined,

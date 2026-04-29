@@ -54,7 +54,7 @@ MedigunEffects_t g_MedigunEffects[MEDIGUN_NUM_CHARGE_TYPES] =
 	{ TF_COND_MEDIGUN_UBER_BULLET_RESIST,	TF_COND_LAST,					 "WeaponMedigun_Vaccinator.InvulnerableOn",		"WeaponMedigun_Vaccinator.InvulnerableOff" },		// TF_COND_MEDIGUN_UBER_BULLET_RESIST,
 	{ TF_COND_MEDIGUN_UBER_BLAST_RESIST,	TF_COND_LAST,					 "WeaponMedigun_Vaccinator.InvulnerableOn",		"WeaponMedigun_Vaccinator.InvulnerableOff" },		// TF_COND_MEDIGUN_UBER_BLAST_RESIST,
 	{ TF_COND_MEDIGUN_UBER_FIRE_RESIST,		TF_COND_LAST,					 "WeaponMedigun_Vaccinator.InvulnerableOn",		"WeaponMedigun_Vaccinator.InvulnerableOff" },		// TF_COND_MEDIGUN_UBER_FIRE_RESIST,
-	{ TF_COND_STEALTHED_USER_BUFF,			TF_COND_STEALTHED_USER_BUFF_FADING,					 "TFPlayer.QuickFixInvulnerableOn",				"TFPlayer.MegaHealOff" },		// MEDIGUN_CHARGE_CLOAK,
+	{ TF_COND_STEALTHED_USER_BUFF,			TF_COND_LAST,					 "TFPlayer.QuickFixInvulnerableOn",				"TFPlayer.MegaHealOff" },		// MEDIGUN_CHARGE_CLOAK,
 };
 
 struct MedigunResistConditions_t
@@ -606,12 +606,13 @@ bool CWeaponMedigun::AllowedToHealTarget( CBaseEntity *pTarget )
 	{
 
 		// VSCRIPT - Allow anything to be healable
-		if ( pTarget->m_bCanBeHealed )
+		if ( pTarget->m_nTFFlags & TFFLAG_MEDIGUN_CAN_HEAL )
 		{
-			if ( !pTarget->InSameTeam( pOwner ) && pTarget->m_bCanBeHealed == 1 )
+			//TODO: Add a way to filter? probably using a 2nd networked thing...
+			/*if (!pTarget->InSameTeam(pOwner) && pTarget->m_bCanBeHealed == 1)
 				return true;
-			else if ( pTarget->InSameTeam( pOwner ) && pTarget->m_bCanBeHealed == 2  )
-				return true;
+			else if ( pTarget->InSameTeam( pOwner ) && pTarget->m_bCanBeHealed == 2  )*/
+			return true;
 		}
 
 		if ( !pTarget->InSameTeam( pOwner ) )
@@ -819,7 +820,7 @@ void CWeaponMedigun::SetChargeLevelToPreserve( float flAmount )
 //-----------------------------------------------------------------------------
 float CWeaponMedigun::GetMinChargeAmount( void ) const
 {
-	if( GetMedigunType() == MEDIGUN_RESIST )
+	if( ( GetMedigunType() == MEDIGUN_RESIST || GetMedigunType() == MEDIGUN_MEAN ) )
 	{
 		return 1.f / weapon_medigun_resist_num_chunks.GetInt();
 	}
@@ -1407,7 +1408,7 @@ bool CWeaponMedigun::FindAndHealTargets( void )
 				}
 
 #ifdef CLIENT_DLL
-					if ( GetMedigunType() == MEDIGUN_RESIST && prediction->IsFirstTimePredicted() )
+					if ( ( GetMedigunType() == MEDIGUN_RESIST || GetMedigunType() == MEDIGUN_MEAN ) && prediction->IsFirstTimePredicted() )
 					{
 						// Play a sound when we tick over to a new charge level
 						int nChargeLevel = int(floor(flNewLevel/flMinChargeAmount));
@@ -1505,7 +1506,7 @@ void CWeaponMedigun::SubtractChargeAndUpdateDeployState( float flSubtractAmount,
 
 	float flNewCharge = Max( m_flChargeLevel - flSubtractAmount, 0.0f );
 
-	if( GetMedigunType() == MEDIGUN_RESIST )
+	if( ( GetMedigunType() == MEDIGUN_RESIST || GetMedigunType() == MEDIGUN_MEAN ) )
 	{
 		if( flNewCharge <= m_flEndResistCharge )
 		{
@@ -1867,13 +1868,27 @@ void CWeaponMedigun::SecondaryAttack( void )
 		}
 	}
 
+	// Mean gun early outs if the patient and medic both have the condition (or medic with no patient has condition)
+	if ( GetMedigunType() == MEDIGUN_MEAN )
+	{
+		ETFCond eCondition = g_MedigunEffects[GetChargeType()].eCondition;
+		if (pOwner->m_Shared.InCond(eCondition))
+		{
+			if (!pTFPlayerPatient || pTFPlayerPatient->m_Shared.InCond(eCondition))
+			{
+				return;
+			}
+		}
+	}
+
+
 	m_bAttack2Down = true;
 
 	// If using standard-uber-model-medigun, ensure they have a full charge and are not already in charge release mode
-	bool bDenyUse = GetMedigunType() != MEDIGUN_RESIST && (m_flChargeLevel < 1.0);
+	bool bDenyUse = (GetMedigunType() != MEDIGUN_RESIST && GetMedigunType() != MEDIGUN_MEAN) && (m_flChargeLevel < 1.0);
 	// If using the resist-medigun, they can shoot sooner
 	float flChunkSize = GetMinChargeAmount();
-	bDenyUse |= GetMedigunType() == MEDIGUN_RESIST && m_flChargeLevel < flChunkSize;
+	bDenyUse |= ( GetMedigunType() == MEDIGUN_RESIST || GetMedigunType() == MEDIGUN_MEAN ) && m_flChargeLevel < flChunkSize;
 
 	if ( bDenyUse || m_bChargeRelease )
 	{
@@ -1912,7 +1927,7 @@ void CWeaponMedigun::SecondaryAttack( void )
 	m_flReleaseStartedAt = gpGlobals->curtime;
 
 #ifdef GAME_DLL
-	if( GetMedigunType() == MEDIGUN_RESIST )
+	if( ( GetMedigunType() == MEDIGUN_RESIST || GetMedigunType() == MEDIGUN_MEAN ) )
 	{
 		// We dont want to give the user a point every time they deploy an uber with the resist medigun.
 		// Instead we give them a point for every 4 deploys
@@ -1934,7 +1949,7 @@ void CWeaponMedigun::SecondaryAttack( void )
 	}
 	
 	// STAGING_MEDIC
-	if ( GetMedigunType() != MEDIGUN_RESIST )
+	if ( (GetMedigunType() != MEDIGUN_RESIST && GetMedigunType() != MEDIGUN_MEAN) )
 	{
 		RecalcEffectOnTarget( pOwner );
 	}
@@ -1943,7 +1958,7 @@ void CWeaponMedigun::SecondaryAttack( void )
 	if ( pTFPlayerPatient )
 	{
 		// STAGING_MEDIC
-		if ( GetMedigunType() != MEDIGUN_RESIST )
+		if ( ( GetMedigunType() != MEDIGUN_RESIST && GetMedigunType() != MEDIGUN_MEAN ) )
 		{
 			RecalcEffectOnTarget( pTFPlayerPatient );
 		}
@@ -2010,19 +2025,31 @@ void CWeaponMedigun::SecondaryAttack( void )
 #endif // GAME_DLL
 
 	// STAGING_MEDIC
-	if ( GetMedigunType() == MEDIGUN_RESIST )
+	if ( ( GetMedigunType() == MEDIGUN_RESIST || GetMedigunType() == MEDIGUN_MEAN ) )
 	{
 		// Remove charge immediately and just give target and yourself the conditions
 		m_bChargeRelease = false;
 #ifdef GAME_DLL
-		float flResistDuration = weapon_vaccinator_resist_duration.GetFloat();
-		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, flResistDuration, add_uber_time );
-		pOwner->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
-		m_flChargeLevel -= flChunkSize;
-		if ( pTFPlayerPatient )
+		float flUberTime = 1;
+		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER(pOwner, flUberTime, add_uber_time);
+		float flResistDuration = weapon_vaccinator_resist_duration.GetFloat() * flUberTime;
+		if ( GetMedigunType() == MEDIGUN_RESIST ) 
 		{
-			pTFPlayerPatient->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
+			pOwner->m_Shared.AddCond(g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner);
+			if (pTFPlayerPatient)
+			{
+				pTFPlayerPatient->m_Shared.AddCond(g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner);
+			}
 		}
+		if ( GetMedigunType() == MEDIGUN_MEAN ) 
+		{
+			pOwner->m_Shared.AddCond(g_MedigunEffects[GetChargeType()].eCondition, flResistDuration, pOwner);
+			if (pTFPlayerPatient)
+			{
+				pTFPlayerPatient->m_Shared.AddCond(g_MedigunEffects[GetChargeType()].eCondition, flResistDuration, pOwner);
+			}
+		}
+		m_flChargeLevel -= flChunkSize;
 		if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() )
 		{
 			CBaseEntity *pTarget = m_hHealingTarget;

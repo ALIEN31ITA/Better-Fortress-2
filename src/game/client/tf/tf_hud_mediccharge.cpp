@@ -228,7 +228,7 @@ void CHudMedicChargeMeter::OnTick( void )
 
 	if ( flCharge != m_flLastChargeValue )
 	{
-		if( pMedigun->GetMedigunType() == MEDIGUN_RESIST )
+		if( pMedigun->GetMedigunType() == MEDIGUN_RESIST || pMedigun->GetMedigunType() == MEDIGUN_MEAN )
 		{
 			float flChunkSize = 1.f / weapon_medigun_resist_num_chunks.GetFloat();
 			for( int i=0; i<weapon_medigun_resist_num_chunks.GetInt(); ++i )
@@ -320,7 +320,7 @@ void CHudMedicChargeMeter::UpdateControlVisibility()
 	if ( !pMedigun )
 		return;
 
-	bool bResistMedigun = m_eLastKnownMedigunType == MEDIGUN_RESIST;
+	bool bResistMedigun = ( m_eLastKnownMedigunType == MEDIGUN_RESIST || m_eLastKnownMedigunType == MEDIGUN_MEAN );
 
 	// Using the resist medigun
 	if( !bResistMedigun )

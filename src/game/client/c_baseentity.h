@@ -1292,6 +1292,7 @@ public:
 	unsigned short					m_EntClientFlags;
 
 	CNetworkColor32( m_clrRender );
+	CNetworkVar( int, m_nTFFlags );
 
 private:
 	
@@ -1353,13 +1354,6 @@ public:
 	// Team Handling
 	int								m_iTeamNum;
 
-	//TF2 Specific
-	bool							m_bExplodesProjectiles;
-	bool							m_bSticksProjectiles;
-	int                             m_bCanBeHealed;
-	bool                            m_bCanBeTargeted;
-	bool							m_bCanBeBurned;
-	bool                            m_bCanBeObserved;
 
 
 #if !defined( NO_ENTITY_PREDICTION )

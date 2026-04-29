@@ -1354,14 +1354,27 @@ bool CBaseObject::StartBuilding( CBaseEntity *pBuilder )
 	
 	// Check to see if we need to add this to a hierarchy.  We can just do a simple ray trace from the center as
 	// the placement code has guarenteed we are in a valid position.
-	trace_t trace;
-	UTIL_TraceHull( GetAbsOrigin() + Vector( 0.0f, 0.0f, 2.0f ), GetAbsOrigin() - Vector( 0.0f, 0.0f, 2.0f ), vec3_origin, vec3_origin, MASK_PLAYERSOLID_BRUSHONLY, this, COLLISION_GROUP_PLAYER_MOVEMENT, &trace );
-	if ( trace.m_pEnt && trace.m_pEnt->IsBSPModel() )
+	if ( GetMoveParent() == NULL )
 	{
-		CFuncTrackTrain *pTrain = dynamic_cast<CFuncTrackTrain*>( trace.m_pEnt );
-		if ( pTrain )
+		trace_t trace;
+		UTIL_TraceHull( GetAbsOrigin() + Vector( 0.0f, 0.0f, 2.0f ), GetAbsOrigin() - Vector( 0.0f, 0.0f, 2.0f ), vec3_origin, vec3_origin, MASK_PLAYERSOLID, this, COLLISION_GROUP_NONE, &trace ); //COLLISION_GROUP_PLAYER_MOVEMENT
+		//Vscript
+		if ( trace.m_pEnt && !trace.m_pEnt->IsWorld() )
 		{
-			SetParent( pTrain );
+			if ( trace.m_pEnt->m_nTFFlags & TFFLAG_SUPPORTS_ENGINEER_BUILDINGS )
+			{
+				SetParent( trace.m_pEnt );
+				DevMsg( "Building successfully parented to %s\n", trace.m_pEnt->GetClassname() );
+			}
+			else if ( trace.m_pEnt->IsBSPModel() )
+			{
+				CFuncTrackTrain *pTrain = dynamic_cast<CFuncTrackTrain*>( trace.m_pEnt );
+				if ( pTrain )
+				{
+					SetParent( pTrain );
+					DevMsg( "Building snapped to TrackTrain: %s\n", pTrain->GetClassname() );
+				}
+			}
 		}
 	}
 

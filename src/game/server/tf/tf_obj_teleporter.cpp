@@ -60,6 +60,7 @@ IMPLEMENT_SERVERCLASS_ST( CObjectTeleporter, DT_ObjectTeleporter )
 	SendPropFloat( SENDINFO(m_flYawToExit), 8, 0, 0.0, 360.0f ),
 	SendPropBool( SENDINFO(m_bMatchBuilding) ),
 	SendPropBool( SENDINFO(m_bIsMVMTeleporter) ),
+	SendPropEHandle( SENDINFO( m_hMatchingTeleporter ) ),
 END_SEND_TABLE()
 
 BEGIN_DATADESC( CObjectTeleporter )

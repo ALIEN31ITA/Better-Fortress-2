@@ -38,13 +38,6 @@
 #include "utlbuffer.h"
 #include "imageutils.h"
 
-#ifdef _WIN32
-#include <windows.h>
-// Undefine Windows macros that conflict with VGUI
-#undef PostMessage
-#undef CreateDialog
-#endif
-
 ConVar cl_map("cl_map", "-1");
 
 using namespace vgui;
@@ -3520,10 +3513,13 @@ void CTFCreateServerDialog::OnCommand(const char* command)
 					PublishedFileId_t workshopFileID = 0;
 					FOR_EACH_VEC( m_vecAllMaps, i )
 					{
-						if ( V_stricmp( m_vecAllMaps[i].Get(), pItem->szItemText ) == 0 )
+						CreateServerMapItem item = m_vecAllMaps[i];
+						const char* pszMapName = item.mapName;
+
+						if ( Q_stricmp( pszMapName, pItem->szItemText ) == 0 )
 						{
-							bIsWorkshopMap = m_vecIsWorkshopMap[i];
-							workshopFileID = m_vecMapFileIDs[i];
+							bIsWorkshopMap = item.bIsWorkshopMap;
+							workshopFileID = item.iMapFileId;
 							break;
 						}
 					}
@@ -4060,8 +4056,6 @@ void CTFCreateServerDialog::DestroyControls()
 void CTFCreateServerDialog::LoadMapList()
 {
 	m_vecAllMaps.RemoveAll();
-	m_vecIsWorkshopMap.RemoveAll();
-	m_vecMapFileIDs.RemoveAll();
 
 	// Helper lambda to check if a map name already exists
 	// Compares base name (strips workshop/ prefix and .ugcXXXX suffix)
@@ -4069,33 +4063,40 @@ void CTFCreateServerDialog::LoadMapList()
 	{
 		// Extract base name from input
 		char szBaseName[MAX_PATH];
-		V_strncpy( szBaseName, szMapName, sizeof( szBaseName ) );
+		Q_strncpy( szBaseName, szMapName, sizeof( szBaseName ) );
 		
 		// Strip workshop/ prefix if present
 		const char* pBase = szBaseName;
-		if ( V_strnicmp( pBase, "workshop/", 9 ) == 0 )
+		char pszPrefix[96];
+		Q_strcpy(pszPrefix, "workshop\\");
+		Q_FixSlashes(pszPrefix);
+
+		if ( Q_strnicmp( pBase, pszPrefix, 9 ) == 0 )
 			pBase = szBaseName + 9;
 		
 		// Strip .ugcXXXX suffix if present
-		char* pUgc = V_stristr( (char*)pBase, ".ugc" );
+		char* pUgc = Q_stristr( (char*)pBase, ".ugc" );
 		if ( pUgc )
 			*pUgc = '\0';
 		
 		FOR_EACH_VEC( m_vecAllMaps, i )
 		{
+			CreateServerMapItem item = m_vecAllMaps[i];
+			const char* pszMapName = item.mapName;
+
 			// Extract base name from existing entry
 			char szExistingBase[MAX_PATH];
-			V_strncpy( szExistingBase, m_vecAllMaps[i].Get(), sizeof( szExistingBase ) );
+			Q_strncpy( szExistingBase, pszMapName, sizeof( szExistingBase ) );
 			
 			const char* pExisting = szExistingBase;
-			if ( V_strnicmp( pExisting, "workshop/", 9 ) == 0 )
+			if ( Q_strnicmp( pExisting, pszPrefix, 9 ) == 0 )
 				pExisting = szExistingBase + 9;
 			
-			char* pExistingUgc = V_stristr( (char*)pExisting, ".ugc" );
+			char* pExistingUgc = Q_stristr( (char*)pExisting, ".ugc" );
 			if ( pExistingUgc )
 				*pExistingUgc = '\0';
 			
-			if ( V_stricmp( pExisting, pBase ) == 0 )
+			if ( Q_stricmp( pExisting, pBase ) == 0 )
 				return true;
 		}
 		return false;
@@ -4105,233 +4106,197 @@ void CTFCreateServerDialog::LoadMapList()
 	// FIRST: Scan workshop sources (they have proper file IDs and metadata)
 	// =====================================================
 
-#ifdef _WIN32
 	// Get workshop maps from the workshop manager
 	CUtlVector<CCFWorkshopItem*> workshopMaps;
 	CFWorkshop()->GetItemsByType( CF_WORKSHOP_TYPE_MAP, workshopMaps );
 	Warning( "LoadMapList: Workshop manager has %d map items\n", workshopMaps.Count() );
-	
-	FOR_EACH_VEC( workshopMaps, i )
-	{
+
+	FOR_EACH_VEC(workshopMaps, i) {
 		CCFWorkshopItem* pItem = workshopMaps[i];
-		if ( pItem )
-		{
-			char szInstallPath[MAX_PATH];
-			if ( pItem->GetInstallPath( szInstallPath, sizeof( szInstallPath ) ) )
-			{
-				char szSearchPath[MAX_PATH];
-				WIN32_FIND_DATAA findData;
-				
-				// Check maps subfolder
-				V_snprintf( szSearchPath, sizeof( szSearchPath ), "%s\\maps\\*.bsp", szInstallPath );
-				HANDLE hFind = FindFirstFileA( szSearchPath, &findData );
-				if ( hFind != INVALID_HANDLE_VALUE )
-				{
-					do
-					{
-						if ( !( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) )
-						{
-							char szShortName[MAX_PATH] = { 0 };
-							V_snprintf( szShortName, sizeof( szShortName ), "workshop/%s", findData.cFileName );
-							V_StripExtension( szShortName, szShortName, sizeof( szShortName ) );
-							char szWithID[MAX_PATH];
-							V_snprintf( szWithID, sizeof( szWithID ), "%s.ugc%llu", szShortName, pItem->GetFileID() );
+		if (!pItem) continue;
 
-							if ( !MapExists( szWithID ) )
-							{
-								m_vecAllMaps.AddToTail( szWithID );
-								m_vecIsWorkshopMap.AddToTail( true );
-								m_vecMapFileIDs.AddToTail( pItem->GetFileID() );
-								Warning( "LoadMapList: Added workshop map from manager: %s\n", szWithID );
-							}
-						}
-					} while ( FindNextFileA( hFind, &findData ) );
-					FindClose( hFind );
-				}
-				
-				// Also check root folder
-				V_snprintf( szSearchPath, sizeof( szSearchPath ), "%s\\*.bsp", szInstallPath );
-				hFind = FindFirstFileA( szSearchPath, &findData );
-				if ( hFind != INVALID_HANDLE_VALUE )
-				{
-					do
-					{
-						if ( !( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) )
-						{
-							char szShortName[MAX_PATH] = { 0 };
-							V_snprintf( szShortName, sizeof( szShortName ), "workshop/%s", findData.cFileName );
-							V_StripExtension( szShortName, szShortName, sizeof( szShortName ) );
-							char szWithID[MAX_PATH];
-							V_snprintf( szWithID, sizeof( szWithID ), "%s.ugc%llu", szShortName, pItem->GetFileID() );
+		char pszInstallPath[MAX_PATH];
+		if (!pItem->GetInstallPath(pszInstallPath, sizeof(pszInstallPath))) continue;
 
-							if ( !MapExists( szWithID ) )
-							{
-								m_vecAllMaps.AddToTail( szWithID );
-								m_vecIsWorkshopMap.AddToTail( true );
-								m_vecMapFileIDs.AddToTail( pItem->GetFileID() );
-								Warning( "LoadMapList: Added workshop map from manager root: %s\n", szWithID );
-							}
-						}
-					} while ( FindNextFileA( hFind, &findData ) );
-					FindClose( hFind );
-				}
-			}
+		char pszSearchDirPath[MAX_PATH];
+
+		Q_snprintf(pszSearchDirPath, sizeof(pszSearchDirPath), "%s\\*.bsp", pszInstallPath);
+		Q_FixSlashes(pszSearchDirPath);
+
+		FileFindHandle_t hFindHandle;
+
+		const char* pszFilePath = filesystem->FindFirstEx(pszSearchDirPath, "MOD", &hFindHandle);
+		while (pszFilePath) {
+			// 0% chance of it retrieving a directory, but better safe than sorry.
+			if (!filesystem->FindIsDirectory(hFindHandle)) pszFilePath = filesystem->FindNext(hFindHandle); continue;
+
+			// @PracticeMedicine:
+			// Pretty sure that calling Q_StripExtension while setting the same char[] variable
+			// worked out for them but honestly i'm mostly sure that it is just unsafe doing that,
+			// so use Q_FileBase for "pszFileName" instead.
+			//
+			// For reference:
+			// this is how they did it previously: Q_StripExtension(pszShortName, pszShortName, sizeof(pszShortName));
+			char pszFileName[MAX_PATH];
+			Q_FileBase(pszFilePath, pszFileName, sizeof(pszFileName));
+
+			char pszShortName[MAX_PATH];
+			Q_snprintf(pszShortName, sizeof(pszShortName), "workshop\\%s", pszFileName);
+			Q_FixSlashes(pszShortName);
+
+			char pszNameWithId[MAX_PATH];
+			Q_snprintf(pszNameWithId, sizeof(pszNameWithId), "%s.ugc%llu", pszShortName, pItem->GetFileID());
+
+			if (MapExists(pszNameWithId)) pszFilePath = filesystem->FindNext(hFindHandle); continue;
+
+			CreateServerMapItem newItem{};
+			Q_strncpy(newItem.mapName, pszNameWithId, sizeof(newItem.mapName));
+			newItem.bIsWorkshopMap = true;
+			newItem.iMapFileId = pItem->GetFileID();
+			m_vecAllMaps.AddToTail(newItem);
+
+			pszFilePath = filesystem->FindNext(hFindHandle);
 		}
+
+		filesystem->FindClose(hFindHandle);
 	}
 
-	// Search for Steam Workshop subscribed maps via UGC API
 	ISteamUGC* pUGC = GetSteamUGC();
-	if ( pUGC )
-	{
-		uint32 numSubscribed = pUGC->GetNumSubscribedItems();
-		if ( numSubscribed > 0 )
-		{
-			CUtlVector<PublishedFileId_t> items;
-			items.SetSize( numSubscribed );
-			pUGC->GetSubscribedItems( items.Base(), numSubscribed );
+	if (pUGC) {
+		uint32 iNumSubbed = pUGC->GetNumSubscribedItems();
+		if (iNumSubbed > 0) {
+			PublishedFileId_t* items = new PublishedFileId_t[iNumSubbed];
+			if (pUGC->GetSubscribedItems(items, sizeof(items)) > 0) {
+				for (int i = 0; i < sizeof(items); i++) {
+					PublishedFileId_t itemId = items[i];
+					char pszInstallPath[MAX_PATH];
+					uint64 iSize = 0;
+					uint32 iTime = 0;
 
-			FOR_EACH_VEC( items, i )
-			{
-				PublishedFileId_t fileID = items[i];
-				char szInstallPath[MAX_PATH];
-				uint64 sizeOnDisk = 0;
-				uint32 timestamp = 0;
+					if (!pUGC->GetItemInstallInfo(itemId, &iSize, pszInstallPath, sizeof(pszInstallPath), &iTime))
+						continue;
 
-				if ( pUGC->GetItemInstallInfo( fileID, &sizeOnDisk, szInstallPath, sizeof( szInstallPath ), &timestamp ) )
-				{
-					char szSearchPath[MAX_PATH];
-					WIN32_FIND_DATAA findData;
-					
-					// Check maps subfolder
-					V_snprintf( szSearchPath, sizeof( szSearchPath ), "%s\\maps\\*.bsp", szInstallPath );
-					HANDLE hFind = FindFirstFileA( szSearchPath, &findData );
-					if ( hFind != INVALID_HANDLE_VALUE )
-					{
-						do
-						{
-							if ( !( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) )
-							{
-								char szShortName[MAX_PATH] = { 0 };
-								V_snprintf( szShortName, sizeof( szShortName ), "workshop/%s", findData.cFileName );
-								V_StripExtension( szShortName, szShortName, sizeof( szShortName ) );
-								char szWithID[MAX_PATH];
-								V_snprintf( szWithID, sizeof( szWithID ), "%s.ugc%llu", szShortName, fileID );
+					char pszSearchPath[MAX_PATH];
+					Q_snprintf(pszSearchPath, sizeof(pszSearchPath), "%s\\*.bsp", pszInstallPath);
+					Q_FixSlashes(pszSearchPath);
 
-								if ( !MapExists( szWithID ) )
-								{
-									m_vecAllMaps.AddToTail( szWithID );
-									m_vecIsWorkshopMap.AddToTail( true );
-									m_vecMapFileIDs.AddToTail( fileID );
-									Warning( "LoadMapList: Added workshop map from UGC: %s\n", szWithID );
-								}
-							}
-						} while ( FindNextFileA( hFind, &findData ) );
-						FindClose( hFind );
-					}
-					
-					// Check root of install folder
-					V_snprintf( szSearchPath, sizeof( szSearchPath ), "%s\\*.bsp", szInstallPath );
-					hFind = FindFirstFileA( szSearchPath, &findData );
-					if ( hFind != INVALID_HANDLE_VALUE )
-					{
-						do
-						{
-							if ( !( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) )
-							{
-								char szShortName[MAX_PATH] = { 0 };
-								V_snprintf( szShortName, sizeof( szShortName ), "workshop/%s", findData.cFileName );
-								V_StripExtension( szShortName, szShortName, sizeof( szShortName ) );
-								char szWithID[MAX_PATH];
-								V_snprintf( szWithID, sizeof( szWithID ), "%s.ugc%llu", szShortName, fileID );
+					FileFindHandle_t hFindHandle;
+					const char* pszFilePath = filesystem->FindFirstEx(pszSearchPath, "MOD", &hFindHandle);
+					while (pszFilePath) {
+						if (!filesystem->FindIsDirectory(hFindHandle)) continue;
 
-								if ( !MapExists( szWithID ) )
-								{
-									m_vecAllMaps.AddToTail( szWithID );
-									m_vecIsWorkshopMap.AddToTail( true );
-									m_vecMapFileIDs.AddToTail( fileID );
-									Warning( "LoadMapList: Added workshop map from UGC root: %s\n", szWithID );
-								}
-							}
-						} while ( FindNextFileA( hFind, &findData ) );
-						FindClose( hFind );
+						char pszFileName[MAX_PATH];
+						Q_FileBase(pszFilePath, pszFileName, sizeof(pszFileName));
+
+						char pszShortName[MAX_PATH];
+						Q_snprintf(pszShortName, sizeof(pszShortName), "workshop\\%s", pszFileName);
+						Q_FixSlashes(pszShortName);
+
+						char pszStrippedShortName[MAX_PATH];
+						Q_StripExtension(pszShortName, pszStrippedShortName, sizeof(pszStrippedShortName));
+
+						char pszNameWithId[MAX_PATH];
+						Q_snprintf(pszNameWithId, sizeof(pszNameWithId), "%s.ugc%llu", pszShortName, itemId);
+
+						if (MapExists(pszNameWithId)) pszFilePath = filesystem->FindNext(hFindHandle); continue;
+
+						CreateServerMapItem newItem{};
+						Q_strncpy(newItem.mapName, pszNameWithId, sizeof(newItem.mapName));
+						newItem.bIsWorkshopMap = true;
+						newItem.iMapFileId = itemId;
+						m_vecAllMaps.AddToTail(newItem);
+
+						pszFilePath = filesystem->FindNext(hFindHandle);
 					}
 				}
 			}
+			delete[] items;
 		}
 	}
-#endif // _WIN32
-
+	
 	// =====================================================
 	// SECOND: Scan regular map folders (skip workshop maps already found)
 	// =====================================================
 
 	FileFindHandle_t mapHandle;
-	const char* pMapFileName = filesystem->FindFirstEx( "maps/*.bsp", "GAME", &mapHandle );
 
-	while ( pMapFileName && pMapFileName[ 0 ] != '\0' )
+	char pszMapSearchDir[MAX_PATH];
+	Q_strncpy(pszMapSearchDir, "maps/*.bsp", sizeof(pszMapSearchDir));
+	Q_FixSlashes(pszMapSearchDir);
+
+	const char* pMapFileName = filesystem->FindFirstEx( pszMapSearchDir, "GAME", &mapHandle );
+
+	while (pMapFileName && pMapFileName[0] != '\0')
 	{
-		if ( filesystem->FindIsDirectory( mapHandle ) )
+		if (filesystem->FindIsDirectory(mapHandle))
 		{
-			pMapFileName = filesystem->FindNext( mapHandle );
+			pMapFileName = filesystem->FindNext(mapHandle);
 			continue;
 		}
 
-		if ( pMapFileName )
-		{
-			char szShortName[MAX_PATH] = { 0 };
-			V_strncpy( szShortName, pMapFileName, sizeof( szShortName ) );
-			V_StripExtension( szShortName, szShortName, sizeof( szShortName ) );
+		char szShortName[MAX_PATH];
+		Q_strncpy(szShortName, pMapFileName, sizeof(szShortName));
 
-			if ( !MapExists( szShortName ) )
-			{
-				m_vecAllMaps.AddToTail( szShortName );
-				m_vecIsWorkshopMap.AddToTail( false );
-				m_vecMapFileIDs.AddToTail( 0 );
-			}
-		}
+		char szStrippedShortName[MAX_PATH];
+		Q_StripExtension(szShortName, szStrippedShortName, sizeof(szStrippedShortName));
 
-		pMapFileName = filesystem->FindNext( mapHandle );
+		if (MapExists(szStrippedShortName)) continue;
+
+		CreateServerMapItem newItem{};
+		Q_strncpy(newItem.mapName, szStrippedShortName, sizeof(newItem.mapName));
+		newItem.bIsWorkshopMap = false;
+		newItem.iMapFileId = 0;
+
+		m_vecAllMaps.AddToTail(newItem);
+
+		pMapFileName = filesystem->FindNext(mapHandle);
 	}
 
 	filesystem->FindClose( mapHandle );
 
-	// Also search workshop folder via filesystem (for any we might have missed)
-	pMapFileName = filesystem->FindFirstEx( "maps/workshop/*.bsp", "GAME", &mapHandle );
+	Q_strncpy(pszMapSearchDir, "maps/workshop/*.bsp", sizeof(pszMapSearchDir));
+	Q_FixSlashes(pszMapSearchDir);
 
-	while ( pMapFileName && pMapFileName[ 0 ] != '\0' )
+	// Also search workshop folder via filesystem (for any we might have missed)
+	pMapFileName = filesystem->FindFirstEx(pszMapSearchDir, "MOD", &mapHandle);
+
+	while (pMapFileName && pMapFileName[0] != '\0')
 	{
-		if ( filesystem->FindIsDirectory( mapHandle ) )
+		if (filesystem->FindIsDirectory(mapHandle))
 		{
-			pMapFileName = filesystem->FindNext( mapHandle );
+			pMapFileName = filesystem->FindNext(mapHandle);
 			continue;
 		}
 
-		if ( pMapFileName )
-		{
-			char szShortName[MAX_PATH] = { 0 };
-			V_snprintf( szShortName, sizeof( szShortName ), "workshop/%s", pMapFileName );
-			V_StripExtension( szShortName, szShortName, sizeof( szShortName ) );
+		char szShortName[MAX_PATH];
+		Q_snprintf(szShortName, sizeof(szShortName), "workshop/%s", pMapFileName);
 
-			if ( !MapExists( szShortName ) )
-			{
-				m_vecAllMaps.AddToTail( szShortName );
-				m_vecIsWorkshopMap.AddToTail( true );
-				PublishedFileId_t fileID = CFWorkshop()->GetMapIDFromName( szShortName );
-				m_vecMapFileIDs.AddToTail( fileID );
-			}
-		}
+		char szStrippedShortName[MAX_PATH];
+		Q_StripExtension(szShortName, szStrippedShortName, sizeof(szStrippedShortName));
 
-		pMapFileName = filesystem->FindNext( mapHandle );
+		if (MapExists(szStrippedShortName)) continue;
+
+		PublishedFileId_t fileID = CFWorkshop()->GetMapIDFromName(szShortName);
+
+		CreateServerMapItem newItem{};
+		Q_strncpy(newItem.mapName, szStrippedShortName, sizeof(newItem.mapName));
+		newItem.bIsWorkshopMap = true;
+		newItem.iMapFileId = fileID;
+
+		m_vecAllMaps.AddToTail(newItem);
+
+		pMapFileName = filesystem->FindNext(mapHandle);
 	}
 
 	filesystem->FindClose( mapHandle );
 
 	// Count workshop maps
 	int nWorkshopCount = 0;
-	for ( int i = 0; i < m_vecIsWorkshopMap.Count(); i++ )
+	FOR_EACH_VEC(m_vecAllMaps, i)
 	{
-		if ( m_vecIsWorkshopMap[i] )
-			nWorkshopCount++;
+		CreateServerMapItem item = m_vecAllMaps[i];
+		if (!item.bIsWorkshopMap) continue;
+		nWorkshopCount++;
 	}
 	Warning( "LoadMapList: Loaded %d maps, %d are workshop maps\n", m_vecAllMaps.Count(), nWorkshopCount );
 }
@@ -4374,8 +4339,9 @@ void CTFCreateServerDialog::RefreshMapList()
 	int iCount = m_vecAllMaps.Count();
 	for ( int k = 0; k < iCount; ++k )
 	{
-		const char *szMapName = m_vecAllMaps[k].Get();
-		bool bIsWorkshop = m_vecIsWorkshopMap[k];
+		CreateServerMapItem item = m_vecAllMaps[k];
+		const char *szMapName = item.mapName;
+		bool bIsWorkshop = item.bIsWorkshopMap;
 
 		// Filter by workshop if enabled
 		if ( bWorkshopOnly && !bIsWorkshop )
@@ -4731,8 +4697,9 @@ void CTFCreateServerDialog::OnThink()
 				//Msg("Current Selection: %s, index=%d\n", szMapName, nMapIndex);
 				if( szMapName && nMapIndex >= 0 && nMapIndex < m_vecAllMaps.Count() )
 				{
-					bool bIsWorkshop = m_vecIsWorkshopMap[nMapIndex];
-					PublishedFileId_t fileID = m_vecMapFileIDs[nMapIndex];
+					CreateServerMapItem item = m_vecAllMaps[nMapIndex];
+					bool bIsWorkshop = item.bIsWorkshopMap;
+					PublishedFileId_t fileID = item.iMapFileId;
 					
 					if ( bIsWorkshop && fileID != 0 )
 					{

@@ -810,14 +810,16 @@ void CTFClassMenu::SelectClass( int iClass )
 	{
 		bool bMVM = TFGameRules() && TFGameRules()->IsMannVsMachineMode();
 		int	iRobots = GetTeamNumber() == TF_TEAM_PVE_INVADERS;
-		m_pTFPlayerModelPanel->SetToPlayerClass( iClass, bClassWasRandom, bMVM && iRobots ? g_szBotModels[iClass] : NULL );
 
 		//MVM Versus - Carrier style
 		if ( bMVM && iRobots )
 		{
-			MDLHandle_t hModel = mdlcache->FindMDL( g_szBotModels[iClass] );
-			m_pTFPlayerModelPanel->SetMDL( hModel );
+			m_pTFPlayerModelPanel->SetToPlayerClass( iClass, bClassWasRandom, g_szBotModels[iClass] );
 			m_ResMenuBackground->SwapModel("models/vgui/UI_class01_mvm.mdl", NULL);
+		}
+		else
+		{
+			m_pTFPlayerModelPanel->SetToPlayerClass(iClass, bClassWasRandom);
 		}
 
 		m_pEditLoadoutButton->SetVisible( true );
@@ -843,11 +845,11 @@ void CTFClassMenu::SelectClass( int iClass )
 	char nClassMusicStr[64];
 	if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() )
 	{
-		sprintf( nClassMusicStr, "music.mvm_class_menu_0%i", iClass );
+		Q_snprintf( nClassMusicStr, sizeof(nClassMusicStr), "music.mvm_class_menu_0%i", iClass);
 	}
 	else
 	{
-		sprintf( nClassMusicStr, "music.class_menu_0%i", iClass );
+		Q_snprintf( nClassMusicStr, sizeof(nClassMusicStr), "music.class_menu_0%i", iClass);
 	}
 	CBaseEntity::EmitSound( filter, SOUND_FROM_UI_PANEL, nClassMusicStr );
 	m_nBaseMusicGuid = enginesound->GetGuidForLastSoundEmitted();

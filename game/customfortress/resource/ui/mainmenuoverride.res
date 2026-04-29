@@ -414,7 +414,7 @@
 		"ControlName"	"CExLabel"
 		"fieldName"		"SplashTextLabel"
 		"xpos"			"c-285"
-		"ypos"			"145"
+		"ypos"			"150"
 		"zpos"			"2"
 		"wide"			"256"
 		"tall"			"20"

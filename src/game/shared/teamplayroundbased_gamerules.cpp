@@ -565,6 +565,9 @@ float CTeamplayRoundBasedRules::GetNextRespawnWave( int iTeam, CBasePlayer *pPla
 	if ( State_Get() == GR_STATE_STALEMATE )
 		return 0;
 
+	if ( cf_instantrespawn.GetBool() )
+		return 0;
+
 	// If we are purely checking when the next respawn wave is for this team
 	if ( pPlayer == NULL )
 	{

@@ -126,7 +126,7 @@ void CTFWeaponBaseGun::PrimaryAttack( void )
 		if ( GetOwner() && GetAmmoPerShot() > GetOwner()->GetAmmoCount( m_iPrimaryAmmoType ) )
 		{
 			WeaponSound( EMPTY );
-			m_flNextPrimaryAttack = gpGlobals->curtime + flFireDelay;
+			m_flNextPrimaryAttack = GetCorrectedNextAttackTime( m_flNextPrimaryAttack, flFireDelay );
 			return;
 		}
 	}
@@ -182,7 +182,7 @@ void CTFWeaponBaseGun::PrimaryAttack( void )
 	}
 
 	// Set next attack times.
-	m_flNextPrimaryAttack = gpGlobals->curtime + flFireDelay;
+	m_flNextPrimaryAttack = GetCorrectedNextAttackTime( m_flNextPrimaryAttack, flFireDelay );
 
 	// Don't push out secondary attack, because our secondary fire
 	// systems are all separate from primary fire (sniper zooming, demoman pipebomb detonating, etc)
@@ -214,6 +214,19 @@ void CTFWeaponBaseGun::PrimaryAttack( void )
 	}
 
 	pPlayer->m_Shared.OnAttack();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Calculates the next attack time that averages the attack interval correctly for continuous fire
+//-----------------------------------------------------------------------------
+float CTFWeaponBaseGun::GetCorrectedNextAttackTime( float flAttackTime, float flFireDelay ) const
+{
+	float flDiff = gpGlobals->curtime - flAttackTime;
+
+	if ( flDiff < 0.f || flDiff > TICK_INTERVAL )
+		return gpGlobals->curtime + flFireDelay;
+
+	return flAttackTime + flFireDelay;
 }	
 
 //-----------------------------------------------------------------------------
@@ -1081,6 +1094,47 @@ float CTFWeaponBaseGun::GetProjectileDamage( void )
 //-----------------------------------------------------------------------------
 bool CTFWeaponBaseGun::Holster( CBaseCombatWeapon *pSwitchingTo )
 {
+	bool bHolsterReload = 0;
+	CALL_ATTRIB_HOOK_INT(bHolsterReload, holster_reloads);
+	// Allow weapon to silently reload like the flaregun
+	if ( bHolsterReload )
+	{
+		CTFPlayer* pPlayer = GetTFPlayerOwner();
+		if ( m_iClip1 < GetMaxClip1() && pPlayer && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) > 0 )
+		{
+			// These Values need to match the anim times since all this stuff is actually driven by animation sequence time in the base code
+			float flFireDelay = ApplyFireDelay(m_pWeaponInfo->GetWeaponData(m_iWeaponMode).m_flTimeFireDelay);
+
+			float flReloadTime = m_pWeaponInfo->GetWeaponData(m_iWeaponMode).m_flTimeReload;
+			CALL_ATTRIB_HOOK_FLOAT(flReloadTime, mult_reload_time);
+			CALL_ATTRIB_HOOK_FLOAT(flReloadTime, mult_reload_time_hidden);
+			CALL_ATTRIB_HOOK_FLOAT(flReloadTime, fast_reload);
+
+			float flIdleTime = GetLastPrimaryAttackTime() + flFireDelay + flReloadTime;
+			if (GetWeaponIdleTime() < flIdleTime)
+			{
+				SetWeaponIdleTime(flIdleTime);
+				m_flNextPrimaryAttack = flIdleTime;
+			}
+			if ( m_bReloadsSingly )
+			{
+				IncrementAmmo();
+			}
+			else 
+			{
+				if ( pPlayer->GetAmmoCount(m_iPrimaryAmmoType) < ( GetMaxClip1() - m_iClip1) )
+				{
+					m_iClip1 += pPlayer->GetAmmoCount(m_iPrimaryAmmoType);
+					pPlayer->RemoveAmmo(pPlayer->GetAmmoCount(m_iPrimaryAmmoType), m_iPrimaryAmmoType);
+				}
+				else
+				{
+					pPlayer->RemoveAmmo(GetMaxClip1() - m_iClip1, m_iPrimaryAmmoType);
+					m_iClip1 = GetMaxClip1();
+				}
+			}
+		}
+	}
 // Server specific.
 #if !defined( CLIENT_DLL )
 

@@ -927,7 +927,8 @@ ConVar tf_mvm_buybacks_method( "tf_mvm_buybacks_method", "0", FCVAR_REPLICATED |
 ConVar tf_mvm_buybacks_per_wave( "tf_mvm_buybacks_per_wave", "3", FCVAR_REPLICATED | FCVAR_HIDDEN, "The fixed number of buybacks players can use per-wave." );
 
 //MVM Versus - Convars
-ConVar cf_gamemode_mvmvs( "cf_gamemode_mvmvs", "1", FCVAR_REPLICATED | FCVAR_NOTIFY, "Enable versus in MvM");
+ConVar cf_mvmvs_enable("cf_mvmvs_enable", "1", FCVAR_REPLICATED | FCVAR_NOTIFY, "Enable versus in MvM");
+ConVar cf_gamemode_mvmvs("cf_gamemode_mvmvs", "0", FCVAR_REPLICATED | FCVAR_NOTIFY | FCVAR_DEVELOPMENTONLY);
 ConVar cf_mvmvs_robot_stations( "cf_mvmvs_robot_stations", "0", FCVAR_REPLICATED | FCVAR_NOTIFY, "Allow Robots to use upgrade stations");
 ConVar cf_mvmvs_use_loadout( "cf_mvmvs_use_loadout", "1", FCVAR_REPLICATED | FCVAR_NOTIFY, "Robot players will spawn with their loadout items, if not, will be picked from the robot selection list file");
 ConVar cf_mvmvs_playstyle( "cf_mvmvs_playstyle", "0", FCVAR_REPLICATED | FCVAR_NOTIFY, "MvM Versus playstyle: 0 = Classic (spawn with loadout, random giants/gatebots), 1 = Popfile List (load robots from current wave)" );
@@ -4264,6 +4265,9 @@ void CTFGameRules::Activate()
 	tf_gamemode_raid.SetValue( 0 );
 	tf_gamemode_boss_battle.SetValue( 0 );
 #endif
+
+	cf_gamemode_mvmvs.SetValue(0);
+
 	m_bPlayingMannVsMachine.Set( false );
 	m_bBountyModeEnabled.Set( false );
 	m_nCurrencyAccumulator = 0;
@@ -4361,6 +4365,9 @@ void CTFGameRules::Activate()
 	{
 		m_bPlayingMannVsMachine.Set( true );
 		tf_gamemode_mvm.SetValue( 1 );
+
+		if (cf_mvmvs_enable.GetBool())
+			cf_gamemode_mvmvs.SetValue(1);
 		m_nGameType.Set( TF_GAMETYPE_MVM );
 	}
 	else if ( MapHasPrefix( STRING( gpGlobals->mapname ), "sd_" ) )
@@ -18862,6 +18869,8 @@ convar_tags_t convars_to_check_for_tags[] =
 	{ "tf_powerup_mode", "powerup", NULL },
 	{ "tf_gamemode_passtime", "passtime", NULL },
 	{ "tf_gamemode_misc", "misc", NULL }, // catch-all for matchmaking to identify sd, tc, and pd servers via sv_tags
+	{ "tf_disable_taunts", "notaunts", NULL },
+	{ "tf_disable_taunt_kills", "notauntkills", NULL },
 };
 
 //-----------------------------------------------------------------------------

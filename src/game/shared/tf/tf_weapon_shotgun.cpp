@@ -38,6 +38,7 @@ CREATE_SIMPLE_WEAPON_TABLE( TFShotgun_Revenge, tf_weapon_sentry_revenge )
 CREATE_SIMPLE_WEAPON_TABLE( TFSodaPopper, tf_weapon_soda_popper )
 CREATE_SIMPLE_WEAPON_TABLE( TFPEPBrawlerBlaster, tf_weapon_pep_brawler_blaster )
 CREATE_SIMPLE_WEAPON_TABLE( TFShotgunBuildingRescue, tf_weapon_shotgun_building_rescue )
+CREATE_SIMPLE_WEAPON_TABLE( TFLeech, tf_weapon_leech )
 
 #define SCATTERGUN_KNOCKBACK_MIN_DMG		30.0f
 #define SCATTERGUN_KNOCKBACK_MIN_RANGE_SQ	160000.0f //400x400

@@ -287,6 +287,7 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CBaseEntity, DT_BaseEntity )
 	SendPropEHandle (SENDINFO(m_hEffectEntity)),
 	SendPropEHandle (SENDINFO_NAME(m_hMoveParent, moveparent)),
 	SendPropInt		(SENDINFO(m_iParentAttachment), NUM_PARENTATTACHMENT_BITS, SPROP_UNSIGNED),
+	SendPropInt( SENDINFO( m_nTFFlags ), 20, SPROP_UNSIGNED ),
 
 	SendPropInt		(SENDINFO_NAME( m_MoveType, movetype ), MOVETYPE_MAX_BITS, SPROP_UNSIGNED ),
 	SendPropInt		(SENDINFO_NAME( m_MoveCollide, movecollide ), MOVECOLLIDE_MAX_BITS, SPROP_UNSIGNED ),
@@ -2146,6 +2147,7 @@ BEGIN_DATADESC_NO_BASE( CBaseEntity )
 	DEFINE_KEYFIELD( m_iszKillerPrintName, FIELD_STRING, "print_killername"),
 	DEFINE_KEYFIELD( m_iszVictimPrintName, FIELD_STRING, "print_victimname"),
 	DEFINE_KEYFIELD( m_iszKilliconPrint, FIELD_STRING, "print_killicon"),
+	DEFINE_KEYFIELD( m_nTFFlags, FIELD_INTEGER, "TFFlags" ),
 
 //	DEFINE_FIELD( m_bSentLastFrame, FIELD_INTEGER ),
 
@@ -2298,6 +2300,9 @@ BEGIN_ENT_SCRIPTDESC_ROOT( CBaseEntity, "Root class of all server-side entities"
 	DEFINE_SCRIPTFUNC_NAMED( entindex, "GetEntityIndex", "" )
 
 	DEFINE_SCRIPTFUNC_NAMED( ScriptPrecacheModel, "PrecacheModel", "" )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptPrecacheModelWithGibs, "PrecacheModelWithGibs", "" )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptPrecacheMaterial, "PrecacheMaterial", "" )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptPrecacheParticleSystem, "PrecacheParticleSystem", "" )
 	DEFINE_SCRIPTFUNC_NAMED( ScriptPrecacheScriptSound, "PrecacheScriptSound", "" )
 	// dota had a SetModel here too, but i dont think we need it
 
@@ -2390,6 +2395,15 @@ BEGIN_ENT_SCRIPTDESC_ROOT( CBaseEntity, "Root class of all server-side entities"
 	DEFINE_SCRIPTFUNC( KeyValueFromInt, "Executes KeyValue with an int" )
 	DEFINE_SCRIPTFUNC( KeyValueFromVector, "Executes KeyValue with a vector" )
 
+	// TF2-specific
+	DEFINE_SCRIPTFUNC( AddTFFlags, "Adds a new TF2 specific flag into the entity." )
+	DEFINE_SCRIPTFUNC( HasTFFlags, "Determines whether the entity has a TF2 specific flag applied." )
+	DEFINE_SCRIPTFUNC( RemoveTFFlags, "Removes a TF2 specific flag from the entity." )
+
+	DEFINE_SCRIPTFUNC( IsObservable, "Determines whether the entity can be observed by spectators/observers." )
+	DEFINE_SCRIPTFUNC( IsMediGunTargetable, "Determines whether the entity can be healed by Medic's MediGun." )
+	DEFINE_SCRIPTFUNC( IsSentryTargetable, "Determines whether the entity can be targeted by Engineer's Sentry Gun." )
+
 	DEFINE_SCRIPTFUNC_NAMED( ScriptGetModelKeyValues, "GetModelKeyValues", "Get a KeyValue class instance on this entity's model")
 
 	DEFINE_SCRIPTFUNC( ValidateScriptScope, "Ensure that an entity's script scope has been created" )
@@ -2454,23 +2468,20 @@ BEGIN_ENT_SCRIPTDESC_ROOT( CBaseEntity, "Root class of all server-side entities"
 	DEFINE_SCRIPTFUNC_NAMED( ScriptGetSolid, "GetSolid", "" )
 	DEFINE_SCRIPTFUNC_NAMED( ScriptSetSolid, "SetSolid", "" )
 	
-	DEFINE_SCRIPTFUNC_NAMED( ScriptMakePhysics, "MakePhysics", "Give the entity Physics" )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptDestroyPhysics, "DestroyPhysics", "Remove the entity Physics" )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptSetMass, "SetMass", "Set the entity's Mass" )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptGetMass, "GetMass", "Get the entity's Mass" )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptSetBuoyancyRatio, "SetBuoyancyRatio", "Set the entity's Bouyancy, 0 = sink, 1 = float" )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptSetElasticity, "SetElasticity", "Set the entity's Elasticity" )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptGetElasticity, "GetElasticity", "Get the entity's Elasticity" )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptToggleCollisionsOn, "ToggleCollisionsOn", "Toggle Collisions between 2 entities" )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptCreatePhysics, "CreatePhysics", "Create the entity Physics." )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptDestroyPhysics, "DestroyPhysics", "Destroy the entity Physics." )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptHasPhysics, "HasPhysics", "Do we have Physics?")
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetSurfaceProperty, "GetSurfaceProperty", "Get the surface property id of the Physics Object.")
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetSurfacePropertyName, "GetSurfacePropertyName", "Get the surface property id by name on the Physics Object.")
+	DEFINE_SCRIPTFUNC_NAMED( ScriptSetSurfaceProperty, "SetSurfaceProperty", "Set a surface property id of the Physics Object.")
+	DEFINE_SCRIPTFUNC_NAMED( ScriptSetSurfacePropertyByName, "SetSurfacePropertyByName", "Set a surface property id by name on the Physics Object.")
+	DEFINE_SCRIPTFUNC_NAMED( ScriptSetMass, "SetMass", "Set the entity's Mass." )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptGetMass, "GetMass", "Get the entity's Mass." )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptSetBuoyancy, "SetBuoyancy", "Set the entity's Bouyancy, 0-1 ratio." )
+	DEFINE_SCRIPTFUNC_NAMED( SetElasticity, "SetElasticity", "Set the entity's Elasticity." )
+	DEFINE_SCRIPTFUNC_NAMED( GetElasticity,	"GetElasticity", "Get the entity's Elasticity." )
+	DEFINE_SCRIPTFUNC_NAMED( ScriptToggleCollisionsOn, "ToggleCollisionsOn", "Toggle Collisions between two physical entities." )
 
-	//TF2 Specific
-	DEFINE_SCRIPTFUNC_NAMED( ScriptSetExplodeProjectilesOnTouch, "SetExplodeProjectilesOnTouch", "Make Some Projectiles explode on contact with this entity." )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptCanStickProjectiles, "CanStickProjectiles", "Make Stickybombs attach with this entity." )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptCanBeHealed, "CanBeHealed", "Make this entity Healable from Mediguns." )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptSetTargetable, "SetTargetable", "UNFINISHED: Make this entity Targetable from Bots or Sentryguns." )
-	DEFINE_SCRIPTFUNC_NAMED( ScriptSetBurnable, "SetBurnable", "Make this entity catch fire from Pyro weapons.")
-	DEFINE_SCRIPTFUNC_NAMED( ScriptSetObservable, "SetObservable", "Make this entity Observable.")
-	
 	DEFINE_SCRIPTFUNC( TerminateScriptScope, "Clear the current script scope for this entity" )
 
 	DEFINE_SCRIPTFUNC_NAMED( ScriptAcceptInput, "AcceptInput", "Generate a synchronous I/O event" )
@@ -5615,6 +5626,10 @@ void CBaseEntity::Remove( )
 	UTIL_Remove( this );
 }
 
+bool CBaseEntity::IsObservable() const { return HasTFFlags(TFFLAG_OBSERVABLE); }
+bool CBaseEntity::IsMediGunTargetable() const { return HasTFFlags(TFFLAG_MEDIGUN_CAN_HEAL); }
+bool CBaseEntity::IsSentryTargetable() const { return HasTFFlags(TFFLAG_TARGETABLE); }
+
 //-----------------------------------------------------------------------------
 // VScript access to model's key values
 // for iteration and value access, use:
@@ -5663,6 +5678,36 @@ HSCRIPT CBaseEntity::ScriptGetModelKeyValues( void )
 void CBaseEntity::ScriptPrecacheModel( const char *name )
 {
 	PrecacheModel( name );
+}
+
+//------------------------------------------------------------------------------
+// Purpose :
+// Input   :
+// Output  :
+//------------------------------------------------------------------------------
+void CBaseEntity::ScriptPrecacheModelWithGibs( const char *name )
+{
+	int iModel = PrecacheModel( name );
+	PrecacheGibsForModel( iModel );
+	PrecacheModel( name );
+}
+//------------------------------------------------------------------------------
+// Purpose :
+// Input   :
+// Output  :
+//------------------------------------------------------------------------------
+void CBaseEntity::ScriptPrecacheMaterial( const char *name )
+{
+	PrecacheMaterial( name );
+}
+//------------------------------------------------------------------------------
+// Purpose :
+// Input   :
+// Output  :
+//------------------------------------------------------------------------------
+void CBaseEntity::ScriptPrecacheParticleSystem( const char *name )
+{
+	PrecacheParticleSystem( name );
 }
 
 //------------------------------------------------------------------------------

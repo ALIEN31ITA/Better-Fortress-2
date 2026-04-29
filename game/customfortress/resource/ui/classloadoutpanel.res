@@ -162,6 +162,42 @@
 		"enabled"		"1"
 	}
 	
+	"ExtraCaratLabel"
+	{
+		"ControlName"		"CExLabel"
+		"fieldName"		"ExtraCaratLabel"
+		"font"			"HudFontSmallestBold"
+		"labelText"		">>"
+		"textAlignment"	"west"
+		"xpos"			"c-150"
+		"ypos"			"20"
+		"zpos"			"1"
+		"wide"			"20"
+		"tall"			"15"
+		"autoResize"	"1"
+		"pinCorner"		"0"
+		"visible"		"1"
+		"enabled"		"1"
+		"fgcolor_override" "200 80 60 255"
+	}
+	"ExtraLabel"
+	{
+		"ControlName"	"CExLabel"
+		"fieldName"		"ExtraLabel"
+		"font"			"HudFontMediumBold"
+		"labelText"		"#CF_Extra"
+		"textAlignment"	"west"
+		"xpos"			"c-130"
+		"ypos"			"15"
+		"zpos"			"1"
+		"wide"			"240"
+		"tall"			"25"
+		"autoResize"	"0"
+		"pinCorner"		"0"
+		"visible"		"1"
+		"enabled"		"1"
+	}
+	
 	"TopLine"
 	{
 		"ControlName"	"ImagePanel"
@@ -520,7 +556,7 @@
 		"ControlName"	"CExImageButton"
 		"fieldName"		"CharacterLoadoutButton"
 		"labelText"		""
-		"xpos"			"c-25"
+		"xpos"			"c-52"
 		"ypos"			"c90"
 		"zpos"			"2"
 		"wide"			"25"
@@ -558,7 +594,7 @@
 		"ControlName"	"CExImageButton"
 		"fieldName"		"TauntLoadoutButton"
 		"labelText"		""
-		"xpos"			"c2"
+		"xpos"			"c-25"
 		"ypos"			"c90"
 		"zpos"			"2"
 		"wide"			"25"
@@ -699,5 +735,43 @@
 				"scaleImage"	"1"
 			}				
 		}		
+	}
+
+	"ExtraLoadoutButton"
+	{
+		"ControlName"	"CExImageButton"
+		"fieldName"		"ExtraLoadoutButton"
+		"labelText"		""
+		"xpos"			"c2"
+		"ypos"			"c90"
+		"zpos"			"2"
+		"wide"			"25"
+		"tall"			"25"
+		"autoResize"	"0"
+		"pinCorner"		"3"
+		"visible"		"1"
+		"enabled"		"1"
+		"tabPosition"	"0"
+		"dulltext"		"0"
+		"brighttext"	"0"
+		"default"		"0"
+		"Command"		"extraloadout"
+		"sound_depressed"	"UI/buttonclick.wav"
+		"sound_released"	"UI/buttonclickrelease.wav"
+
+		"SubImage"
+		{
+			"ControlName"	"ImagePanel"
+			"fieldName"		"SubImage"
+			"xpos"			"4"
+			"ypos"			"4"
+			"zpos"			"1"
+			"wide"			"17"
+			"tall"			"17"
+			"visible"		"1"
+			"enabled"		"1"
+			"scaleImage"	"1"
+			"image"			"../hud/ico_spy"
+		}
 	}
 }

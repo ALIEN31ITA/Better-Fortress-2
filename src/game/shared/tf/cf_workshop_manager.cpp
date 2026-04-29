@@ -707,7 +707,7 @@ void CCFWorkshopManager::InitWorkshop()
 			}
 		}
 	}
-	
+
 	// Queue a refresh of subscriptions
 	m_bRefreshQueued = true;
 }
@@ -3475,7 +3475,7 @@ CON_COMMAND(cf_workshop_maps, "List subscribed workshop maps and their paths")
 	FOR_EACH_VEC(items, i)
 	{
 		PublishedFileId_t fileID = items[i];
-		uint32 itemState = pUGC->GetItemState(fileID);
+		//uint32 itemState = pUGC->GetItemState(fileID);
 		
 		char szInstallPath[MAX_PATH];
 		uint64 sizeOnDisk = 0;

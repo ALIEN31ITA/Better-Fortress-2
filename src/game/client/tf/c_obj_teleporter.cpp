@@ -33,6 +33,7 @@ IMPLEMENT_CLIENTCLASS_DT(C_ObjectTeleporter, DT_ObjectTeleporter, CObjectTelepor
 	RecvPropFloat( RECVINFO(m_flYawToExit) ),
 	RecvPropBool( RECVINFO(m_bMatchBuilding) ),
 	RecvPropBool( RECVINFO(m_bIsMVMTeleporter) ),
+	RecvPropEHandle( RECVINFO( m_hMatchingTeleporter ) ),
 END_RECV_TABLE()
 
 //-----------------------------------------------------------------------------
@@ -344,7 +345,22 @@ void C_ObjectTeleporter::ClientThink( void )
 {
 	if ( m_iState >= TELEPORTER_STATE_READY )
 	{
-		SetPoseParameter( m_iDirectionArrowPoseParam, m_flYawToExit);
+		float flFinalYaw = m_flYawToExit;
+
+		if ( GetMoveParent() != NULL )
+        {
+			C_ObjectTeleporter *pExit = m_hMatchingTeleporter.Get();
+			if ( pExit )
+			{
+				Vector vecToOwner = pExit->GetAbsOrigin() - GetAbsOrigin();
+				QAngle angleToExit;
+				VectorAngles( vecToOwner, Vector(0,0,1), angleToExit );
+				angleToExit -= GetAbsAngles();
+
+				flFinalYaw = anglemod( -angleToExit.y + 180 );
+			}
+		}
+		SetPoseParameter( m_iDirectionArrowPoseParam, flFinalYaw);
 	}
 
 }

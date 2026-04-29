@@ -913,7 +913,7 @@ void CTFHudMannVsMachineScoreboard::UpdatePopFile( void )
 			char szTempName[MAX_PATH];
 			V_FileBase( m_popfile, szTempName, sizeof( szTempName ) );
 			int iChallengeIndex = GetItemSchema()->FindMvmMissionByName( szTempName );
-			int iEndlessMode = TFObjectiveResource()->IsInEndlessWaves();
+			//int iEndlessMode = TFObjectiveResource()->IsInEndlessWaves();
 
 			if ( GetItemSchema()->GetMvmMissions().IsValidIndex( iChallengeIndex ) )
 			{
