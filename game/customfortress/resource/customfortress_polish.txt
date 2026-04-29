@@ -1,7 +1,7 @@
 //Bajo Jajo Bajo Jajo
 "lang"
 {
-	"Language" "Polish"
+	"Language" "polish"
 	"Tokens"
 	{
 		//-----------------------------------------
@@ -159,7 +159,7 @@
 		"TFCW_Overdose_Desc"	"A prototype of a prototype, how odd..."
 		"TFCW_SchwabenCharger"	"The Schwaben-Charger 9000"
 		"TFCW_TonsilClamp"		"The Tonsil Guillotines"
-		"TFCW_TonsilClamp_Desc"	"Open wide."
+		"TFCW_TonsilClamp_Desc"	"Otwórz szeroko."
 
 		"TF_Default_Itemdef"			"NIEPRAWIDŁOWY PRZEDMIOT! PROSZĘ WYPOSAŻYĆ SIĘ PONOWNIE! \n GRA NAJPRAWDOPODOBNIEJ ZAKTUALIZOWAŁA!"
 		
@@ -189,7 +189,7 @@
 		"WS_DDAN_Taunt_StreamSniper" 				"The Stream Sniper"
 		"WS_DDAN_Taunt_StreamSniper_Desc" 			"Unzip, let loose, and make your enemy take the piss!"
 		
-		"TF_Canteen_Merasmus"						"Misfortune Canteen"
+		"TF_Canteen_Merasmus"						"Niefortunna Mannierka"
 		"TF_Canteen_Merasmus_Desc"					"Foolish machines! you cannot match the one and only, greatest magician of the Badlands!!!"
 		
 		//-----------------------------------------
@@ -197,18 +197,18 @@
 		//-----------------------------------------
 		
 		//Gamemode
-		"TF_MvM_EndlessWave"					"Endless!"
+		"TF_MvM_EndlessWave"					"Nieskończone!"
 		"TF_TANK_BOSS_DEATHCAM_NAME"			"Czołg!"
 		"Msg_DeployedBomb" 						"podłożył bombę!"
 
 		// MvM Versus Scoreboard
-		"TF_MvM_Defenders"						"OBROŃCY"
-		"TF_MvM_Invaders"						"Invaders"
+		"TF_MvM_Defenders"						"Obrońcy"
+		"TF_MvM_Invaders"						"Najeźdźcy"
 		
-		"TF_PVE_Player_UsedRadiusStealth"			"%player% has used their RADIUS STEALTH Power Up Canteen!"
-		"TF_PVE_Player_SeeCashThroughWall" 			"%player% has used their X-RAY VISION Power Up Canteen!"
-		"TF_PVE_UsePowerup_RadiusStealth"			"'%use_action_slot_item%' to activate Radius Stealth"
-		"TF_PVE_UsePowerup_SeeCashThroughWall"		"'%use_action_slot_item%' to activate X-Ray Vision"
+		"TF_PVE_Player_UsedRadiusStealth"			"%player% używa mannierki z Obszar Niewidzialności!"
+		"TF_PVE_Player_SeeCashThroughWall" 			"%player% używa mannierki z Rentgen Pieniędzy!"
+		"TF_PVE_UsePowerup_RadiusStealth"			"'%use_action_slot_item%' by aktywować Obszar Niewidzialności"
+		"TF_PVE_UsePowerup_SeeCashThroughWall"		"'%use_action_slot_item%' by aktywować Rentgen Pieniędzy"
 		
 		//Attributes
 		"Attrib_SniperLaser"						"Zooming activates a laser pointer"
@@ -287,7 +287,7 @@
 		"OFFSHORE_TauntFishing_Desc"			"To nie jest zwykłe wędkowanie, synu!"
 		
 		// Killfeed Messages
-		"Humiliation_Kill_Marlin"			"MARLIN KILL!"
+		"Humiliation_Kill_Marlin"			"MARLIN!"
 		
 		// Weapons
 		"TFCW_Swordfish" 		"The Holy Marlin"	//Altranade
@@ -295,7 +295,7 @@
 		"TFCW_Pipewrench" 		"Junction Bolter"		//Lettuce
 		"TFCW_Pipewrench_Desc"	"Call me a plumber one more time and you will regret it."
 		"TFCW_HellSticky" 		"The Hell Beneath"		//Haau
-		"TFCW_HellSticky_Desc"	"Waves are not measured in feet or inches, they are measured in increments of fear."
+		"TFCW_HellSticky_Desc"	"Fale nie mierzy się w stopach ani calach, mierzy się je w jednostkach strachu."
 
 		//Crate and Keys - [DISPLAY ONLY]
 		"Offshore2025_Crate_sea"			"Offshore Murky Case"
