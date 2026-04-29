@@ -14,31 +14,31 @@
 		"TFB_BetaMessage"					"BETA"
 		"TFB_MOTD_DISCORD"					"DISCORD"
 		"TFB_MOTD_GITHUB"					"GITHUB"
-		"TF_ClearTextChatOnDisconnect"		"Clear text chat on disconnect"
-		"Tooltip_ClearTextChatOnDisconnect"	"If set, text chat is auto cleared on disconnecting from a server. (You may manually do this any time via cl_clearchathistory command)"
+		"TF_ClearTextChatOnDisconnect"		"Wyczyść czat tekstowy po rozłączeniu"
+		"Tooltip_ClearTextChatOnDisconnect"	"Po zaznaczeniu, czat tekstowy zostanie automatycznie wyczyszczony po rozłączeniu się z serwerem. (Możesz zrobić to manualnie w każdej chwili komendą cl_clearchathistory)"
 		"TF_UseRadialVoiceMenu"				"Use Radial Voice Menu"
 		"Tooltip_UseRadialVoiceMenu"		"If set, the voice command keys will open a radial menu instead of the traditional numbered menu."
-		"GameUI_ItemSettings"				"ITEM SETTINGS"
+		"GameUI_ItemSettings"				"USTAWIENIA PRZEDMIOTÓW"
 		
-		"Vote_ToggleVersus"					"Toggle Mann Vs Machine Versus"
-		"TF_vote_versus_enable"				"Enable Mann Vs Machine Versus Mode?"
-		"TF_vote_passed_versus_enable"		"Enabling Mann Vs Machine Versus Mode..."
-		"TF_vote_versus_disable"			"Disable Mann Vs Machine Versus Mode?"
-		"TF_vote_passed_versus_disable"		"Disabling Mann Vs Machine Versus Mode..."
-		"CF_DisableCosmetics"				"Disable Cosmetics"
+		"Vote_ToggleVersus"					"Zmień Mann Vs Maszyny Kontra"
+		"TF_vote_versus_enable"				"Włączyć Mann Vs Maszyny Tryb Kontra?"
+		"TF_vote_passed_versus_enable"		"Włączanie Mann Vs Maszyny Tryb Kontra..."
+		"TF_vote_versus_disable"			"Wyłączyć Mann Vs Maszyny Tryb Kontra?"
+		"TF_vote_passed_versus_disable"		"Wyłączanie Mann Vs Maszyny Tryb Kontra..."
+		"CF_DisableCosmetics"				"Wyłącz ozdoby"
 		"Tooltip_DisableCosmetics"			"If set, all cosmetic items (hats and misc items) will be hidden from view."
-		"CF_DisableUnusualEffects"			"Disable Unusual Effects"
-		"Tooltip_DisableUnusualEffects"	"If set, all unusual particle effects will be hidden from view."
+		"CF_DisableUnusualEffects"			"Wyłącz Nietypowe Efekty"
+		"Tooltip_DisableUnusualEffects"		"If set, all unusual particle effects will be hidden from view."
 		"CF_DisableWeaponSkins"				"Disable Weapon Skins"
 		"Tooltip_DisableWeaponSkins"		"If set, all weapon skins and warpaints will be disabled, showing default weapon textures."
 		"CF_DisableHolidayThemes"			"Disable Holiday Themes"
 		"Tooltip_DisableHolidayThemes"		"If set, holiday-themed main menu backgrounds (Halloween, Christmas, etc.) will be disabled."
 		"CF_CleanSpectatorHUD"				"Clean Spectator HUD"
-		"Tooltip_CleanSpectatorHUD"		"If set, hides the spectator GUI elements for a cleaner viewing experience while spectating."
+		"Tooltip_CleanSpectatorHUD"			"If set, hides the spectator GUI elements for a cleaner viewing experience while spectating."
 		"TF_MedicShowCritHealIndicator"		"Medic: Enable Crit Heal Indicator"
 		"Tooltip_MedicShowCritHealIndicator"	"Show visual indicators above patients who can receive critical healing (haven't taken damage recently) while playing as Medic."
-		"CF_2007Visuals"                   "2007 Visuals"
-		"Tooltip_2007Visuals"              "When enabled, uses 2007-style weapon models (v_models and w_models) where available."
+		"CF_2007Visuals"                   	"2007 Visuals"
+		"Tooltip_2007Visuals"              	"When enabled, uses 2007-style weapon models (v_models and w_models) where available."
 		
 		// Item Quality
 		"beta"							"Beta"
@@ -50,31 +50,31 @@
 		"TF_Tag_Contributor"			"[Contributor] "
 		
 		// Chat Prefixes
-		"TF_Chat_Dead"					"*DEAD*"
-		"TF_Chat_Spec"					"*SPEC*"
-		"TF_Chat_TeamPrefix"			"(TEAM)"
-		"TF_Chat_CoachPrefix"			"(COACH)"
+		"TF_Chat_Dead"					"*NIE ŻYJE*"
+		"TF_Chat_Spec"					"*WIDZ*"
+		"TF_Chat_TeamPrefix"			"(DRUŻYNA)"
+		"TF_Chat_CoachPrefix"			"(TRENER)"
 		
 		// Chat Format
 		"TF_Chat_All"					"%s1 :  %s2"
 		
 		//OVERRIDE
-		"NewItemsAcquired"		"%numitems% NEW ITEMS ACQUIRED IN TEAM FORTRESS 2!"
-		"NewItemAcquired"		"NEW ITEM ACQUIRED IN TEAM FORTRESS 2!"
+		"NewItemsAcquired"		"%numitems% NOWE ZDOBYTE PRZEDMIOTY W TEAM FORTRESS 2!"
+		"NewItemAcquired"		"NOWE ZDOBYTE PRZEDMIOTY W TEAM FORTRESS 2!"
 		
 		// ITEM SELECTION PANEL
-		"Selection_ShowModItems"	 "Show Mod Items"
-		"Selection_ShowTF2Items"	 "Show TF2 Items"
+		"Selection_ShowModItems"	 "Pokaż przedmioty Moda"
+		"Selection_ShowTF2Items"	 "Pokaż przedmioty TF2"
 		
 		//GAMEPLAY
-		"FreezePanel_Killer_Crusher" "You got crushed by"
+		"FreezePanel_Killer_Crusher" "Zostałeś zmiażdżony przez"
 
 		// Voice Menu
-		"Voice_Menu_Sniper"	         "Sniper!"
+		"Voice_Menu_Sniper"	         "Snajper!"
 				
 		//Item Styles
-		"TFB_Jetpack_S1"		"Factory Issue"
-		"TFB_Jetpack_S2" 		"Rainbow magic!"
+		"TFB_Jetpack_S1"		"Wada fabryczna"
+		"TFB_Jetpack_S2" 		"Tęczowa magia!"
 		
 
 		//Item Sets
@@ -91,7 +91,7 @@
 		"TCF_TauntKill_Trustfall_Desc" "I have squashed you like bug!"
 		
 		//Attributes
-		"Attrib_WrenchBuildsMiniDispenser"			"Replaces the Dispenser with a Mini-Dispenser"
+		"Attrib_WrenchBuildsMiniDispenser"			"Zamienia Zasobnik na Mini-Zasobnik"
 		"Attrib_ApplyKnockbackOnHit"				"Apply knockback on hit"
 		"Attrib_ShowHitsInKillfeed"					"Show hits in killfeed"
 		"Attrib_EngySentryFireRateDecreased"		"%s1% sentry firing speed"
@@ -111,22 +111,22 @@
 		"Attrib_SpeedBuffAllyProjectile"			"On Hit Teammate: Boosts teammate's speed for 1 second"
 		"Attrib_MeleeCleanseAlly"					"On Hit Teammate: Remove debuffs from teammate, granting 1% - 20% Übercharge per debuff"
 		"Attrib_UberDurationPenalty"				"Über duration decreased by %s1%"
-		"Attrib_Medigun_Cloak"						"ÜberCharge cloaks patient and user"
+		"Attrib_Medigun_Cloak"						"ÜberCharge zapewnia pacjentowi i użytkownikowi niewidzialność"
 		
 		// Warpaints
 		"WARPAINT_MOD_BARNEY"		"Barney's Special"
 		"WARPAINT_MOD_MEATWAD"		"Purple Range MK.II"
 		
 		// Collections
-		"BetterFortress_collection"			"Custom Fortress Collection (Display only)"
-		"BetterFortress_collection_desc"		"Items from the mod Collection:"
+		"BetterFortress_collection"			"Kolekcja Custom Fortress (Display only)"
+		"BetterFortress_collection_desc"		"Przedmioty z kolekcji moda:"
 		
 		//Items Types
-		"TF_Throwable_Bread"				"Bread"
+		"TF_Throwable_Bread"				"Chleb"
 		"TF_Taunt_Community"				"Community Taunt"
 		"TF_TauntKill_Community"			"Community Taunt Kill"
 		"TF_Throwable_Type_Bread"			"Wheat-Based Product"
-		"TF_Weapon_Throwable" 				"Throwable"
+		"TF_Weapon_Throwable" 				"Rzucalne"
 		"TF_Dash"						    "DASH"
 		"TF_Weapon_Defib"					"Defibrillator"
 		"TF_Weapon_Tongs"					"Tongs"
@@ -138,9 +138,9 @@
 		"TFCW_Torchlight"		"The Baleful Beacon"
 		"TFCW_Torchlight_Desc"	"This shattered old lantern on a stick still has a few good uses left in it."
 		"TFCW_Afterburner"		"The Afterburner"
-		"TFCW_Afterburner_Desc"	"Fly high you Pyromaniac!"
+		"TFCW_Afterburner_Desc"	"Leć wysoko ty Piromanie!"
 		"TFCW_Spitfire"			"The Spitfire"
-		"TFCW_Spitfire_Desc"	"Target acquired."
+		"TFCW_Spitfire_Desc"	"Cel namierzony."
 		"TFCW_Spitfire_SeekProj" "Flares ignore gravity and home-in on burning players"
 		"TFCW_Weapon_Afterburner_Dash" "Alt-Fire: Release a blast of air that\n propels the wearer towards the\n direction they are moving or looking"
 		"TFCW_Weapon_Afterburner_NoBlast" "Can't airblast or exstinguish teammates"
@@ -198,11 +198,11 @@
 		
 		//Gamemode
 		"TF_MvM_EndlessWave"					"Endless!"
-		"TF_TANK_BOSS_DEATHCAM_NAME"			"A Tank!"
-		"Msg_DeployedBomb" 						"deployed the bomb!"
+		"TF_TANK_BOSS_DEATHCAM_NAME"			"Czołg!"
+		"Msg_DeployedBomb" 						"podłożył bombę!"
 
 		// MvM Versus Scoreboard
-		"TF_MvM_Defenders"						"Defenders"
+		"TF_MvM_Defenders"						"OBROŃCY"
 		"TF_MvM_Invaders"						"Invaders"
 		
 		"TF_PVE_Player_UsedRadiusStealth"			"%player% has used their RADIUS STEALTH Power Up Canteen!"
@@ -219,13 +219,13 @@
 		"Attrib_Blacklisted_MVM_Description"		"This item cannot be used in Mann vs. Machine!"
 		"Attrib_AirblastYourTeam"					"Airblast pushes your Teammates! \n Don't be a Jerk..."
 		"Attrib_ItemCanTalk_Description"			"I Can Speak!"
-		"Attrib_AirBlastPushDownScale"				"%s1% airblast push force"
+		"Attrib_AirBlastPushDownScale"				"%s1% siły odpychania sprężonego powietrza"
 		
 		//Canteen Attributes
-		"Attrib_Radius_Stealth_shortdesc"			"Radius Stealth"
-		"Attrib_Radius_Stealth"						"Consumable: Help your teammates to cloak for a few seconds!"
-		"Attrib_CashXray_shortdesc"					"X-Ray Cash"
-		"Attrib_CashXray"							"Consumable: Makes you able to see dropped money thru walls!"
+		"Attrib_Radius_Stealth_shortdesc"			"Obszar Niewidzialności"
+		"Attrib_Radius_Stealth"						"Po użyciu: Pomóż twojej drużynie stać się niewidzialnym przez kilka sekund!"
+		"Attrib_CashXray_shortdesc"					"Rentgen Pieniędzy"
+		"Attrib_CashXray"							"Po użyciu: Pozwala dostrzec upuszczone pieniądze przez ściany!"
 		
 		//Items
 		"TF_MVMRobotSkin_Type"			"Mechanized Mercenary"
@@ -291,7 +291,7 @@
 		
 		// Weapons
 		"TFCW_Swordfish" 		"The Holy Marlin"	//Altranade
-		"TFCW_Swordfish_Desc"	"Mother's nature true sword\nExcept it's smelly and dead..."
+		"TFCW_Swordfish_Desc"	"Prawdziwy miecz Matki Natury\nTyle że śmierdzi i jest martwy..."
 		"TFCW_Pipewrench" 		"Junction Bolter"		//Lettuce
 		"TFCW_Pipewrench_Desc"	"Call me a plumber one more time and you will regret it."
 		"TFCW_HellSticky" 		"The Hell Beneath"		//Haau
@@ -331,28 +331,28 @@
 		//-----------------------------------------
 		// WORKSHOP COSMETIC TOOL
 		//-----------------------------------------
-		"TF_WorkshopCosmeticTool_Title"				"Cosmetic Preview Tool"
-		"TF_WorkshopCosmeticTool_Preview"			"Cosmetic Preview"
+		"TF_WorkshopCosmeticTool_Title"				"Narzędzie Podglądu Ozdoby"
+		"TF_WorkshopCosmeticTool_Preview"			"Podgląd Ozdoby"
 		"TF_WorkshopCosmeticTool_DragToRotate"		"Left-click to rotate, Middle-click to pan, Scroll to zoom"
 		"TF_WorkshopCosmeticTool_BrowseMDL"			"Browse MDL..."
 		"TF_WorkshopCosmeticTool_ResetView"			"Reset View"
 		"TF_WorkshopCosmeticTool_AutoRotate"		"Auto-Rotate"
 		"TF_WorkshopCosmeticTool_ModelPath"			"Model Path:"
 		"TF_WorkshopCosmeticTool_ClassSection"		"Mercenary Selection"
-		"TF_WorkshopCosmeticTool_Class"				"Class:"
-		"TF_WorkshopCosmeticTool_Team"				"Team:"
-		"TF_WorkshopCosmeticTool_PaintSection"		"Paint Color"
-		"TF_WorkshopCosmeticTool_PaintColor"		"Color:"
-		"TF_WorkshopCosmeticTool_UnusualSection"	"Unusual Effect"
-		"TF_WorkshopCosmeticTool_UnusualEffect"		"Effect:"
-		"TF_WorkshopCosmeticTool_InfoSection"		"Instructions"
+		"TF_WorkshopCosmeticTool_Class"				"Klasa:"
+		"TF_WorkshopCosmeticTool_Team"				"Drużyna:"
+		"TF_WorkshopCosmeticTool_PaintSection"		"Kolor farby"
+		"TF_WorkshopCosmeticTool_PaintColor"		"Kolor:"
+		"TF_WorkshopCosmeticTool_UnusualSection"	"Nietypowy efekt"
+		"TF_WorkshopCosmeticTool_UnusualEffect"		"Efekt:"
+		"TF_WorkshopCosmeticTool_InfoSection"		"Instrukcje"
 		"TF_WorkshopCosmeticTool_Info1"				"1. Click 'Browse MDL...' to select a cosmetic model file. The model will be loaded onto the selected mercenary class."
 		"TF_WorkshopCosmeticTool_Info2"				"2. Use the dropdowns to preview different paint colors and unusual effects on your cosmetic. Change classes to see how it looks on different mercenaries."
 
 		//-----------------------------------------
 		// LOADOUT SLOTS
 		//-----------------------------------------
-		"CF_Extra"					"EXTRAS"
+		"CF_Extra"					"DODATKI"
 		"LoadoutSlot_Skin"				"Skin"
 		"ItemSel_SKIN"					"- SKIN"
 
@@ -369,7 +369,7 @@
 		//-----------------------------------------
 		// UI STRINGS
 		//-----------------------------------------
-		"GameUI_Search"					"Search:"
-		"GameUI_AdvancedOptions"		"Advanced Options"
+		"GameUI_Search"					"Wyszukaj:"
+		"GameUI_AdvancedOptions"		"Opcje zaawansowane"
 	}
 }
