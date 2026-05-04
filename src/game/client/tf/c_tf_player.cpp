@@ -6047,6 +6047,10 @@ void C_TFPlayer::ClientThink()
 
 	UpdateOverheadEffects();
 
+
+	if ( IsAlive() )
+		UpdateVoiceFlexes();
+
 	{
 		if ( !IsTaunting() && m_PlayerAnimState->IsGestureSlotActive( GESTURE_SLOT_VCD ) )
 		{
@@ -6248,6 +6252,63 @@ void C_TFPlayer::ClientThink()
 		    engine->ClientCmd("voicemenu 1 8");
 	    }
 	}
+}
+
+//-----------------------------------------------------------------------------
+// PROTOTYPE: Improve it somehow?...
+//-----------------------------------------------------------------------------
+void C_TFPlayer::UpdateVoiceFlexes()
+{
+    CVoiceStatus *pVoiceMgr = GetClientVoiceMgr();
+    CStudioHdr *pStudioHdr = GetModelPtr();
+    if (!pVoiceMgr || !pStudioHdr) return;
+
+    const char* szPhonemes[] = { "OH", "OO", "AH", "EE", "PP" };
+    int nPhonemeCount = 5;
+
+    if (!pVoiceMgr->IsPlayerSpeaking(entindex()))
+    {
+        for (int i = 0; i < nPhonemeCount; i++)
+        {
+            LocalFlexController_t iFlex = FindFlexController(szPhonemes[i]);
+            if ((int)iFlex != -1)
+            {
+               
+                SetFlexWeight(iFlex, Approach(0.0f, GetFlexWeight(iFlex), gpGlobals->frametime * 5.0f));
+            }
+        }
+        return;
+    }
+    static float flNextShiftTime = 0.0f;
+    static int iActiveIndex = 0;
+
+    if (gpGlobals->curtime > flNextShiftTime)
+    {
+        iActiveIndex = RandomInt(0, 3);
+        flNextShiftTime = gpGlobals->curtime + 0.12f;
+    }
+
+    float flVocalEnergy = 0.7f + (sin(gpGlobals->curtime * 45.0f) * 0.3f);
+
+    for (int i = 0; i < nPhonemeCount; i++)
+    {
+        LocalFlexController_t iFlex = FindFlexController(szPhonemes[i]);
+        if ((int)iFlex == -1) continue;
+
+        float flTarget = 0.0f;
+
+        if (i == iActiveIndex)
+        {
+            flTarget = flVocalEnergy;
+        }
+        else if (szPhonemes[iActiveIndex] == "OH" && szPhonemes[i] == "OO")
+        {
+            flTarget = flVocalEnergy * 0.3f;
+        }
+
+        float flNewWeight = Approach(flTarget, GetFlexWeight(iFlex), gpGlobals->frametime * 15.0f);
+        SetFlexWeight(iFlex, flNewWeight);
+    }
 }
 
 void C_TFPlayer::MVM_StartIdleSound(void)

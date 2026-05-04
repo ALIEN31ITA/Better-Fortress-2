@@ -6090,8 +6090,11 @@ bool CTFWeaponBase::DeflectProjectiles()
 		if ( bTruce && ( pObjects[i]->GetTeamNumber() == iEnemyTeam ) )
 			continue;
 
-		if ( !pObjects[i]->IsDeflectable() && !FClassnameIs( pObjects[i], "prop_physics" ) )
-			continue;
+		//Skip if we have the TF flag. FL_GRENADE is still required for compatibility...
+		if (!(pObjects[i]->m_nTFFlags & TFFLAG_AIRBLASTABLE)) {
+			if (!pObjects[i]->IsDeflectable() && !FClassnameIs(pObjects[i], "prop_physics"))
+				continue;
+		}
 
 		if ( pObjects[i]->IsPlayer() == true )
 		{
@@ -6174,14 +6177,18 @@ bool CTFWeaponBase::DeflectEntity( CBaseEntity *pTarget, CTFPlayer *pOwner, Vect
 	Vector vecVel = pTarget->GetAbsVelocity();
 
 	// apply an impulse instead if this is a prop physics object
-	if ( FClassnameIs( pTarget, "prop_physics" ) )
+	if ( FClassnameIs( pTarget, "prop_physics" ) || pTarget->m_nTFFlags & TFFLAG_AIRBLASTABLE )
 	{
 		IPhysicsObject *pPhysicsObject = pTarget->VPhysicsGetObject();
 		if ( pPhysicsObject && pTarget->CollisionProp() )
 		{
+			//MvM Upgrade Support
+			float flForce = 1;
+			CALL_ATTRIB_HOOK_FLOAT(flForce, airblast_pushback_scale);
+
 			Vector vecDir = pTarget->WorldSpaceCenter() - vecEye;
 			VectorNormalize( vecDir );
-			float flVel = 50.0f * CTFWeaponBase::DeflectionForce( pTarget->CollisionProp()->OBBSize(), 90, 12.0f );
+			float flVel = ( 50.0f * flForce ) * CTFWeaponBase::DeflectionForce( pTarget->CollisionProp()->OBBSize(), 90, 12.0f );
 			pPhysicsObject->ApplyForceOffset( vecDir * flVel, vecEye );
 		}
 		return true;

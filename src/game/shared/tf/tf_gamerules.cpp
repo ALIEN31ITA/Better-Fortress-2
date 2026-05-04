@@ -18898,11 +18898,16 @@ void CTFGameRules::GetTaggedConVarList( KeyValues *pCvarTagList )
 	const char *pszBranch = GetSteamBranchName();
 	if ( pszBranch && pszBranch[0] )
 	{
-		KeyValues *pKVBranch = new KeyValues( "branch_tag" );
-		pKVBranch->SetString( "tag", CFmtStr( "branch_%s", pszBranch ).Access() );
-		pCvarTagList->AddSubKey( pKVBranch );
+		static bool bLoggedBranch = false;
+		if ( !bLoggedBranch )
+		{
+			KeyValues *pKVBranch = new KeyValues( "branch_tag" );
+			pKVBranch->SetString( "tag", CFmtStr( "branch_%s", pszBranch ).Access() );
+			pCvarTagList->AddSubKey( pKVBranch );
 		
-		DevMsg( "Server tagged with branch: branch_%s\n", pszBranch );
+			ConColorMsg(Color(220, 220, 0, 255), "Server tagged with branch: branch_%s\n", pszBranch );
+			bLoggedBranch = true;
+		}
 	}
 #endif
 }

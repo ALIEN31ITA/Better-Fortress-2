@@ -5576,7 +5576,7 @@ class CPhysicsPropMultiplayer : public CPhysicsProp, public IMultiplayerPhysics
 	{
 		BaseClass::VPhysicsUpdate( pPhysics );
 
-		if ( sv_turbophysics.GetBool() )
+		if ( sv_turbophysics.GetBool() && !m_bIgnoreTurboPhysics )
 		{
 			// If the object is set to debris, don't let turbo physics change it.
 			if ( IsDebris() )

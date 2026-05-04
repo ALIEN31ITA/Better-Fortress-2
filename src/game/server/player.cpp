@@ -8302,7 +8302,7 @@ unsigned int CBasePlayer::PlayerSolidMask( bool brushOnly ) const
 //-----------------------------------------------------------------------------
 void CBasePlayer::VPhysicsShadowUpdate( IPhysicsObject *pPhysics )
 {
-	if ( sv_turbophysics.GetBool() )
+	if ( sv_turbophysics.GetBool() && !m_bIgnoreTurboPhysics )
 		return;
 
 	Vector newPosition;
@@ -8528,7 +8528,7 @@ void CBasePlayer::InitVCollision( const Vector &vecAbsOrigin, const Vector &vecA
 	VPhysicsDestroyObject();
 
 	// in turbo physics players dont have a physics shadow
-	if ( sv_turbophysics.GetBool() )
+	if ( sv_turbophysics.GetBool() && !m_bIgnoreTurboPhysics)
 		return;
 	
 	CPhysCollide *pModel = PhysCreateBbox( VEC_HULL_MIN_SCALED( this ), VEC_HULL_MAX_SCALED( this ) );

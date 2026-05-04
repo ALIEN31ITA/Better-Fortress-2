@@ -96,7 +96,9 @@ public:
 	void			CycleResistType();
 	medigun_resist_types_t GetResistType() const;
 
-	CBaseEntity		*GetHealTarget( void ) { return IsAttachedToBuilding() ? NULL : m_hHealingTarget.Get(); }
+	CBaseEntity		*GetHealTarget( void ) { return IsAttachedToEntity() ? NULL : m_hHealingTarget.Get(); }
+
+	bool			IsAttachedToEntity(void);
 
 	bool			IsAllowedToTargetBuildings( void );
 	bool			IsAttachedToBuilding( void );

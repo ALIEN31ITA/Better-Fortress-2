@@ -1342,6 +1342,8 @@ public:
 #ifdef TF_CLIENT_DLL
 	int								m_nModelIndexOverrides[MAX_VISION_MODES];
 #endif
+	 
+	bool                            m_bIgnoreTurboPhysics;
 
 	char							m_takedamage;
 	char							m_lifeState;

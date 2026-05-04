@@ -944,7 +944,8 @@ void CTFGrenadePipebombProjectile::VPhysicsCollision( int index, gamevcollisione
 	// We should make the saws their own entity type for networking.
 	if ( FStrEq( pHitEntity->m_iParent.ToCStr(), "sawmovelinear01" ) ||
 		 FStrEq( pHitEntity->m_iParent.ToCStr(), "sawmovelinear02" ) ||
-		  PropDynamic_CollidesWithGrenades( pHitEntity) )
+		  PropDynamic_CollidesWithGrenades( pHitEntity) 			 ||
+		(pHitEntity->m_nTFFlags & TFFLAG_DONT_STICK_PROJECTILES) )
 	{
 		bIsDynamicProp = false;
 	}

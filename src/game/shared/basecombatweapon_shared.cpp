@@ -247,10 +247,10 @@ const unsigned char *CBaseCombatWeapon::GetEncryptionKey( void )
 //-----------------------------------------------------------------------------
 void CBaseCombatWeapon::Precache( void )
 {
-#if defined( CLIENT_DLL )
-	Assert( Q_strlen( GetWeaponScriptName() ) > 0 );
-	Msg( "Client got %s\n", GetWeaponScriptName() );
-#endif
+//#if defined( CLIENT_DLL )
+	//Assert( Q_strlen( GetWeaponScriptName() ) > 0 );
+	//Msg( "Client got %s\n", GetWeaponScriptName() );
+//#endif
 	m_iPrimaryAmmoType = m_iSecondaryAmmoType = -1;
 
 	// Add this weapon to the weapon registry, and get our index into it

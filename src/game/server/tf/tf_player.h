@@ -585,6 +585,7 @@ public:
 	void ExtinguishPlayerBurning();
 	void BleedPlayer( float flBleedingTime );
 	void BleedPlayerEx( float flBleedingTime, int nBleedDmg, bool bPermenantBleeding, int nDmgType );
+	void RollSpell();
 	void RollRareSpell();
 	void GiveItem(int inputdata);
 	void GiveItemString( const char* pszItemName );
@@ -604,6 +605,7 @@ public:
 	void InputTriggerLootIslandAchievement( inputdata_t &inputdata );
 	void InputTriggerLootIslandAchievement2( inputdata_t &inputdata );
 	void InputRollRareSpell( inputdata_t &inputdata );
+	void InputRollSpell(inputdata_t& inputdata);
 	void InputGiveItem(inputdata_t &inputdata);
 	void InputRoundSpawn( inputdata_t &inputdata );
 

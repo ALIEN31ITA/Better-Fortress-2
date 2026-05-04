@@ -74,6 +74,7 @@
 
 extern bool g_bTestMoveTypeStepSimulation;
 extern ConVar sv_vehicle_autoaim_scale;
+extern ConVar sv_turbophysics;
 
 // Init static class variables
 bool CBaseEntity::m_bInDebugSelect = false;	// Used for selection in debug overlays
@@ -312,6 +313,8 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CBaseEntity, DT_BaseEntity )
 	SendPropArray3( SENDINFO_ARRAY3(m_nModelIndexOverrides), SendPropInt( SENDINFO_ARRAY(m_nModelIndexOverrides), SP_MODEL_INDEX_BITS, 0 ) ),
 #endif
 
+	SendPropBool( SENDINFO(m_bIgnoreTurboPhysics) ),
+
 END_SEND_TABLE()
 
 #ifdef SDK_TEMP_PATCH
@@ -403,6 +406,7 @@ CBaseEntity::CBaseEntity( bool bServerOnly )
 	CollisionProp()->Init( this );
 	NetworkProp()->Init( this );
 	m_bForcePurgeFixedupStrings = false;
+	m_bIgnoreTurboPhysics = false;
 
 	// NOTE: THIS MUST APPEAR BEFORE ANY SetMoveType() or SetNextThink() calls
 	AddEFlags( EFL_NO_THINK_FUNCTION | EFL_NO_GAME_PHYSICS_SIMULATION | EFL_USE_PARTITION_WHEN_NOT_SOLID );
@@ -2148,6 +2152,8 @@ BEGIN_DATADESC_NO_BASE( CBaseEntity )
 	DEFINE_KEYFIELD( m_iszVictimPrintName, FIELD_STRING, "print_victimname"),
 	DEFINE_KEYFIELD( m_iszKilliconPrint, FIELD_STRING, "print_killicon"),
 	DEFINE_KEYFIELD( m_nTFFlags, FIELD_INTEGER, "TFFlags" ),
+
+	DEFINE_KEYFIELD( m_bIgnoreTurboPhysics, FIELD_BOOLEAN, "ignoreturbophysics"),
 
 //	DEFINE_FIELD( m_bSentLastFrame, FIELD_INTEGER ),
 

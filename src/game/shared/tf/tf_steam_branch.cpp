@@ -55,7 +55,7 @@ const char *GetSteamBranchName()
 		V_strncpy( s_szBranchName, sv_steam_branch.GetString(), sizeof( s_szBranchName ) );
 #endif
 
-		DevMsg( "Steam branch detected: %s\n", s_szBranchName );
+		ConColorMsg(Color(220, 220, 0, 255), "Steam branch detected: %s\n", s_szBranchName );
 	}
 
 	return s_szBranchName;

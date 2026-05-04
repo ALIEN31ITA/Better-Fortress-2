@@ -575,6 +575,7 @@ BEGIN_DATADESC( CTFPlayer )
 	DEFINE_INPUTFUNC( FIELD_VOID, "TriggerLootIslandAchievement2", InputTriggerLootIslandAchievement2 ),
 	DEFINE_INPUTFUNC( FIELD_STRING,	"SpeakResponseConcept",	InputSpeakResponseConcept ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "RollRareSpell", InputRollRareSpell ),
+	DEFINE_INPUTFUNC(FIELD_VOID, "RollSpell", InputRollSpell),
 	DEFINE_INPUTFUNC(FIELD_INTEGER, "GiveItem", InputGiveItem),
 	DEFINE_INPUTFUNC( FIELD_VOID, "RoundSpawn", InputRoundSpawn ),
 END_DATADESC()
@@ -23616,6 +23617,26 @@ void CTFPlayer::RollRareSpell()
 void CTFPlayer::InputRollRareSpell( inputdata_t &inputdata )
 {
 	RollRareSpell();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTFPlayer::RollSpell()
+{
+	CTFSpellBook* pSpellBook = dynamic_cast<CTFSpellBook*>(GetEntityForLoadoutSlot(LOADOUT_POSITION_ACTION));
+	if (pSpellBook)
+	{
+		pSpellBook->RollNewSpell( 0 );
+
+		CSingleUserRecipientFilter user(this);
+		EmitSound(user, entindex(), "Halloween.Merasmus_TP_In");
+	}
+}
+
+void CTFPlayer::InputRollSpell(inputdata_t& inputdata)
+{
+	RollSpell();
 }
 
 

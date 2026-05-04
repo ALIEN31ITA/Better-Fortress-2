@@ -115,6 +115,7 @@ public:
 	virtual void ClientThink();
 
 	void	UpdateTimers();
+	void	UpdateVoiceFlexes();
 
 	// Deal with recording
 	virtual void GetToolRecordingState( KeyValues *msg );

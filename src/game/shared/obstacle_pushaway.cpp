@@ -81,7 +81,7 @@ bool IsPushableEntity( CBaseEntity *pEnt )
 	if ( pEnt == NULL )
 		return false;
 
-	if ( sv_turbophysics.GetBool() )
+	if ( sv_turbophysics.GetBool() && !pEnt->m_bIgnoreTurboPhysics )
 	{
 		if ( pEnt->GetCollisionGroup() == COLLISION_GROUP_NONE )
 		{

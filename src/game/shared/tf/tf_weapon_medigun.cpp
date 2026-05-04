@@ -946,6 +946,20 @@ bool CWeaponMedigun::IsAllowedToTargetBuildings( void )
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
+bool CWeaponMedigun::IsAttachedToEntity(void)
+{
+	if (!m_hHealingTarget)
+		return false;
+
+	if ( m_hHealingTarget->IsBaseObject() )
+		return IsAttachedToBuilding();
+
+	return m_hHealingTarget;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
 bool CWeaponMedigun::IsAttachedToBuilding( void )
 {
 	if ( !m_hHealingTarget )
@@ -998,6 +1012,18 @@ void CWeaponMedigun::HealTargetThink( void )
 
 	if ( !pTarget->IsPlayer() )
 	{
+		if (IsAttachedToEntity() )
+		{
+			if (m_hHealingTarget->GetHealth() < m_hHealingTarget->GetMaxHealth())
+			{
+				CBaseEntity* pEntity = m_hHealingTarget;
+				if (pEntity)
+				{
+					pEntity->SetHealth(m_hHealingTarget->GetHealth() + (GetHealRate() / 10.f));
+				}
+			}
+		}
+
 		if ( IsAttachedToBuilding() )
 		{
 			// Heal building
@@ -1441,7 +1467,7 @@ bool CWeaponMedigun::FindAndHealTargets( void )
 #endif
 					SetChargeLevel( flNewLevel );
 			}
-			else if ( IsAttachedToBuilding() )
+			else if ( IsAttachedToEntity() )
 			{
 				m_flChargeLevel = MIN( m_flChargeLevel + flChargeAmount, 1.0 );
 			}
@@ -2476,7 +2502,7 @@ void CWeaponMedigun::UpdateEffects( void )
 		bool bHealTargetMarker = hud_medichealtargetmarker.GetBool() && !bReviveMarker;
 
 		const char *pszEffectName;
-		if ( IsAttachedToBuilding() )
+		if ( IsAttachedToBuilding() || IsAttachedToEntity() )
 		{
 			pszEffectName = "medicgun_beam_machinery";
 		}
