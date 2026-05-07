@@ -107,9 +107,9 @@
 		"Attrib_KillComboFireRateBoost"				"%s1% firing speed per class killed in a row (up to three)"
 		"Attrib_MinigunHolsterSpunUp"				"Minigun can holster whilst spun-up"
 		"Attrib_BlastDamageToSelf_Decreased"		"%s1% damage to self"
-		"Attrib_GiveHealthToTeammate"				"On Hit Teammate: Gives up to +%s1 health to teammate, damaging the wielder"
-		"Attrib_SpeedBuffAllyProjectile"			"On Hit Teammate: Boosts teammate's speed for 1 second"
-		"Attrib_MeleeCleanseAlly"					"On Hit Teammate: Remove debuffs from teammate, granting 1% - 20% Übercharge per debuff"
+		"Attrib_GiveHealthToTeammate"				"Przy trafieniu w sojusznika: Gives up to +%s1 health to teammate, damaging the wielder"
+		"Attrib_SpeedBuffAllyProjectile"			"Przy trafieniu w sojusznika: Boosts teammate's speed for 1 second"
+		"Attrib_MeleeCleanseAlly"					"Przy trafieniu w sojusznika: Remove debuffs from teammate, granting 1% - 20% Übercharge per debuff"
 		"Attrib_UberDurationPenalty"				"Über duration decreased by %s1%"
 		"Attrib_Medigun_Cloak"						"ÜberCharge zapewnia pacjentowi i użytkownikowi niewidzialność"
 		
@@ -216,8 +216,8 @@
 		"Attrib_Heal_EngiBuildings_shortdesc"		"Bolt Flow"
 		"Attrib_Arrow_Mastery_shortdesc"			"Arrow Mastery"
 		"Attrib_Arrow_Mastery"			            "Arrows Split in 3"
-		"Attrib_Blacklisted_MVM_Description"		"This item cannot be used in Mann vs. Machine!"
-		"Attrib_AirblastYourTeam"					"Airblast pushes your Teammates! \n Don't be a Jerk..."
+		"Attrib_Blacklisted_MVM_Description"		"This item cannot be used in Mann vs. Maszyny!"
+		"Attrib_AirblastYourTeam"					"Strumień powietrza odpycha twoich towarzyszy! \n Nie bądź palantem..."
 		"Attrib_ItemCanTalk_Description"			"I Can Speak!"
 		"Attrib_AirBlastPushDownScale"				"%s1% siły odpychania sprężonego powietrza"
 		
