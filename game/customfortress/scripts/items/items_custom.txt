@@ -3955,6 +3955,72 @@
 			"mouse_pressed_sound"	"ui/item_knife_small_pickup.wav"
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
+		//Sten (Scout SMG)
+		"32036"
+		{
+			"name" "The Sten"
+			"item_class"	"tf_weapon_scout_smg"
+			"item_type_name"	"#TF_Weapon_SMG"
+			"item_name"	"#TFCW_Sten"
+			"item_description"	"#TFCW_Sten_Desc"
+			"item_slot"	"primary"
+			"prefab"								"valve cf_restored_item"
+			"show_in_armory"					"1"
+			"item_quality"						"rarity2"
+			"moditem" 							"1"
+			"propername"						"1"
+			"min_ilevel"						"1"
+			"max_ilevel"						"1"
+			"image_inventory"	"backpack/weapons/c_models/c_sten/c_sten"
+			"image_inventory_size_w"		"124"
+			"image_inventory_size_h"		"82"
+			"model_player"	"models/weapons/c_models/c_sten/c_sten.mdl"
+			"attach_to_hands"	"1"
+			"attributes"
+			{
+				"revolver use hit locations"
+				{
+					"attribute_class"	"set_weapon_mode"
+					"value"	"1"
+				}
+				"crit mod disabled"
+				{
+					"attribute_class"	"mult_crit_chance"
+					"value"	"0"
+				}
+				"is community contributed item"
+				{
+					"attribute_class"  "is_community_contributed_item"
+					"value"			   "DanielAwesomo"
+				}
+				"hidden primary max ammo bonus"
+				{
+					"attribute_class"	"mult_maxammo_primary"
+					"value" "3.125"
+				}
+			}
+			"visuals"
+			{
+				"animation_replacement"
+				{
+					"ACT_VM_IDLE"	"ACT_ITEM4_VM_IDLE"
+					"ACT_VM_DRAW"	"ACT_ITEM4_VM_DRAW"
+					"ACT_VM_PRIMARYATTACK"	"ACT_ITEM4_VM_PRIMARYATTACK"
+					"ACT_VM_RELOAD"	"ACT_ITEM4_VM_RELOAD"
+				}
+			}
+			"used_by_classes"
+			{
+				"scout"	"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"					"10 0 -7"
+				"crit_dmg_falloff"			"1"
+			}
+			"mouse_pressed_sound"	"ui/item_light_gun_pickup.wav"
+			"drop_sound"		"ui/item_light_gun_drop.wav"
+		}
 		"34000" 
 		{
 			"name"		"Paintkit 800"

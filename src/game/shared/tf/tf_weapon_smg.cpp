@@ -59,6 +59,11 @@ END_PREDICTION_DATA()
 LINK_ENTITY_TO_CLASS( tf_weapon_charged_smg, CTFChargedSMG );
 PRECACHE_WEAPON_REGISTER( tf_weapon_charged_smg );
 
+// ---------- Scout SMG (Primary) -------------
+
+CREATE_SIMPLE_WEAPON_TABLE( TFScoutSMG, tf_weapon_scout_smg )
+
+
 //=============================================================================
 //
 // Weapon SMG functions.
