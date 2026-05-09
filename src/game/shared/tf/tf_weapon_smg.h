@@ -14,6 +14,7 @@
 #ifdef CLIENT_DLL
 #define CTFSMG C_TFSMG
 #define CTFChargedSMG C_TFChargedSMG
+#define CTFScoutSMG C_TFScoutSMG
 #endif
 
 //=============================================================================
@@ -89,5 +90,13 @@ private:
 	CTFChargedSMG( const CTFChargedSMG & ) {}
 };
 
+// Scout SMG (Primary)
+class CTFScoutSMG : public CTFSMG
+{
+public:
+	DECLARE_CLASS( CTFScoutSMG, CTFSMG );
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+};
 
 #endif // TF_WEAPON_SMG_H
