@@ -158,7 +158,7 @@ void CEconItemSystem::ReloadWhitelist( void )
 #ifdef GAME_DLL
     if ( mp_tournament.GetBool() && mp_tournament_whitelist.GetString() )
     {
-        const char *pszWhitelistFile = mp_tournament_whitelist.GetString();
+        pszWhitelistFile = mp_tournament_whitelist.GetString();
         if ( pWhitelistKV->LoadFromFile( filesystem, pszWhitelistFile ) )
         {
             // Allow the whitelist to override the default, so they can turn it into a blacklist if they want to
