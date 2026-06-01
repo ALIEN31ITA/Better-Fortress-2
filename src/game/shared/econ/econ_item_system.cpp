@@ -153,6 +153,8 @@ void CEconItemSystem::ReloadWhitelist( void )
 
     KeyValues *pWhitelistKV = new KeyValues( "item_whitelist" );
 
+	const char *pszWhitelistFile = cf_item_whitelist.GetString();
+
 #ifdef GAME_DLL
     if ( mp_tournament.GetBool() && mp_tournament_whitelist.GetString() )
     {
@@ -167,18 +169,18 @@ void CEconItemSystem::ReloadWhitelist( void )
         {
             Msg("A tournament item file '%s' could not be found. Checking for general whitelist.\n", pszWhitelistFile );
         }
-    } else if ( cf_item_whitelist.GetString() )
-      {
-        const char *pszWhitelistFile = cf_item_whitelist.GetString();
+    }
+	else if ( pszWhitelistFile && pszWhitelist[0] != '\0' )
+    {
         if ( pWhitelistKV->LoadFromFile( filesystem, pszWhitelistFile ) )
         {
             // Allow the whitelist to override the default, so they can turn it into a blacklist if they want to
             bDefault = pWhitelistKV->GetBool( "unlisted_items_default_to" );
             bFoundWhitelist = true;
         }
-        else if ( pszWhitelistFile && pszWhitelistFile[0] )
+        else
         {
-            Msg("A general item whitelist file '%s' could not be found. All items will be allowed.\n", pszWhitelistFile );
+            Msg( "A general item whitelist file '%s' could not be found. All items will be allowed.\n", pszWhitelistFile );
         }
     } 
 #endif
