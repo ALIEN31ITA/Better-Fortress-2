@@ -170,7 +170,7 @@ void CEconItemSystem::ReloadWhitelist( void )
             Msg("A tournament item file '%s' could not be found. Checking for general whitelist.\n", pszWhitelistFile );
         }
     }
-	else if ( pszWhitelistFile && pszWhitelist[0] != '\0' )
+	else if ( pszWhitelistFile && pszWhitelistFile[0] != '\0' )
     {
         if ( pWhitelistKV->LoadFromFile( filesystem, pszWhitelistFile ) )
         {
