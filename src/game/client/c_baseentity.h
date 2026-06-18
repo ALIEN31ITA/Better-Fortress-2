@@ -1292,7 +1292,6 @@ public:
 	unsigned short					m_EntClientFlags;
 
 	CNetworkColor32( m_clrRender );
-	CNetworkVar( int, m_nTFFlags );
 
 private:
 	
@@ -1341,6 +1340,7 @@ public:
 
 #ifdef TF_CLIENT_DLL
 	int								m_nModelIndexOverrides[MAX_VISION_MODES];
+	CNetworkVar(int, m_nTFFlags);
 #endif
 	 
 	bool                            m_bIgnoreTurboPhysics;

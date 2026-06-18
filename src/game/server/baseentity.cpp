@@ -288,7 +288,9 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CBaseEntity, DT_BaseEntity )
 	SendPropEHandle (SENDINFO(m_hEffectEntity)),
 	SendPropEHandle (SENDINFO_NAME(m_hMoveParent, moveparent)),
 	SendPropInt		(SENDINFO(m_iParentAttachment), NUM_PARENTATTACHMENT_BITS, SPROP_UNSIGNED),
+#ifdef TF_DLL
 	SendPropInt( SENDINFO( m_nTFFlags ), 20, SPROP_UNSIGNED ),
+#endif
 
 	SendPropInt		(SENDINFO_NAME( m_MoveType, movetype ), MOVETYPE_MAX_BITS, SPROP_UNSIGNED ),
 	SendPropInt		(SENDINFO_NAME( m_MoveCollide, movecollide ), MOVECOLLIDE_MAX_BITS, SPROP_UNSIGNED ),
@@ -2151,7 +2153,9 @@ BEGIN_DATADESC_NO_BASE( CBaseEntity )
 	DEFINE_KEYFIELD( m_iszKillerPrintName, FIELD_STRING, "print_killername"),
 	DEFINE_KEYFIELD( m_iszVictimPrintName, FIELD_STRING, "print_victimname"),
 	DEFINE_KEYFIELD( m_iszKilliconPrint, FIELD_STRING, "print_killicon"),
+#ifdef TF_DLL
 	DEFINE_KEYFIELD( m_nTFFlags, FIELD_INTEGER, "TFFlags" ),
+#endif
 
 	DEFINE_KEYFIELD( m_bIgnoreTurboPhysics, FIELD_BOOLEAN, "ignoreturbophysics"),
 
@@ -2402,13 +2406,16 @@ BEGIN_ENT_SCRIPTDESC_ROOT( CBaseEntity, "Root class of all server-side entities"
 	DEFINE_SCRIPTFUNC( KeyValueFromVector, "Executes KeyValue with a vector" )
 
 	// TF2-specific
+#ifdef TF_DLL
 	DEFINE_SCRIPTFUNC( AddTFFlags, "Adds a new TF2 specific flag into the entity." )
 	DEFINE_SCRIPTFUNC( HasTFFlags, "Determines whether the entity has a TF2 specific flag applied." )
 	DEFINE_SCRIPTFUNC( RemoveTFFlags, "Removes a TF2 specific flag from the entity." )
 
-	DEFINE_SCRIPTFUNC( IsObservable, "Determines whether the entity can be observed by spectators/observers." )
-	DEFINE_SCRIPTFUNC( IsMediGunTargetable, "Determines whether the entity can be healed by Medic's MediGun." )
-	DEFINE_SCRIPTFUNC( IsSentryTargetable, "Determines whether the entity can be targeted by Engineer's Sentry Gun." )
+	DEFINE_SCRIPTFUNC( CanBeObservedBySpectators, "Determines whether the entity can be observed by spectators/observers." )
+	DEFINE_SCRIPTFUNC( CanBeHealedByMedigun, "Determines whether the entity can be healed by Medic's MediGun." )
+	DEFINE_SCRIPTFUNC( CanBeTargetedBySentrygun, "Determines whether the entity can be targeted by Engineer's Sentry Gun." )
+	DEFINE_SCRIPTFUNC( CanBeIgnitedByFlamethrower, "Determines whether the entity can ignited by Pyro's Flamethrower.")
+#endif
 
 	DEFINE_SCRIPTFUNC_NAMED( ScriptGetModelKeyValues, "GetModelKeyValues", "Get a KeyValue class instance on this entity's model")
 
@@ -5624,6 +5631,73 @@ int CBaseEntity::PrecacheModel( const char *name, bool bPreload )
 	return idx;
 }
 
+#ifdef TF_DLL
+bool CBaseEntity::CanBeObservedBySpectators() 
+{ 
+	//Return true for the default entities.
+	if (GetClassname() == "info_observer_point" ||
+		IsPlayer() ||
+		IsBaseObject() ||
+		TFGameRules()->GetActiveBoss() == this
+		)
+	{
+		return true;
+	}
+
+	return HasTFFlags(TFFLAG_OBSERVABLE); 
+}
+bool CBaseEntity::CanBeHealedByMedigun() 
+{ 
+	//Return true for the default entities.
+	if (IsPlayer() ||
+		GetClassname() == "entity_revive_marker" 
+		)
+	{ 
+		return true;
+	}
+	
+	return HasTFFlags(TFFLAG_MEDIGUN_CAN_HEAL); 
+}
+bool CBaseEntity::CanBeTargetedBySentrygun() 
+{ 
+	if (GetFlags() & FL_NOTARGET)
+		return false;
+
+	if ( IsPlayer() && !IsAlive() )
+		return false;
+
+	//Return true for the default entities.
+	if (GetClassname() == "tf_target_dummy" ||
+		IsBaseObject() ||
+		MyNextBotPointer() ||
+		IsPlayer()
+		)
+	{
+		return true;
+	}
+
+	return HasTFFlags(TFFLAG_TARGETABLE); 
+}
+bool CBaseEntity::CanBeIgnitedByFlamethrower() 
+{ 
+	//Return true for the default entities.
+	if ( GetClassname() == "func_breakable"  ||
+		 GetClassname() == "tf_pumpkin_bomb" ||
+		 GetClassname() == "tf_merasmus_trick_or_treat_prop" ||
+		 GetClassname() == "tf_generic_bomb" ||
+		 GetClassname() == "tf_robot_destruction_robot" ||
+		 IsBaseObject() ||
+		 MyNextBotPointer() ||
+		 IsPlayer() 
+		)
+	{
+		return true;
+	}
+
+	return HasTFFlags(TFFLAG_FLAMMABLE); 
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -5631,10 +5705,6 @@ void CBaseEntity::Remove( )
 {
 	UTIL_Remove( this );
 }
-
-bool CBaseEntity::IsObservable() const { return HasTFFlags(TFFLAG_OBSERVABLE); }
-bool CBaseEntity::IsMediGunTargetable() const { return HasTFFlags(TFFLAG_MEDIGUN_CAN_HEAL); }
-bool CBaseEntity::IsSentryTargetable() const { return HasTFFlags(TFFLAG_TARGETABLE); }
 
 //-----------------------------------------------------------------------------
 // VScript access to model's key values

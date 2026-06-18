@@ -1259,8 +1259,10 @@ public:
 	CNetworkVarForDerived( char, m_lifeState );
 	CNetworkVarForDerived( char , m_takedamage );
 
-	//TF2 Specific
-	CNetworkVarForDerived( int , m_nTFFlags );
+#ifdef TF_DLL
+	CNetworkVarForDerived(int, m_nTFFlags);
+#endif 
+
 
 	// Damage filtering
 	string_t	m_iszDamageFilterName;	// The name of the entity to use as our damage filter.
@@ -1523,7 +1525,7 @@ public:
 		return false;
 	}
 
-	//TF2 Specific
+#ifdef TF_DLL
 	void AddTFFlags( int nTFFlags )
 	{
 		m_nTFFlags |= nTFFlags;
@@ -1538,9 +1540,11 @@ public:
 		m_nTFFlags &= ~nTFFlags;
 	}
 
-	bool IsObservable() const;
-	bool IsMediGunTargetable() const;
-	bool IsSentryTargetable() const;
+	bool CanBeObservedBySpectators();
+	bool CanBeHealedByMedigun();
+	bool CanBeTargetedBySentrygun();
+	bool CanBeIgnitedByFlamethrower();
+#endif
 
 	HSCRIPT ScriptGetModelKeyValues( void );
 

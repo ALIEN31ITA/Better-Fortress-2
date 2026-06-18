@@ -1346,13 +1346,16 @@ enum
 {
 	TFFLAG_PROJECTILES_EXPLODE_ON_TOUCH		= 1<<0,		//Demoman Pipebombs, Jars, and anything that usually bounces off, will explode on contact.	
 	TFFLAG_DONT_STICK_PROJECTILES			= 1<<1,		//Stickybombs will NOT parent to this target.
-	TFFLAG_STICKS_PROJECTILES				= 1<<2,		//Stickybombs will parent to this target.			
+	TFFLAG_STICKS_PROJECTILES				= 1<<2,		//Stickybombs will parent to this target, Arrow projectiles will also attach.			
 	TFFLAG_MEDIGUN_CAN_HEAL					= 1<<3,		//Medic can heal this target.					
-	TFFLAG_TARGETABLE					    = 1<<4,		//Sentryguns will consider this a valid target.
+	TFFLAG_TARGETABLE					    = 1<<4,		//Sentryguns will consider this a valid target. Respects teams
 	TFFLAG_FLAMMABLE						= 1<<5,		//Flamethrowers will burn this target.
-	TFFLAG_OBSERVABLE						= 1<<6,		//Adds the entity to the observable list, like bosses.
+	TFFLAG_OBSERVABLE						= 1<<6,		//Adds the entity to the observable list, giving the 360 view, like bosses.
 	TFFLAG_SUPPORTS_ENGINEER_BUILDINGS		= 1<<7,		//Allows Engineers to build on top of it.
 	TFFLAG_AIRBLASTABLE						= 1<<8,		//Pyro can now airblast this object, just like the beachball.
+	TFFLAG_CAN_BE_STUNNED					= 1<<9,		//The Sandman's ball will be able to stun this.
+	TFFLAG_CAN_BE_DRENCHED					= 1<<10,	//Jars will be able to drench the entity.
+	TFFLAG_REMOVES_PROJECTILES				= 1<<11,	//Kills projectiles, and sends the event when doing so.
 };
 
 enum

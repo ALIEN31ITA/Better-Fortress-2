@@ -1355,7 +1355,8 @@ CBaseEntity *ScriptCreateEntityFromTable( const char *pszClassname, HSCRIPT hSpa
 }
 
 //-----------------------------------------------------------------------------
-static HSCRIPT Script_SpawnEntityFromTable( const char *pszName, HSCRIPT spawn_table, bool dispatch_spawn = true )
+//TODO: Find a way to add a bool for prevent DispatchSpawn
+static HSCRIPT Script_SpawnEntityFromTable( const char *pszName, HSCRIPT spawn_table )
 {
 	if ( !pszName || !*pszName )
 		return NULL;
@@ -1365,11 +1366,8 @@ static HSCRIPT Script_SpawnEntityFromTable( const char *pszName, HSCRIPT spawn_t
 		return 0;
 
 	pEntity->Precache();
-	if ( dispatch_spawn )
-	{ 
-		DispatchSpawn( pEntity );
-		pEntity->Activate();
-	}
+	DispatchSpawn( pEntity );
+	pEntity->Activate();
 
 	return ToHScript( pEntity );
 }
