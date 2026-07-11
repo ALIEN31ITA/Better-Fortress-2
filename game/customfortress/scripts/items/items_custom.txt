@@ -712,6 +712,15 @@
 				"The Big Bang"					"1"	
 			}
 		}
+		"pyro_gardening"
+		{
+			"name" "#TFCSet_PyroGardening"
+			"items"
+			{
+				"The Griefblower"		"1"
+				"The Head-Trimmer"		"1"
+			}
+		}
 	}
 	"attributes"
 	{
@@ -1468,6 +1477,17 @@
 				"engineer"		"1"
 			}
 		}
+		//Taunts
+		// Pyro - Friendly Fire (Extinguisher)
+		"31605"
+		{
+			"static_attrs"
+			{
+				"taunt attack name"		"TAUNTATK_PYRO_ECON_EXTINGUISHER"
+				"taunt attack time"		"1.76"
+			}
+		}
+		
 		//ALL-CLASS OVERRIDES
 		"264" //Frying Pan
 		{
@@ -3858,7 +3878,170 @@
 		}
 		//32031 (Reserved) (Moai)
 		//32032 (Reserved) (Deputy)
-		//32033-32034 (Reserved) (Leaf Blower, Scythe)
+		//The Griefblower - Guitbox
+		"32033"
+		{
+			"name"		"The Griefblower"
+			"item_class"		"tf_weapon_flamethrower"
+			"prefab"		"weapon_flamethrower cf_restored_item"
+			"craft_class"		"weapon"
+			"moditem" 	"1"
+			"craft_material_type"		"weapon"
+			"capabilities"
+			{
+				"nameable"		"1"
+				"can_craft_count"		"1"
+			}
+			"tags"
+			{
+				"can_deal_damage"		"1"
+				"can_deal_posthumous_damage"		"1"
+				"can_deal_critical_damage"		"1"
+				"is_flamethrower"		"1"
+			}
+			"item_logname"		"griefblower"
+			"item_iconname"		"griefblower"
+			"show_in_armory"		"1"
+			"item_type_name"		"#TF_Weapon_Flamethrower"
+			"item_name"		"#TFCW_Griefblower"
+			"item_description"  "#TFCW_Griefblower_Desc"
+			"item_slot"		"primary"
+			"image_inventory"		"backpack/weapons/c_models/c_griefblower/c_griefblower"
+			"image_inventory_size_w"		"128"
+			"image_inventory_size_h"		"82"
+			"inspect_panel_dist"		"75"
+			"model_player"		"models/weapons/c_models/c_griefblower/c_griefblower.mdl"
+			"attach_to_hands"		"1"
+			"item_quality"		"rarity2"
+			"propername"		"1"
+			"min_ilevel"		"10"
+			"max_ilevel"		"10"
+			"used_by_classes"
+			{
+				"pyro"		"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"		"10 0 -10"
+				"flame_speed"				"2940" 
+				"flame_lifetime"			".72"
+			}
+			"visuals"
+			{
+				"animation_replacement"
+				{
+					"ACT_PRIMARY_VM_INSPECT_START"		"ACT_PRIMARY_ALT1_VM_INSPECT_START"
+					"ACT_PRIMARY_VM_INSPECT_IDLE"		"ACT_PRIMARY_ALT1_VM_INSPECT_IDLE"
+					"ACT_PRIMARY_VM_INSPECT_END"		"ACT_PRIMARY_ALT1_VM_INSPECT_END"
+				}
+			}
+            "attributes"
+            {
+                "flame life bonus"
+                {
+                    "attribute_class"  "mult_flame_life"
+                    "value"                            "1.2"
+                }
+                "flame size penalty"
+                {
+                    "attribute_class"  "mult_flame_size"
+                    "value"                            "0.7"
+                }						
+				"flame ammopersec increased"
+                {
+                    "attribute_class"  "mult_flame_ammopersec"
+                    "value"                            "1.4"
+                }		
+                "charged airblast"
+                {
+                    "attribute_class"  "set_charged_airblast"
+                    "value"                            "1"
+                }
+				"is community contributed item"
+				{
+					"attribute_class"  "is_community_contributed_item"
+					"value"			   "[U:1:31043810]"
+				}
+            }
+			"mouse_pressed_sound"		"ui/item_heavy_gun_pickup.wav"
+			"drop_sound"		"ui/item_heavy_gun_drop.wav"
+			"xifier_class_remap"		"flamethrower"
+		}
+		//The Headtrimmer - Guitbox
+		"32034"
+		{
+			"name"	"The Head-Trimmer"
+			"prefab"	"weapon_sword cf_restored_item"
+			"item_class"	"tf_weapon_sword"
+			"item_type_name"	"#TF_Weapon_Scythe"
+			"item_name"			"#TFCW_HeadTrimmer"
+			"item_description"  "#TFCW_HeadTrimmer_Desc"
+			"show_in_armory"	"1"
+			"item_logname"	"pyroscythe"
+			"item_iconname"	"pyroscythe"
+			"item_quality"	"rarity2"
+			"show_in_armory"						"1"
+			"moditem" "1"
+			"min_ilevel"	"10"
+			"max_ilevel"	"10"
+			"image_inventory"	"backpack/weapons/c_models/c_headtrimmer/c_headtrimmer"
+			"image_inventory_size_w"		"128"
+			"image_inventory_size_h"		"104"
+			"model_player"	"models/weapons/c_models/c_headtrimmer/c_headtrimmer.mdl"
+			"attach_to_hands" "1"
+			"anim_slot"	"melee"
+			"used_by_classes"
+			{
+				"pyro"	"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"					"10 0 -10"
+			}
+			"attributes"
+			{
+				"is_a_sword"
+				{
+					"attribute_class"	"is_a_sword"
+					"value"				"72"
+				}
+				"melee cleave attack"
+				{
+					"attribute_class"	"melee_cleave_attack"
+					"value"				"1"
+				}
+				"melee bounds multiplier"
+				{
+					"attribute_class"	"melee_bounds_multiplier"
+					"value"	"1.5"
+				}
+				"fire rate penalty"
+				{
+					"attribute_class"	"mult_firerate"
+					"value"	"1.15"
+				}
+				"is community contributed item"
+				{
+					"attribute_class"  "is_community_contributed_item"
+					"value"			   "[U:1:31043810]"
+				}
+			}
+			"visuals"
+			{
+				"animation_replacement"
+				{
+					"ACT_MELEE_VM_INSPECT_START"		"ACT_MELEE_VM_INSPECT_START"
+					"ACT_MELEE_VM_INSPECT_IDLE"		"ACT_MELEE_VM_INSPECT_IDLE"
+					"ACT_MELEE_VM_INSPECT_END"		"ACT_MELEE_VM_INSPECT_END"
+				}
+				"sound_melee_miss"	"Weapon_Sword.Swing"
+				"sound_melee_hit"	"Weapon_Sword.HitFlesh"
+				"sound_melee_hit_world"	"Weapon_Sword.HitWorld"
+				"sound_burst"		"Weapon_Sword.SwingCrit"
+			}
+			"mouse_pressed_sound"	"ui/item_knife_large_pickup.wav"
+			"drop_sound"		"ui/item_metal_weapon_drop.wav"
+		}
 		//The Inside Jab 
 		"32035"
 		{

@@ -20167,11 +20167,50 @@ void CTFPlayer::HandleTauntCommand( int iTauntSlot )
 		return;
 
 	m_nActiveTauntSlot = LOADOUT_POSITION_INVALID;
+
+
+
+	
+
 	if ( iTauntSlot > 0 && iTauntSlot <= 8 )
 	{
 		m_nActiveTauntSlot = LOADOUT_POSITION_TAUNT + iTauntSlot - 1;
 		CEconItemView* pItem = GetEquippedItemForLoadoutSlot( m_nActiveTauntSlot );
-		PlayTauntSceneFromItem( pItem );
+		bool bPlayedTaunt = PlayTauntSceneFromItem( pItem );
+
+		//Custom Fortress - Detect Taunting
+
+		IGameEvent* pEvent = gameeventmanager->CreateEvent("cf_player_taunt");
+
+		if ( bPlayedTaunt && pEvent )
+		{
+			pEvent->SetInt("taunter", GetUserID());
+
+			CEconItemView* TauntID = GetEquippedItemForLoadoutSlot(iTauntSlot);
+			int TauntIndex = -1;
+			if ( TauntID && TauntID->GetItemDefinition() )
+			{
+				TauntIndex = TauntID->GetItemDefinition()->GetDefinitionIndex();
+			}
+			pEvent->SetInt("taunter_tauntID", TauntIndex ? TauntIndex : -1);
+			pEvent->SetInt("attack_name", TauntIndex ? m_iTauntAttack : TAUNTATK_NONE);
+
+			//We have a partner taunt, so we need to send the partner's taunt ID as well
+			CTFPlayer* Partner = FindPartnerTauntInitiator();
+			int PartnerTauntID = -1;
+			if (Partner)
+			{
+				const GameItemDefinition_t* pPartnerTauntID = Partner->m_TauntEconItemView.GetItemDefinition();
+				if (pPartnerTauntID)
+				{
+					PartnerTauntID = pPartnerTauntID->GetDefinitionIndex();
+				}
+			}
+			pEvent->SetInt("partner", Partner ? Partner->GetUserID() : -1);
+			pEvent->SetInt("partner_tauntID", PartnerTauntID ? PartnerTauntID : -1);
+			gameeventmanager->FireEvent(pEvent);
+		}
+
 		return;
 	}
 	else
@@ -20242,11 +20281,24 @@ void CTFPlayer::HandleTauntCommand( int iTauntSlot )
 
 		if ( pTauntItem && pTauntItem->IsValid() && PlayTauntSceneFromItem( pTauntItem ) )
 		{
-			// taunts played from item
 			return;
 		}
 		else
 		{
+			//Custom Fortress - Detect Taunting
+
+			IGameEvent* pEvent = gameeventmanager->CreateEvent("cf_player_taunt");
+
+			if ( pEvent )
+			{
+				pEvent->SetInt("taunter", GetUserID());
+				pEvent->SetInt("taunter_tauntID", -1);
+				pEvent->SetInt("attack_name", TAUNTATK_NONE);
+
+				pEvent->SetInt("partner", -1);
+				pEvent->SetInt("partner_tauntID", -1);
+				gameeventmanager->FireEvent(pEvent);
+			}
 			Taunt( TAUNT_BASE_WEAPON );
 		}
 	}
@@ -21128,6 +21180,80 @@ void CTFPlayer::DoTauntAttack( void )
 				// Launch them up a little
 				AngleVectors( QAngle( -45, m_angEyeAngles[ YAW ], 0 ), &vecForward );
 				pEnt->TakeDamage( CTakeDamageInfo( this, this, GetActiveTFWeapon(), vecForward * 25000, WorldSpaceCenter(), 500.0f, DMG_BULLET, TF_DMG_CUSTOM_TAUNTATK_TRICKSHOT ) );
+			}
+		}
+	}
+	else if (iTauntAttack == TAUNTATK_PYRO_ECON_EXTINGUISHER )
+	{
+		// Pyro "Friendly Fire" attack
+		Vector vecForward;
+		AngleVectors(QAngle(0, m_angEyeAngles[YAW], 0), &vecForward);
+		Vector vecCenter = WorldSpaceCenter() + vecForward * 64;
+		Vector vecSize = Vector(24, 24, 24);
+		CBaseEntity* pList[256];
+		int count = UTIL_EntitiesInBox(pList, 256, vecCenter - vecSize, vecCenter + vecSize, FL_CLIENT );
+		if (count)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				if (pList[i] == this)
+					continue;
+
+				if (FVisible(pList[i], MASK_SOLID) == false)
+					continue;
+
+				CTFPlayer * pAffectedPlayers = ToTFPlayer(pList[i]);
+				//Extinguish our friends, push back our enemies.
+				if (pAffectedPlayers->GetTeamNumber() == GetTeamNumber())
+				{
+					//Ignore non burning teammates
+					if (!pAffectedPlayers->m_Shared.InCond(TF_COND_BURNING))
+						return;
+
+					Vector vecPos = WorldSpaceCenter();
+					vecPos += (pAffectedPlayers->WorldSpaceCenter() - vecPos) * 0.75;
+
+					//Offset angle to match left hook.
+					AngleVectors(QAngle(-45, m_angEyeAngles[YAW] - 35, 0), &vecForward);
+					pAffectedPlayers->m_Shared.RemoveCond(TF_COND_BURNING);
+					pAffectedPlayers->EmitSound("TFPlayer.FlameOut");
+					
+					//Same rules from the Flamethrower
+					if (ShouldGetBonusPointsForExtinguishEvent(pAffectedPlayers->GetUserID()))
+					{
+						CTF_GameStats.Event_PlayerAwardBonusPoints(this, pAffectedPlayers, 10);
+					}
+
+					CRecipientFilter involved_filter;
+					involved_filter.AddRecipient(this);
+					involved_filter.AddRecipient(pAffectedPlayers);
+
+					UserMessageBegin(involved_filter, "PlayerExtinguished");
+					WRITE_BYTE(entindex());
+					WRITE_BYTE(pAffectedPlayers->entindex());
+					MessageEnd();
+
+					IGameEvent* event = gameeventmanager->CreateEvent("player_extinguished");
+					if (event)
+					{
+						event->SetInt("victim", pAffectedPlayers->entindex());
+						event->SetInt("healer", entindex());
+
+						gameeventmanager->FireEvent(event, true);
+					}			
+				}
+				else
+				{
+					Vector vecDir = WorldSpaceCenter() - pList[i]->WorldSpaceCenter();
+					VectorNormalize(vecDir);
+
+					//Adjust the values?...
+					float flForce = 175;
+					Vector vecForce = vecDir * -flForce;
+					vecForce.z += 230;
+
+					ToTFPlayer(pList[i])->ApplyGenericPushbackImpulse(vecForce, this);
+				}
 			}
 		}
 	}

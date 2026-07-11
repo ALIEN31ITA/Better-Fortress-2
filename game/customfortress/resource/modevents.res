@@ -2026,24 +2026,5 @@
 		"assister"	"short"
 	}
 	
-	"generic_killfeed_event"		// a game event, name may be 32 charaters long
-	{
-		"victim"				"short"   	// user ID who died, used to display involvement
-		"killer"				"short"	 	// user ID who killed, used to display involvement
-		"victim_team"			"short"   	// team of victim, used to display base team colors
-		"killer_team"			"short"	 	// team of killer, used to display base team colors
-		"victim_name"			"string" 	// name of the victim
-		"killer_name"			"string" 	// name of the killer
-		"msg"					"string"	// text to display after killer
-		"msg2"					"string"	// text to display after victim
-		"msg3"					"string"	// text to display after killer before msg
-		"msgcolor"				"string" 	// color of the text to display after killer in "R G B A"
-		"msgcolor2"				"string" 	// color of the text to display after victim in "R G B A"
-		"msgcolor3"				"string" 	// color of the text to display after killer before msg in "R G B A"
-		"msgcolor_victim"		"string" 	// color of the victim in "R G B A"
-		"msgcolor_killer"		"string" 	// color of the killer in "R G B A"
-		"killicon"				"string"	// name of the killicon
-		"killicon_background"	"string"	// name of the killicon's background, used for australium / crit
-	}
 }
 

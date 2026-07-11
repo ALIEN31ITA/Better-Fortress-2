@@ -145,6 +145,9 @@ ConVar tf_airblast_cray_pitch_control( "tf_airblast_cray_pitch_control", "0", FC
 #define TF_FLAMETHROWER_HITACCURACY_MED			40.0f
 #define TF_FLAMETHROWER_HITACCURACY_HIGH		60.0f
 
+#define AIRBLAST_CHARGE_MULT_MIN 0.75
+#define AIRBLAST_CHARGE_MULT_MAX 1.5
+
 //-----------------------------------------------------------------------------
 
 #define TF_WEAPON_BUBBLE_WAND_MODEL		"models/player/items/pyro/mtp_bubble_wand.mdl"
@@ -1225,6 +1228,24 @@ void CTFFlameThrower::SecondaryAttack()
 #endif
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+float CTFFlameThrower::GetChargeMaxTime(void)
+{
+	float fAirblastRefireTimeScale = 1.0f;
+	CALL_ATTRIB_HOOK_FLOAT(fAirblastRefireTimeScale, mult_airblast_refire_time);
+	if (fAirblastRefireTimeScale <= 0.0f)
+	{
+		fAirblastRefireTimeScale = 1.0f;
+	}
+	// It takes less time to charge if the fire rate is higher
+	float flChargeMaxTime = TF_FLAMETHROWER_MAX_CHARGE_TIME * fAirblastRefireTimeScale;
+
+	return flChargeMaxTime;
+}
+
+
 #ifdef GAME_DLL
 
 //-----------------------------------------------------------------------------
@@ -1234,16 +1255,24 @@ float CTFFlameThrower::GetDeflectionRadius() const
 {
 	float fMultiplier = 1.0f;
 
-	// int iChargedAirblast = 0;
-	// CALL_ATTRIB_HOOK_INT( iChargedAirblast, set_charged_airblast );
-	// if ( iChargedAirblast != 0 )
-	// {
-	//	 fMultiplier *= RemapValClamped( ( gpGlobals->curtime - m_flChargeBeginTime ),
-	// 										  0.0f,
-	// 										  GetChargeMaxTime(),
-	// 										  AIRBLAST_CHARGE_MULT_MIN,
-	// 										  AIRBLAST_CHARGE_MULT_MAX );
-	// }
+	 int iChargedAirblast = 0;
+	 CALL_ATTRIB_HOOK_INT( iChargedAirblast, set_charged_airblast );
+	 if ( iChargedAirblast != 0 )
+	 {
+		 float fAirblastRefireTimeScale = 1.0f;
+		 CALL_ATTRIB_HOOK_FLOAT(fAirblastRefireTimeScale, mult_airblast_refire_time);
+		 if (fAirblastRefireTimeScale <= 0.0f)
+		 {
+			 fAirblastRefireTimeScale = 1.0f;
+		 }
+		 // It takes less time to charge if the fire rate is higher
+		 float flChargeMaxTime = TF_FLAMETHROWER_MAX_CHARGE_TIME * fAirblastRefireTimeScale;
+		 fMultiplier *= RemapValClamped( ( gpGlobals->curtime - m_flChargeBeginTime ),
+	 										  0.0f,
+	 										  flChargeMaxTime,
+	 										  AIRBLAST_CHARGE_MULT_MIN,
+	 										  AIRBLAST_CHARGE_MULT_MAX );
+	 }
 
 	// Allow custom attributes to scale the deflection size.
 	CALL_ATTRIB_HOOK_FLOAT( fMultiplier, deflection_size_multiplier );
@@ -1319,7 +1348,20 @@ void CTFFlameThrower::ComputeCrayAirBlastForce( CTFPlayer *pTarget, CTFPlayer *p
 	const float flReflectCoeff         = tf_airblast_cray_reflect_coeff.GetFloat();
 	const float flReflectCostCoeff     = tf_airblast_cray_reflect_cost_coeff.GetFloat();
 
-	float flAirblastBasePower = tf_airblast_cray_power.GetFloat();
+	float fMultiplier = 1.0f;
+	int iChargedAirblast = 0;
+	CALL_ATTRIB_HOOK_INT(iChargedAirblast, set_charged_airblast);
+	if (iChargedAirblast != 0)
+	{
+		fMultiplier *= RemapValClamped((gpGlobals->curtime - m_flChargeBeginTime),
+			0.0f,
+			GetChargeMaxTime(),
+			AIRBLAST_CHARGE_MULT_MIN,
+			AIRBLAST_CHARGE_MULT_MAX);
+	}
+
+
+	float flAirblastBasePower = tf_airblast_cray_power.GetFloat() * fMultiplier;
 	float flAirblastVerticalMultiplier = 1.f;
 
 	// Attributes.  Pushback scale is on the player, vulnerability multiplier on the victim.

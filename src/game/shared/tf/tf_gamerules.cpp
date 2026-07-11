@@ -3335,6 +3335,7 @@ CTFGameRules::CTFGameRules()
 	ListenForGameEvent( "player_disconnect" );
 	ListenForGameEvent( "teamplay_setup_finished" );
 	ListenForGameEvent( "recalculate_truce" );
+	ListenForGameEvent( "cf_player_taunt" );
 
 	Q_memset( m_vecPlayerPositions,0, sizeof(m_vecPlayerPositions) );
 
@@ -5956,7 +5957,7 @@ void CTFGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecS
 //-----------------------------------------------------------------------------
 bool CTFGameRules::ApplyOnDamageModifyRules( CTakeDamageInfo &info, CBaseEntity *pVictimBaseEntity, bool bAllowDamage )
 {
-	info.SetDamageForForceCalc( info.GetDamage() );
+	if (!info.GetDamageForForceCalc()) info.SetDamageForForceCalc( info.GetDamage() );
 	bool bDebug = tf_debug_damage.GetBool();
 
 	CTFPlayer *pVictim = ToTFPlayer( pVictimBaseEntity );

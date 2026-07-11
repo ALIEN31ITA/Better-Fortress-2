@@ -47,13 +47,15 @@ enum FlameThrowerMode_t
 
 #define MAX_PARTICLE_EFFECT_NAME_LENGTH 128
 
+#define TF_FLAMETHROWER_MAX_CHARGE_TIME	 1.5f
+
 //=========================================================
 // Flamethrower Weapon
 //=========================================================
 #ifdef GAME_DLL
-class CTFFlameThrower : public CTFWeaponBaseGun, public CGameEventListener
+class CTFFlameThrower : public CTFWeaponBaseGun, public CGameEventListener, public ITFChargeUpWeapon
 #else
-class CTFFlameThrower : public CTFWeaponBaseGun
+class CTFFlameThrower : public CTFWeaponBaseGun, public ITFChargeUpWeapon
 #endif // GAME_DLL
 {
 	DECLARE_CLASS( CTFFlameThrower, CTFWeaponBaseGun );
@@ -85,6 +87,10 @@ public:
 	bool			CanAirBlastPushPlayer() const;
 	bool			CanAirBlastDeflectProjectile() const;
 	bool			CanAirBlastPutOutTeammate() const;
+
+	virtual bool CanCharge() { int iChargedAirblast = 0; CALL_ATTRIB_HOOK_INT( iChargedAirblast, set_charged_airblast )	 return (iChargedAirblast==1); }
+	virtual float GetChargeBeginTime() { return m_flChargeBeginTime; }
+	virtual float GetChargeMaxTime( void );
 
 	void			FireAirBlast( int iAmmoPerShot );
 

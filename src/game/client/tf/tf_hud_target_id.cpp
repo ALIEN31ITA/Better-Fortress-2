@@ -83,6 +83,9 @@ bool ShouldHealthBarBeVisible( CBaseEntity *pTarget, CTFPlayer *pLocalPlayer )
 	if ( tf_hud_target_id_disable_floating_health.GetBool() )
 		return false;
 
+	if ( pTarget->m_nTFFlags & TFFLAG_SHOWS_TARGETID )
+		return true;
+
 	if ( pTarget->IsHealthBarVisible() )
 		return true;
 
@@ -205,8 +208,14 @@ void CTargetID::FireGameEvent( IGameEvent * event )
 bool CTargetID::DrawHealthIcon() 
 {
 	C_BaseEntity *pEnt = cl_entitylist->GetEnt( GetTargetIndex() );
-	if ( pEnt && pEnt->IsBaseObject() )
-		return true;
+	if (pEnt )
+	{
+		//if ( pEnt->m_nTFFlags & TFFLAG_SHOWS_TARGETID )
+		//	return true;
+
+		if ( pEnt->IsBaseObject() )
+			return true;
+	}
 
 	if ( tf_hud_target_id_disable_floating_health.GetBool() )
 		return true;
@@ -484,7 +493,7 @@ bool CTargetID::IsValidIDTarget( int nEntIndex, float flOldTargetRetainFOV, floa
 			{
 				bReturn = true;
 			}
-			else if ( pEnt->IsVisibleToTargetID() )
+			else if ( pEnt->IsVisibleToTargetID() || pEnt->m_nTFFlags & TFFLAG_SHOWS_TARGETID )
 			{
 				bReturn = true;
 			}
@@ -865,6 +874,21 @@ void CTargetID::UpdateID( void )
 		}
 		else	
 		{
+			// see if it has the TFFLag specified
+			if ( pEnt->m_nTFFlags & TFFLAG_SHOWS_TARGETID )
+			{
+				C_BaseEntity* pEntity = assert_cast<C_BaseEntity*>(pEntity);
+				bShowHealth = true;
+				flHealth = pEntity->GetHealth();
+				flMaxHealth = pEntity->GetMaxHealth();
+				m_pTargetHealth->SetBuilding( true );
+
+				if (m_pTargetKillStreakIcon)
+				{
+					m_pTargetKillStreakIcon->SetVisible(false);
+				}
+			}
+
 			// see if it is an object
 			if ( pEnt->IsBaseObject() )
 			{
@@ -1000,7 +1024,7 @@ void CTargetID::UpdateID( void )
 		}
 
 		// Setup health icon
-		if ( !pEnt->IsAlive() && ( pEnt->IsPlayer() || pEnt->IsBaseObject() ) )
+		if ( ( !pEnt->IsAlive() && ( pEnt->IsPlayer() || pEnt->IsBaseObject() || (pEnt->m_nTFFlags & TFFLAG_SHOWS_TARGETID) == 0) ) )
 		{
 			flHealth = 0;	// fixup for health being 1 when dead
 		}

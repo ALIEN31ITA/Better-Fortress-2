@@ -1453,10 +1453,11 @@ void CTFProjectile_GrapplingHook::HookTarget( CBaseEntity *pOther )
 	pTFPlayer->SetGrapplingHookTarget( pTarget, true );
 
 	// Stop moving!
-	if ( pOther->IsPlayer() )
+	if ( pOther->IsPlayer() || (pOther->m_nTFFlags & TFFLAG_STICKS_PROJECTILES) )
 	{
 		FollowEntity( pOther, false );
-		StartImpactFleshSoundLoop();
+		if ( pOther->IsPlayer() )
+			StartImpactFleshSoundLoop();
 	}
 	else
 		SetMoveType( MOVETYPE_NONE );

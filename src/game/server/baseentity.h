@@ -863,6 +863,7 @@ public:
 	
 #ifdef TF_DLL
 	CNetworkArray( int, m_nModelIndexOverrides, MAX_VISION_MODES ); // used to override the base model index on the client if necessary
+	CNetworkVarForDerived(int, m_nTFFlags);
 #endif
 
 	CNetworkVar( bool, m_bIgnoreTurboPhysics);  //Ignores sv_turbophysics and computes normally.
@@ -1259,9 +1260,6 @@ public:
 	CNetworkVarForDerived( char, m_lifeState );
 	CNetworkVarForDerived( char , m_takedamage );
 
-	//TF2 Specific
-	CNetworkVarForDerived( int , m_nTFFlags );
-
 	// Damage filtering
 	string_t	m_iszDamageFilterName;	// The name of the entity to use as our damage filter.
 	EHANDLE		m_hDamageFilter;		// The entity that controls who can damage us.
@@ -1523,7 +1521,7 @@ public:
 		return false;
 	}
 
-	//TF2 Specific
+#ifdef TF_DLL
 	void AddTFFlags( int nTFFlags )
 	{
 		m_nTFFlags |= nTFFlags;
@@ -1538,9 +1536,11 @@ public:
 		m_nTFFlags &= ~nTFFlags;
 	}
 
-	bool IsObservable() const;
-	bool IsMediGunTargetable() const;
-	bool IsSentryTargetable() const;
+	bool CanBeObservedBySpectators();
+	bool CanBeHealedByMedigun();
+	bool CanBeTargetedBySentrygun();
+	bool CanBeIgnitedByFlamethrower();
+#endif
 
 	HSCRIPT ScriptGetModelKeyValues( void );
 
