@@ -3955,12 +3955,12 @@
 			"mouse_pressed_sound"	"ui/item_knife_small_pickup.wav"
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
-		//Sten (Scout SMG)
+		//Sten (SMG Scout)
 		"32036"
 		{
 			"name" "The Sten"
-			"item_class"	"tf_weapon_scout_smg"
-			"item_type_name"	"#TF_Weapon_SMG"
+			"item_class"	"tf_weapon_smg_scout"
+			"item_type_name"	"#TFCW_Weapon_Primary_SMG"
 			"item_name"	"#TFCW_Sten"
 			"item_description"	"#TFCW_Sten_Desc"
 			"item_slot"	"primary"
@@ -3978,21 +3978,6 @@
 			"attach_to_hands"	"1"
 			"attributes"
 			{
-				"revolver use hit locations"
-				{
-					"attribute_class"	"set_weapon_mode"
-					"value"	"1"
-				}
-				"crit mod disabled"
-				{
-					"attribute_class"	"mult_crit_chance"
-					"value"	"0"
-				}
-				"is community contributed item"
-				{
-					"attribute_class"  "is_community_contributed_item"
-					"value"			   "DanielAwesomo"
-				}
 				"hidden primary max ammo bonus"
 				{
 					"attribute_class"	"mult_maxammo_primary"
@@ -4009,6 +3994,19 @@
 					"ACT_VM_RELOAD"	"ACT_ITEM4_VM_RELOAD"
 				}
 			}
+			"attributes"
+			{
+				"provide on active"
+				{
+					"attribute_class"	"provide_on_active"
+					"value" "1"
+				}
+				"no double jump"
+				{
+					"attribute_class"	"set_scout_doublejump_disabled"
+					"value"				"1"
+				}
+			}
 			"used_by_classes"
 			{
 				"scout"	"1"
@@ -4016,7 +4014,6 @@
 			"static_attrs"
 			{
 				"min_viewmodel_offset"					"10 0 -7"
-				"crit_dmg_falloff"			"1"
 			}
 			"mouse_pressed_sound"	"ui/item_light_gun_pickup.wav"
 			"drop_sound"		"ui/item_light_gun_drop.wav"

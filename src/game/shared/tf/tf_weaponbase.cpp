@@ -5289,7 +5289,7 @@ void CTFWeaponBase::ApplyOnHitAttributes( CBaseEntity *pVictimBaseEntity, CTFPla
 	{
 		// Scale Health mod with damage dealt, input being the maximum amount of health possible
 		float flScale = Clamp( info.GetDamage() / info.GetBaseDamage(), 0.f, 1.0f );
-		iModHealthOnHit = Max( 3, (int)( (float)iModHealthOnHit * flScale ) );
+		iModHealthOnHit = Max( iModHealthOnHit, (int)( (float)iModHealthOnHit * flScale ) );
 	}
 
 	// Charge meter on hit
