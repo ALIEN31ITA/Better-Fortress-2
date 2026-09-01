@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 // Workshop Configuration Structure
 //-----------------------------------------------------------------------------
-struct CFWorkshopConfig_t
+typedef struct CFWorkshopConfig_s
 {
 	// Collection ID for bulk downloads
 	PublishedFileId_t m_nCollectionID;
@@ -89,7 +89,7 @@ struct CFWorkshopConfig_t
 		m_bLogDownloads = true;
 		m_bLogUpdates = true;
 	}
-};
+} CFWorkshopConfig_t;
 
 //-----------------------------------------------------------------------------
 // Workshop Tag Categories and Tags
@@ -165,7 +165,7 @@ struct CFWorkshopConfig_t
 // Workshop tag indices for checkbox arrays and tag info lookup
 // Use TAGIDX prefix to avoid conflict with the string macros above
 //-----------------------------------------------------------------------------
-enum CFWorkshopTagIndex_t
+typedef enum CFWorkshopTagIndex_e
 {
 	// MOD TYPE category
 	CF_WORKSHOP_TAGIDX_MAP = 0,
@@ -226,20 +226,20 @@ enum CFWorkshopTagIndex_t
 	CF_WORKSHOP_TAGIDX_COMMUNITY_FIX,
 
 	CF_WORKSHOP_TAG_COUNT
-};
+} CFWorkshopTagIndex_t;
 
 // Workshop tag info structure
-struct CFWorkshopTagInfo_t
+typedef struct CFWorkshopTagInfo_e
 {
 	CFWorkshopTagIndex_t index;
 	const char* pszTagName;
 	const char* pszCategory;
-};
+} CFWorkshopTagInfo_t;
 
 // Global array of workshop tag info
 extern const CFWorkshopTagInfo_t g_CFWorkshopTags[CF_WORKSHOP_TAG_COUNT];
 
-#define CFWorkshopMsg(...) Msg("[CF Workshop] " __VA_ARGS__)
+#define CFWorkshopMsg(...) ConColorMsg(Color(0,50,255,255), "[CF Workshop] " __VA_ARGS__)
 #define CFWorkshopWarning(...) Warning("[CF Workshop] " __VA_ARGS__)
 
 #ifdef CF_WORKSHOP_DEBUG
@@ -256,7 +256,7 @@ class CCFWorkshopManager;
 CCFWorkshopManager *CFWorkshop();
 
 // Workshop item types
-enum CFWorkshopItemType_t
+typedef enum CFWorkshopItemType_e
 {
 	CF_WORKSHOP_TYPE_MAP = 0,
 	CF_WORKSHOP_TYPE_WEAPON_SKIN,
@@ -266,10 +266,10 @@ enum CFWorkshopItemType_t
 	CF_WORKSHOP_TYPE_SOUND_MOD,
 	CF_WORKSHOP_TYPE_HUD,
 	CF_WORKSHOP_TYPE_OTHER,
-};
+} CFWorkshopItemType_t;
 
 // Workshop item state
-enum CFWorkshopItemState_t
+typedef enum CFWorkshopItemState_e
 {
 	CF_WORKSHOP_STATE_NONE = 0,
 	CF_WORKSHOP_STATE_REFRESHING,
@@ -281,7 +281,7 @@ enum CFWorkshopItemState_t
 	CF_WORKSHOP_STATE_INSTALLED,
 	CF_WORKSHOP_STATE_ERROR,
 	CF_WORKSHOP_STATE_NEEDS_UPDATE,
-};
+} CFWorkshopItemState_t;
 
 // Represents a single workshop item
 class CCFWorkshopItem

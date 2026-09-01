@@ -1799,7 +1799,7 @@ bool CCFWorkshopManager::MountWeaponSkin(PublishedFileId_t fileID)
 	
 	// Check for models folder
 	char szModelsPath[MAX_PATH];
-	V_snprintf(szModelsPath, sizeof(szModelsPath), "%s/models", szInstallPath);
+	Q_snprintf(szModelsPath, sizeof(szModelsPath), "%s/models", szInstallPath);
 	if (g_pFullFileSystem->IsDirectory(szModelsPath))
 	{
 		bHasContent = true;
@@ -1808,7 +1808,7 @@ bool CCFWorkshopManager::MountWeaponSkin(PublishedFileId_t fileID)
 	
 	// Check for materials folder
 	char szMaterialsPath[MAX_PATH];
-	V_snprintf(szMaterialsPath, sizeof(szMaterialsPath), "%s/materials", szInstallPath);
+	Q_snprintf(szMaterialsPath, sizeof(szMaterialsPath), "%s/materials", szInstallPath);
 	if (g_pFullFileSystem->IsDirectory(szMaterialsPath))
 	{
 		bHasContent = true;
@@ -1817,7 +1817,7 @@ bool CCFWorkshopManager::MountWeaponSkin(PublishedFileId_t fileID)
 	
 	// Check for sound folder
 	char szSoundPath[MAX_PATH];
-	V_snprintf(szSoundPath, sizeof(szSoundPath), "%s/sound", szInstallPath);
+	Q_snprintf(szSoundPath, sizeof(szSoundPath), "%s/sound", szInstallPath);
 	if (g_pFullFileSystem->IsDirectory(szSoundPath))
 	{
 		bHasContent = true;
@@ -1826,7 +1826,7 @@ bool CCFWorkshopManager::MountWeaponSkin(PublishedFileId_t fileID)
 	
 	// Check for particles folder
 	char szParticlesPath[MAX_PATH];
-	V_snprintf(szParticlesPath, sizeof(szParticlesPath), "%s/particles", szInstallPath);
+	Q_snprintf(szParticlesPath, sizeof(szParticlesPath), "%s/particles", szInstallPath);
 	if (g_pFullFileSystem->IsDirectory(szParticlesPath))
 	{
 		bHasContent = true;
