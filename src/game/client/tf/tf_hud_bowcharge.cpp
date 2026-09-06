@@ -178,10 +178,15 @@ void CHudBowChargeMeter::FireGameEvent( IGameEvent *event )
 		pArrow->InitializeAsClientEntity( pszModelName, RENDER_GROUP_OPAQUE_ENTITY );
 		pArrow->SetModelScale( flScale );
 
-		CTFPlayer *pPlayer = ToTFPlayer( ClientEntityList().GetEnt( event->GetInt( "shooter" ) ) );
-		if ( pPlayer )
+		CBaseEntity* pShooter = ClientEntityList().GetEnt( event->GetInt( "shooter" ) );
+		CTFPlayer *pPlayer = ToTFPlayer( pShooter );
+
+		//No player... check the target skin instead.
+		CBaseEntity *pTarget = pPlayer ? pPlayer : pFlex;
+
+		if ( pTarget )
 		{
-			pArrow->m_nSkin = ( pPlayer->GetTeamNumber() == TF_TEAM_BLUE ) ? 1 : 0;
+			pArrow->m_nSkin = ( pTarget->GetTeamNumber()  == TF_TEAM_BLUE ) ? 1 : 0;
 		}
 
 		pArrow->AttachEntityToBone( pFlex, boneIndexAttached, bonePosition, boneAngles );

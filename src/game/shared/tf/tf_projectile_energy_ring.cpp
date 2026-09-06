@@ -14,6 +14,7 @@
 #include "input.h"
 #include "c_tf_player.h"
 #include "cliententitylist.h"
+#include "player_vs_environment/c_tf_point_weapon_mimic.h"
 #endif
 
 #ifdef GAME_DLL
@@ -24,7 +25,9 @@
 #include "halloween/merasmus/merasmus_trick_or_treat_prop.h"
 #include "tf_robot_destruction_robot.h"
 #include "tf_generic_bomb.h"
+#include "player_vs_environment/tf_point_weapon_mimic.h"
 #endif
+
 
 #define ENERGY_RING_DISPATCH_EFFECT			"ClientProjectile_EnergyRing"
 #define ENERGY_RING_DISPATCH_EFFECT_POMSON	"ClientProjectile_EnergyRingPomson"
@@ -98,13 +101,16 @@ float CTFProjectile_EnergyRing::GetGravity( void )
 
 float CTFProjectile_EnergyRing::GetInitialVelocity( void )
 {
-	return 1200.f; 
+	float fVelocity = 1200.f;
+	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( GetOwnerEntity(), fVelocity, mult_projectile_speed );
+
+	return fVelocity; 
 }
 
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
-CTFProjectile_EnergyRing *CTFProjectile_EnergyRing::Create( CTFWeaponBaseGun *pLauncher, const Vector &vecOrigin, const QAngle& vecAngles, float fSpeed, float fGravity, 
+CTFProjectile_EnergyRing *CTFProjectile_EnergyRing::Create( CBaseEntity *pLauncher, const Vector &vecOrigin, const QAngle& vecAngles, float fSpeed, float fGravity, 
 														    CBaseEntity *pOwner, CBaseEntity *pScorer, Vector vColor1, Vector vColor2, bool bCritical )
 {
 	CTFProjectile_EnergyRing *pRing = NULL;
@@ -126,7 +132,11 @@ CTFProjectile_EnergyRing *CTFProjectile_EnergyRing::Create( CTFWeaponBaseGun *pL
 	// Spawn.
 	pRing->Spawn();
 
-	Vector vecVelocity = vecForward * pRing->GetInitialVelocity();
+	//Set the velocity
+	CTFPointWeaponMimic *pMimic = dynamic_cast<CTFPointWeaponMimic *>( pLauncher );
+	float fProjVelocity = pMimic ? pMimic->GetSpeed() : pRing->GetInitialVelocity();
+
+	Vector vecVelocity = vecForward * fProjVelocity;
 	pRing->SetAbsVelocity( vecVelocity );	
 
 	// Setup the initial angles.
@@ -262,23 +272,27 @@ void CTFProjectile_EnergyRing::ProjectileTouch( CBaseEntity *pOther )
 
 		m_flLastHitTime = gpGlobals->curtime;
 
-		const int nDamage = GetDamage();
 
-		CTakeDamageInfo info( this, pOwner, GetLauncher(), nDamage, GetDamageType(), TF_DMG_CUSTOM_PLASMA );
-		info.SetReportedPosition( pOwner->GetAbsOrigin() );
-		info.SetDamagePosition( pTrace->endpos );
-
-		if ( info.GetDamageType() & DMG_CRITICAL )
+		if ( pOther->GetTeamNumber() != GetTeamNumber() || friendlyfire.GetBool() )
 		{
-			info.SetCritType( CTakeDamageInfo::CRIT_FULL );
+			const int nDamage = GetDamage();
+
+			CTakeDamageInfo info( this, pOwner, GetLauncher(), nDamage, GetDamageType(), TF_DMG_CUSTOM_PLASMA );
+			info.SetReportedPosition( pOwner->GetAbsOrigin() );
+			info.SetDamagePosition( pTrace->endpos );
+
+			if (info.GetDamageType() & DMG_CRITICAL)
+			{
+				info.SetCritType( CTakeDamageInfo::CRIT_FULL );
+			}
+
+			trace_t traceAttack;
+			UTIL_TraceLine( WorldSpaceCenter(), pOther->WorldSpaceCenter(), MASK_SOLID | CONTENTS_HITBOX, this, COLLISION_GROUP_NONE, &traceAttack );
+
+			pOther->DispatchTraceAttack( info, GetAbsVelocity(), &traceAttack );
+
+			ApplyMultiDamage();
 		}
-
-		trace_t traceAttack;
-		UTIL_TraceLine( WorldSpaceCenter(), pOther->WorldSpaceCenter(), MASK_SOLID|CONTENTS_HITBOX, this, COLLISION_GROUP_NONE, &traceAttack );
-
-		pOther->DispatchTraceAttack( info, GetAbsVelocity(), &traceAttack );
-
-		ApplyMultiDamage();
 
 		// Get a position on whatever we hit
 		Vector vecDelta = pOther->GetAbsOrigin() - GetAbsOrigin();
@@ -343,10 +357,11 @@ void CTFProjectile_EnergyRing::OnDataChanged( DataUpdateType_t updateType )
 	{
 		CNewParticleEffect* pEffect = ParticleProp()->Create( GetTrailParticleName(), PATTACH_ABSORIGIN_FOLLOW );
 		CTFWeaponBaseGun* pTFGun = dynamic_cast< CTFWeaponBaseGun* >( GetLauncher() );
-		if ( pEffect && pTFGun )
-		{
-			pEffect->SetControlPoint( CUSTOM_COLOR_CP1, pTFGun->GetParticleColor( 0 ) );
-			pEffect->SetControlPoint( CUSTOM_COLOR_CP2, pTFGun->GetParticleColor( 1 ) );
+		// TODO: If it's not from the weapon, make it copy the entity rendercolor? how...
+		if ( pEffect )
+		{ 
+			pEffect->SetControlPoint( CUSTOM_COLOR_CP1, pTFGun ? pTFGun->GetParticleColor(0) : GetTeamNumber() == TF_TEAM_RED ? TF_PARTICLE_WEAPON_RED_1 : TF_PARTICLE_WEAPON_BLUE_1 );
+			pEffect->SetControlPoint( CUSTOM_COLOR_CP2, pTFGun ? pTFGun->GetParticleColor( 1 ) : GetTeamNumber() == TF_TEAM_RED ? TF_PARTICLE_WEAPON_RED_2 : TF_PARTICLE_WEAPON_BLUE_2 );
 		}
 	}
 }
@@ -358,6 +373,13 @@ void CTFProjectile_EnergyRing::OnDataChanged( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 float CTFProjectile_EnergyRing::GetDamage()
 {
+	//HACK: Weapon Mimic
+	#ifdef GAME_DLL
+		CTFPointWeaponMimic *pMimic = dynamic_cast<CTFPointWeaponMimic *>( GetOwnerEntity() );
+		if ( pMimic )
+			return pMimic->GetProjectileDamage();
+	#endif
+
 	return ShouldPenetrate() ? 20.f : 60.f;
 }
 
@@ -365,6 +387,23 @@ bool CTFProjectile_EnergyRing::ShouldPenetrate() const
 {
 	int iPenetrate = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOwnerEntity(), iPenetrate, energy_weapon_penetration );
+
+	//HACK: Weapon Mimic
+	#ifdef CLIENT_DLL
+		C_CTFPointWeaponMimic *pMimic = dynamic_cast<C_CTFPointWeaponMimic *>( GetOwnerEntity() );
+		if ( pMimic &&
+			pMimic->GetWeaponProjectile() == C_CTFPointWeaponMimic::WEAPON_DRG_ENERGYRING_BISON )
+		{
+			return true;
+		}
+	#else
+		CTFPointWeaponMimic *pMimic = dynamic_cast<CTFPointWeaponMimic *>( GetOwnerEntity() );
+		if ( pMimic &&
+			pMimic->GetWeaponProjectile() == CTFPointWeaponMimic::WEAPON_DRG_ENERGYRING_BISON )
+		{
+			return true;
+		}
+	#endif
 
 	return iPenetrate != 0;
 }

@@ -944,6 +944,7 @@ $Project "Server (TF)"
 				$File	"tf\player_vs_environment\tf_tank_boss_body.cpp"
 				$File	"tf\player_vs_environment\tf_tank_boss_body.h"
 				$File	"tf\player_vs_environment\tf_point_weapon_mimic.cpp"
+				$File	"tf\player_vs_environment\tf_point_weapon_mimic.h"
 
 				$Folder "Boss Alpha"
 				{

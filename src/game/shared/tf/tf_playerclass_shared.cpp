@@ -47,7 +47,7 @@ BEGIN_SEND_TABLE_NOBASE( CTFPlayerClassShared, DT_TFPlayerClassShared )
 	SendPropInt( SENDINFO( m_iClass ), Q_log2( TF_CLASS_COUNT_ALL )+1, SPROP_UNSIGNED ),
 	SendPropStringT( SENDINFO( m_iszClassIcon ) ),
 	SendPropStringT( SENDINFO( m_iszCustomModel ) ),
-	SendPropString( SENDINFO( m_iszCustomHandsModel ) ),
+	SendPropStringT( SENDINFO( m_iszCustomHandsModel ) ),
 	SendPropVector( SENDINFO( m_vecCustomModelOffset ) ),
 	SendPropQAngles( SENDINFO( m_angCustomModelRotation ) ),
 	SendPropBool( SENDINFO( m_bCustomModelRotates ) ),

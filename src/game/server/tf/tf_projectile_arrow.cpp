@@ -23,6 +23,7 @@
 #include "halloween/halloween_base_boss.h"
 #include "halloween/merasmus/merasmus_trick_or_treat_prop.h"
 #include "tf_logic_robot_destruction.h"
+#include "player_vs_environment/tf_point_weapon_mimic.h"
 
 #include "tf_gamerules.h"
 #include "bot/tf_bot.h"
@@ -455,6 +456,7 @@ bool CTFProjectile_Arrow::StrikeTarget( mstudiobbox_t *pBox, CBaseEntity *pOther
 
 	// Damage the entity we struck.
 	CBaseEntity *pAttacker = GetScorer();
+
 	if ( !pAttacker )
 	{
 		// likely not launched by a player
@@ -662,8 +664,10 @@ void CTFProjectile_Arrow::BuildingHealingArrow( CBaseEntity *pOther )
 	if ( !pOther->IsBaseObject() )
 		return;
 
+	CBaseEntity* pOwner = GetOwnerEntity();
 	CTFPlayer *pTFAttacker = ToTFPlayer( GetScorer() );
-	if ( !pTFAttacker )
+	CTFPointWeaponMimic *pWeaponMimic = dynamic_cast< CTFPointWeaponMimic* >( pOwner );
+	if ( !pOwner )
 		return;
 
 	// if not on our team, forget about it
@@ -671,7 +675,15 @@ void CTFProjectile_Arrow::BuildingHealingArrow( CBaseEntity *pOther )
 		return;
 
 	int iArrowHealAmount = 0;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( pTFAttacker, iArrowHealAmount, arrow_heals_buildings );
+	if ( pTFAttacker )
+	{ 
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pTFAttacker, iArrowHealAmount, arrow_heals_buildings );
+	}
+	else if ( pWeaponMimic )
+	{
+		iArrowHealAmount = pWeaponMimic->GetProjectileAmmo();
+	}
+	
 	if ( iArrowHealAmount == 0 )
 		return;
 
@@ -684,14 +696,37 @@ void CTFProjectile_Arrow::BuildingHealingArrow( CBaseEntity *pOther )
 	{
 		iArrowHealAmount *= SHIELD_NORMAL_VALUE;
 	}
+	
+	if ( pOwner )
+	{ 
+		int nHealed = 0;
 
-	int nHealed = pBuilding->Command_Repair( pTFAttacker, iArrowHealAmount, 1.f, 4.f, true );
-	if ( nHealed > 0 )
-	{
-		const char *pParticleName = GetTeamNumber() == TF_TEAM_BLUE ? CLAW_REPAIR_EFFECT_BLU : CLAW_REPAIR_EFFECT_RED;
-		CPVSFilter filter( GetAbsOrigin() );
-		TE_TFParticleEffect( filter, 0.0, pParticleName, GetAbsOrigin(), vec3_angle );
-	}
+		if ( pTFAttacker )
+			nHealed = pBuilding->Command_Repair( pTFAttacker, iArrowHealAmount, 1.f, 4.f, true );
+
+		if ( nHealed > 0 || pWeaponMimic )
+		{
+			const char *pParticleName = GetTeamNumber() == TF_TEAM_BLUE ? CLAW_REPAIR_EFFECT_BLU : CLAW_REPAIR_EFFECT_RED;
+			CPVSFilter filter( GetAbsOrigin() );
+			TE_TFParticleEffect( filter, 0.0, pParticleName, GetAbsOrigin(), vec3_angle );
+
+			//We send the event again, since Command_Repair is exclusive to the player.
+			if ( pWeaponMimic )
+			{
+				pBuilding->SetHealth( Min( (float)pBuilding->GetMaxHealth(), pBuilding->GetHealth() + iArrowHealAmount));
+
+				IGameEvent * pEvent = gameeventmanager->CreateEvent( "building_healed" );
+				if ( pEvent )
+				{
+					pEvent->SetInt( "priority", 1 ); // HLTV event priority, not transmitted
+					pEvent->SetInt( "building", pBuilding->entindex() );
+					pEvent->SetInt( "healer", pWeaponMimic->entindex() );
+					pEvent->SetInt( "amount", iArrowHealAmount );
+					gameeventmanager->FireEvent( pEvent );
+				}
+			}
+		}
+	} 
 }
 
 
@@ -777,7 +812,7 @@ void CTFProjectile_Arrow::ArrowTouch( CBaseEntity *pOther )
 
 		// If we've only got 1 entity in the hit list (the attacker by default) and we've not been deflected
 		// then we can consider this arrow to have completely missed all players.
-		if( m_HitEntities.Count() == 1 && GetDeflected() == 0 )
+		if(  m_HitEntities.Count() == 1 && GetDeflected() == 0 )
 		{
 			OnArrowMissAllPlayers();
 		}
@@ -1223,7 +1258,8 @@ void CTFProjectile_HealingBolt::ImpactTeamPlayer( CTFPlayer *pOther )
 		return;
 
 
-	CTFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
+	CBaseEntity* pOwner = GetOwnerEntity();
+	CTFPlayer *pTFHealer = ToTFPlayer( GetOwnerEntity() );
 	if ( !pOwner )
 		return;
 
@@ -1254,9 +1290,10 @@ void CTFProjectile_HealingBolt::ImpactTeamPlayer( CTFPlayer *pOther )
 		return;
 
 	// Play an impact sound.
-	ImpactSound( "Weapon_Arrow.ImpactFleshCrossbowHeal" );
+	pTFHealer ? ImpactSound( "Weapon_Arrow.ImpactFleshCrossbowHeal" ) : EmitSound( "Weapon_Arrow.ImpactFleshCrossbowHeal" );
 
-	CTF_GameStats.Event_PlayerHealedOther( pOwner, flHealth );
+	if ( pTFHealer )
+		CTF_GameStats.Event_PlayerHealedOther( pTFHealer, flHealth );
 
 	IGameEvent * event = gameeventmanager->CreateEvent( "player_healed" );
 	if ( event )
@@ -1266,7 +1303,8 @@ void CTFProjectile_HealingBolt::ImpactTeamPlayer( CTFPlayer *pOther )
 
 		// Healed by another player.
 		event->SetInt( "patient", pOther->GetUserID() );
-		event->SetInt( "healer", pOwner->GetUserID() );
+		if ( pTFHealer )
+			event->SetInt( "healer", pTFHealer->GetUserID() );
 		event->SetInt( "amount", flHealth );
 		gameeventmanager->FireEvent( event );
 	}
@@ -1276,38 +1314,47 @@ void CTFProjectile_HealingBolt::ImpactTeamPlayer( CTFPlayer *pOther )
 	{
 		event->SetInt( "amount", flHealth );
 		event->SetInt( "entindex", pOther->entindex() );
-		item_definition_index_t healingItemDef = INVALID_ITEM_DEF_INDEX;
-		if ( pWeapon && pWeapon->GetAttributeContainer() && pWeapon->GetAttributeContainer()->GetItem() )
+
+		if ( pTFHealer ) 
 		{
-			healingItemDef = pWeapon->GetAttributeContainer()->GetItem()->GetItemDefIndex();
+			item_definition_index_t healingItemDef = INVALID_ITEM_DEF_INDEX;
+			if ( pWeapon && pWeapon->GetAttributeContainer() && pWeapon->GetAttributeContainer()->GetItem() )
+			{
+				healingItemDef = pWeapon->GetAttributeContainer()->GetItem()->GetItemDefIndex();
+			}
+			event->SetInt( "weapon_def_index", healingItemDef );
 		}
-		event->SetInt( "weapon_def_index", healingItemDef );
 		gameeventmanager->FireEvent( event ); 
 	}
 
 	event = gameeventmanager->CreateEvent( "crossbow_heal" );
 	if ( event )
 	{
-		event->SetInt( "healer", pOwner->GetUserID() );
+		if ( pTFHealer )
+			event->SetInt( "healer", pTFHealer->GetUserID() );
+
 		event->SetInt( "target", pOther->GetUserID() );
 		event->SetInt( "amount", flHealth );
 		gameeventmanager->FireEvent( event ); 
 	}
 
 	// Add ubercharge based on amount healed
-	CWeaponMedigun *pMedigun = static_cast<CWeaponMedigun *>( pOwner->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
-	if ( pMedigun )
-	{
-		float flTimeSinceDamage = gpGlobals->curtime - pOther->GetLastDamageReceivedTime();
-		float flScale = RemapValClamped( flTimeSinceDamage, 10.f, 15.f, 3.f, 1.f ); /*healingbolt_uber_scale.GetFloat()*/
-		const float flGainRate = 24.f * flScale;
+	if ( pTFHealer )
+	{ 
+		CWeaponMedigun *pMedigun = static_cast<CWeaponMedigun *>( pTFHealer->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
+		if ( pMedigun )
+		{
+			float flTimeSinceDamage = gpGlobals->curtime - pOther->GetLastDamageReceivedTime();
+			float flScale = RemapValClamped( flTimeSinceDamage, 10.f, 15.f, 3.f, 1.f ); /*healingbolt_uber_scale.GetFloat()*/
+			const float flGainRate = 24.f * flScale;
 
-		// Ubercharge rate is based on the medigun's heal rate, then scaled based on last combat time (same rule as the medigun's heal rate)
-		pMedigun->AddCharge( ( iActualHealed / flGainRate ) * gpGlobals->frametime );
+			// Ubercharge rate is based on the medigun's heal rate, then scaled based on last combat time (same rule as the medigun's heal rate)
+			pMedigun->AddCharge( ( iActualHealed / flGainRate ) * gpGlobals->frametime );
+		}
+		pOther->m_Shared.AddCond( TF_COND_HEALTH_OVERHEALED, 1.2f );
+
+		EconEntity_OnOwnerKillEaterEvent_Batched( dynamic_cast<CEconEntity *>( GetLauncher() ), pTFHealer, pOther, kKillEaterEvent_AllyHealingDone, flHealth );
 	}
-	pOther->m_Shared.AddCond( TF_COND_HEALTH_OVERHEALED, 1.2f );
-
-	EconEntity_OnOwnerKillEaterEvent_Batched( dynamic_cast<CEconEntity *>( GetLauncher() ), pOwner, pOther, kKillEaterEvent_AllyHealingDone, flHealth );
 }
 
 
@@ -1431,13 +1478,11 @@ void CTFProjectile_GrapplingHook::CheckSkyboxImpact( CBaseEntity *pOther )
 //-----------------------------------------------------------------------------
 void CTFProjectile_GrapplingHook::HookTarget( CBaseEntity *pOther )
 {
-	if ( !GetOwnerEntity() || !pOther )
+	CBaseEntity *pOwner = GetOwnerEntity();
+	if ( !pOwner || !pOther )
 		return;
 
-	CTFPlayer *pTFPlayer = ToTFPlayer( GetOwnerEntity() );
-	if ( !pTFPlayer || pTFPlayer->GetGrapplingHookTarget() )
-		return;
-
+	CTFPlayer *pTFPlayer = ToTFPlayer( pOwner );
 	CBaseEntity *pTarget = pOther->IsWorld() ? this : pOther;
 	const char *pszSoundName = NULL;
 	if ( pTarget->IsPlayer() )
@@ -1448,9 +1493,10 @@ void CTFProjectile_GrapplingHook::HookTarget( CBaseEntity *pOther )
 	{
 		pszSoundName = "WeaponGrapplingHook.ImpactDefault";
 	}
-	ImpactSound( pszSoundName );
+	pTFPlayer ? ImpactSound( pszSoundName ) : EmitSound( pszSoundName );
 
-	pTFPlayer->SetGrapplingHookTarget( pTarget, true );
+	if ( pTFPlayer )
+		pTFPlayer->SetGrapplingHookTarget( pTarget, true );
 
 	// Stop moving!
 	if ( pOther->IsPlayer() || (pOther->m_nTFFlags & TFFLAG_STICKS_PROJECTILES) )
@@ -1472,19 +1518,33 @@ void CTFProjectile_GrapplingHook::HookTarget( CBaseEntity *pOther )
 void CTFProjectile_GrapplingHook::HookLatchedThink()
 {
 	// if owner is dead, remove the hook
-	CTFPlayer *pTFPlayer = ToTFPlayer( GetOwnerEntity() );
-	if ( !pTFPlayer || !pTFPlayer->IsAlive() )
-	{
-		UTIL_Remove( this );
-		return;
+	CBaseEntity *pOwner = GetOwnerEntity();
+	CTFPlayer *pTFPlayer = ToTFPlayer( pOwner );
+	if ( pTFPlayer ) 
+	{ 
+		if ( !pTFPlayer || !pTFPlayer->IsAlive() )
+		{
+			UTIL_Remove( this );
+			return;
+		}
+
+		// if the target nolonger exist or target player is dead, remove the hook
+		CBaseEntity *pHookTarget = pTFPlayer->GetGrapplingHookTarget();
+		if ( !pHookTarget || ( pHookTarget->IsPlayer() && !pHookTarget->IsAlive() ) )
+		{
+			UTIL_Remove( this );
+			return;
+		}
 	}
 
-	// if the target nolonger exist or target player is dead, remove the hook
-	CBaseEntity *pHookTarget = pTFPlayer->GetGrapplingHookTarget();
-	if ( !pHookTarget || ( pHookTarget->IsPlayer() && !pHookTarget->IsAlive() ) )
+	CTFPointWeaponMimic *pWeaponMimic = dynamic_cast< CTFPointWeaponMimic* >( pOwner );
+	if ( pWeaponMimic )
 	{
-		UTIL_Remove( this );
-		return;
+		if ( GetMoveParent() && GetMoveParent()->IsPlayer() && !GetMoveParent()->IsAlive() )
+		{
+			pWeaponMimic->RemoveGrapplingHook();
+			return;
+		}
 	}
 	
 	SetContextThink( &CTFProjectile_GrapplingHook::HookLatchedThink, gpGlobals->curtime + 0.1f, "HookLatchedThink" );

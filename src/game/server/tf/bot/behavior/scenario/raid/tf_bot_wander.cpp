@@ -98,7 +98,7 @@ ActionResult< CTFBot >	CTFBotWander::Update( CTFBot *me, float interval )
 
 		// mouth off
 		if ( me->IsPlayerClass( TF_CLASS_SCOUT ) )
-			me->EmitSound( "Scout.WanderJabber" );
+			me->EmitSound( "Scout.MVM_WanderJabber" );
 		else
 			me->SpeakConceptIfAllowed( MP_CONCEPT_PLAYER_JEERS );
 	}

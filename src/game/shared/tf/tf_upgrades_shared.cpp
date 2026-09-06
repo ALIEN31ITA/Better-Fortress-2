@@ -14,6 +14,10 @@
 #include "tf_gamerules.h"
 #include "tf_item_powerup_bottle.h"
 
+#define FILE_UPGRADES_LEGACY = "scripts/items/mvm_upgrades.txt"
+
+#define FILE_UPGRADES_REVAMP = "scripts/items/mvm_upgrades_customizable.txt"
+
 
 CMannVsMachineUpgradeManager g_MannVsMachineUpgrades;
 

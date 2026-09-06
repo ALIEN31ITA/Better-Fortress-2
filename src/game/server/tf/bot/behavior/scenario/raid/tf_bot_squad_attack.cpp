@@ -122,9 +122,9 @@ ActionResult< CTFBot > CTFBotSquadAttack::Update( CTFBot *me, float interval )
 		m_vocalizeTimer.Start( RandomFloat( tf_raid_squad_vocalize_min_interval.GetFloat(), tf_raid_squad_vocalize_max_interval.GetFloat() ) );
 
 		if ( me->IsPlayerClass( TF_CLASS_SCOUT ) )
-			me->EmitSound( "Scout.MobJabber" );
+			me->EmitSound( "Scout.MVM_MobJabber" );
 		else if ( me->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) )
-			me->EmitSound( "Heavy.MobJabber" );
+			me->EmitSound( "Heavy.MVM_MobJabber" );
 		else
 			me->SpeakConceptIfAllowed( MP_CONCEPT_PLAYER_BATTLECRY );
 	}

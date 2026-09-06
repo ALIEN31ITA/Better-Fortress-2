@@ -666,6 +666,12 @@ const char *CTFWeaponBase::GetViewModel( int iViewModel ) const
 
 	CTFPlayer *pPlayer = ToTFPlayer( GetOwner() );
 
+	//Return custom hands instead!
+	if ( pPlayer->GetPlayerClass()->HasCustomHandsModel() )
+	{ 
+		return pPlayer->GetPlayerClass()->GetCustomHandsModel();
+	}
+
 	int iHandModelIndex = 0;
 	int iGunSlinger = 0;
 	char* HACK_RobotGunsLinger = "models/mvm/weapons/c_models/c_engineer_bot_gunslinger.mdl";
@@ -5794,7 +5800,7 @@ void CTFWeaponBase::ApplyPostHitEffects( const CTakeDamageInfo &info, CTFPlayer 
 			if ( iSubtractVictimMedigunChargeOnHit > 0 )
 			{
 				CWeaponMedigun *pMedigun = (CWeaponMedigun *)pVictim->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN );
-				if ( pMedigun && !pMedigun->IsReleasingCharge() )
+				if ( pMedigun && !pMedigun->IsReleasingCharge() && pMedigun->GetChargeLevel() > 0.0f )
 				{
 					// STAGING_ENGY
 					// Scale drain after 512 Hu to 1536Hu ( 50% drain at 1024, 0 drain at 1536 units )
@@ -6257,6 +6263,8 @@ bool CTFWeaponBase::DeflectEntity( CBaseEntity *pTarget, CTFPlayer *pOwner, Vect
 
 	Vector vecEye = pOwner->EyePosition();
 	Vector vecVel = pTarget->GetAbsVelocity();
+
+	SendObjectDeflectedEvent( pOwner, ToTFPlayer( pTarget->GetOwnerEntity() ), TF_WEAPON_NONE, pTarget->GetBaseAnimating() );
 
 	// apply an impulse instead if this is a prop physics object
 	if ( FClassnameIs( pTarget, "prop_physics" ) || pTarget->m_nTFFlags & TFFLAG_AIRBLASTABLE )

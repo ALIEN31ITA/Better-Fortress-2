@@ -24,6 +24,7 @@
 	#include "halloween/merasmus/merasmus_trick_or_treat_prop.h"
 	#include "tf_robot_destruction_robot.h"
 	#include "tf_generic_bomb.h"
+	#include "player_vs_environment/tf_point_weapon_mimic.h"
 #endif
 
 #ifdef CLIENT_DLL
@@ -264,6 +265,7 @@ public:
 		CBaseEntity *pOwner = GetOwnerEntity();
 		CTFPlayer* pTFOwner = ToTFPlayer( pOwner );
 		CTFPlayer *pTFPlayer = ToTFPlayer( pTarget );
+		CTFPointWeaponMimic *pWeaponMimic = dynamic_cast< CTFPointWeaponMimic* >( pOwner );
 		
 		if ( !friendlyfire.GetBool() )
 		{
@@ -344,6 +346,10 @@ public:
 
 			float flBurnDuration = tf_fireball_burn_duration.GetFloat();
 
+			//Spawned from a Mimic
+			if ( pWeaponMimic )
+				flBurnDuration = pWeaponMimic->GetProjectileTimer();
+
 			// This burn affects pyros, too, but only half as long
 			if ( pTFPlayer->IsPlayerClass( TF_CLASS_PYRO ) )
 			{
@@ -351,7 +357,14 @@ public:
 			}
 
 			// Ignite them AFTER we figure out the damage.  We do extra damage to burning players.
-			pTFPlayer->m_Shared.Burn( ToTFPlayer( pOwner ), (CTFWeaponBase*)GetLauncher(), flBurnDuration );
+			if ( !pWeaponMimic )
+			{ 
+				pTFPlayer->m_Shared.Burn( ToTFPlayer( pOwner ), (CTFWeaponBase*)GetLauncher(), flBurnDuration);
+			}
+			else
+			{
+				pTFPlayer->m_Shared.SelfBurn( flBurnDuration );
+			}
 		}
 		else
 		{
@@ -419,7 +432,7 @@ public:
 		}
 
 		// Special sound in the shooter's ears to let them know they got the Bonus Damage
-		if ( bBonusDamage && !m_bBonusSoundPlayed )
+		if ( pTFOwner && bBonusDamage && !m_bBonusSoundPlayed )
 		{
 			m_bBonusSoundPlayed = true;
 			// sound effects

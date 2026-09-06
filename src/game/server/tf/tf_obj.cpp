@@ -1364,7 +1364,6 @@ bool CBaseObject::StartBuilding( CBaseEntity *pBuilder )
 			if ( trace.m_pEnt->m_nTFFlags & TFFLAG_SUPPORTS_ENGINEER_BUILDINGS )
 			{
 				SetParent( trace.m_pEnt );
-				DevMsg( "Building successfully parented to %s\n", trace.m_pEnt->GetClassname() );
 			}
 			else if ( trace.m_pEnt->IsBSPModel() )
 			{
@@ -1372,7 +1371,6 @@ bool CBaseObject::StartBuilding( CBaseEntity *pBuilder )
 				if ( pTrain )
 				{
 					SetParent( pTrain );
-					DevMsg( "Building snapped to TrackTrain: %s\n", pTrain->GetClassname() );
 				}
 			}
 		}

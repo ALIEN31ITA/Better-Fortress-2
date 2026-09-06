@@ -291,12 +291,13 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 		UTIL_ScreenShake( WorldSpaceCenter(), 25.0, 150.0, 1.0, 750, SHAKE_START );
 	}
 
-	// Sound
-	ImpactSound( "Weapon_CowMangler.Explode" );
-	CSoundEnt::InsertSound ( SOUND_COMBAT, vecOrigin, 1024, 3.0 );
-
 	// Damage.
 	CBaseEntity *pAttacker = GetOwnerEntity();
+
+	// Sound
+	pAttacker->IsPlayer() ? ImpactSound( "Weapon_CowMangler.Explode" ) : EmitSound( "Weapon_CowMangler.Explode" );
+	CSoundEnt::InsertSound ( SOUND_COMBAT, vecOrigin, 1024, 3.0 );
+
 	IScorer *pScorerInterface = dynamic_cast<IScorer*>( pAttacker );
 	if ( pScorerInterface )
 	{
@@ -316,12 +317,11 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 			if ( pTarget->GetTeamNumber() != pAttacker->GetTeamNumber() )
 			{
 				RecordEnemyPlayerHit( pTarget, true );
+				CTakeDamageInfo info( this, pAttacker, m_hLauncher, vec3_origin, vecOrigin, GetDamage(), GetDamageType(), GetDamageCustom() );
+				CTFRadiusDamageInfo radiusinfo( &info, vecOrigin, flRadius, NULL, m_bChargedShot ? TF_ROCKET_RADIUS_FOR_RJS*1.33 : TF_ROCKET_RADIUS_FOR_RJS );
+				TFGameRules()->RadiusDamage( radiusinfo );
 			}
 		}
-
-		CTakeDamageInfo info( this, pAttacker, m_hLauncher, vec3_origin, vecOrigin, GetDamage(), GetDamageType(), GetDamageCustom() );
-		CTFRadiusDamageInfo radiusinfo( &info, vecOrigin, flRadius, NULL, m_bChargedShot ? TF_ROCKET_RADIUS_FOR_RJS*1.33 : TF_ROCKET_RADIUS_FOR_RJS );
-		TFGameRules()->RadiusDamage( radiusinfo );
 	}
 
 	// Don't decal players with scorch.

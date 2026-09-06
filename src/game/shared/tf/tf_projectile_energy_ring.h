@@ -35,7 +35,7 @@ public:
 	virtual float GetGravity( void );
 
 	// Creation.
-	static CTFProjectile_EnergyRing *Create( CTFWeaponBaseGun *pLauncher, const Vector& vecOrigin, const QAngle& vecAngles, float fSpeed, float fGravity, CBaseEntity *pOwner = NULL, CBaseEntity *pScorer = NULL, Vector vColor1=vec3_origin, Vector vColor2=vec3_origin, bool bCritical=false );	
+	static CTFProjectile_EnergyRing *Create( CBaseEntity *pLauncher, const Vector& vecOrigin, const QAngle& vecAngles, float fSpeed, float fGravity, CBaseEntity *pOwner = NULL, CBaseEntity *pScorer = NULL, Vector vColor1=vec3_origin, Vector vColor2=vec3_origin, bool bCritical=false );	
 	virtual void	Spawn();
 	virtual void	Precache();
 	virtual int		GetWeaponID( void ) const			{ return ShouldPenetrate() ? TF_WEAPON_RAYGUN : TF_WEAPON_DRG_POMSON; }

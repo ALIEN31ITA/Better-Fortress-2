@@ -10,6 +10,7 @@
 #include "tf_player.h"
 #include "tf_weapon_flaregun.h"
 #include "tf_gamerules.h"
+#include "player_vs_environment/tf_point_weapon_mimic.h"
 
 //=============================================================================
 //
@@ -233,6 +234,7 @@ void CTFProjectile_Flare::Explode( trace_t *pTrace, CBaseEntity *pOther )
 	Vector vecOrigin = GetAbsOrigin();
 
 	CBaseEntity *pAttacker = GetOwnerEntity();
+	CTFPointWeaponMimic *pWeaponMimic = dynamic_cast< CTFPointWeaponMimic* >( pAttacker );
 	IScorer *pScorerInterface = dynamic_cast<IScorer*>( pAttacker );
 	if ( pScorerInterface )
 	{
@@ -242,9 +244,9 @@ void CTFProjectile_Flare::Explode( trace_t *pTrace, CBaseEntity *pOther )
 	CTFPlayer *pTFVictim = ToTFPlayer( pOther );
 
 	CTFFlareGun *pFlareGun = dynamic_cast< CTFFlareGun* >( GetLauncher() );
-	if ( pFlareGun )
+	if ( pFlareGun || pWeaponMimic )
 	{
-		if ( pFlareGun->GetFlareGunType() == FLAREGUN_SCORCHSHOT )
+		if ( pFlareGun->GetFlareGunType() == FLAREGUN_SCORCHSHOT || pWeaponMimic->GetProjectileType() == FLAREGUN_SCORCHSHOT )
 		{
 			// When the scorch shot hits a player...
 			if ( pTFVictim )
@@ -262,26 +264,29 @@ void CTFProjectile_Flare::Explode( trace_t *pTrace, CBaseEntity *pOther )
 				iDamageType |= DMG_PREVENT_PHYSICS_FORCE;
 
 				// Damage the player to push them back
-				CTakeDamageInfo info( this, pAttacker, m_hLauncher, vec3_origin, vecOrigin, GetDamage(), iDamageType, m_bIsFromTaunt ? TF_DMG_CUSTOM_FLARE_PELLET : 0 );
-				pTFVictim->TakeDamage( info );
-
 				bool bIsEnemy = pAttacker && pTFVictim->GetTeamNumber() != pAttacker->GetTeamNumber();
-				
-				if ( !pTFVictim->m_Shared.IsImmuneToPushback() && bIsEnemy )
-				{
-					Vector vecToTarget;
-					vecToTarget = vVelocity;
-					VectorNormalize( vecToTarget );
-					vecToTarget.z = 1.0;
 
-					// apply airblast - Apply stun if they are effectively grounded so we can knock them up
-					if ( !pTFVictim->m_Shared.InCond( TF_COND_KNOCKED_INTO_AIR ) )
+				if ( bIsEnemy )
+				{
+					CTakeDamageInfo info( this, pAttacker, m_hLauncher, vec3_origin, vecOrigin, GetDamage(), iDamageType, m_bIsFromTaunt ? TF_DMG_CUSTOM_FLARE_PELLET : 0 );
+					pTFVictim->TakeDamage( info );
+
+					if ( !pTFVictim->m_Shared.IsImmuneToPushback() )
 					{
-						pTFVictim->m_Shared.StunPlayer( 0.5, 1.f, TF_STUN_MOVEMENT, ToTFPlayer( pAttacker ) );
+						Vector vecToTarget;
+						vecToTarget = vVelocity;
+						VectorNormalize( vecToTarget );
+						vecToTarget.z = 1.0;
+
+						// apply airblast - Apply stun if they are effectively grounded so we can knock them up
+						if (!pTFVictim->m_Shared.InCond( TF_COND_KNOCKED_INTO_AIR ))
+						{
+							pTFVictim->m_Shared.StunPlayer( 0.5, 1.f, TF_STUN_MOVEMENT, ToTFPlayer( pAttacker ) );
+						}
+
+						float flForce = bIsBurningVictim ? 400.0f : 100.0f;
+						pTFVictim->ApplyGenericPushbackImpulse( vecToTarget * flForce, ToTFPlayer( pAttacker ) );
 					}
-					
-					float flForce = bIsBurningVictim ? 400.0f : 100.0f;
-					pTFVictim->ApplyGenericPushbackImpulse( vecToTarget * flForce, ToTFPlayer( pAttacker ) );
 				}
 
 				// It loses almost all of its speed and pops into the air
@@ -367,8 +372,11 @@ void CTFProjectile_Flare::Explode( trace_t *pTrace, CBaseEntity *pOther )
 		m_bCritical = true;
 	}
 
-	CTakeDamageInfo info( this, pAttacker, m_hLauncher, vec3_origin, vecOrigin, GetDamage(), GetDamageType(), TF_DMG_CUSTOM_BURNING_FLARE );
-	pOther->TakeDamage( info );
+	if ( pTFVictim && pTFVictim->GetTeamNumber() != pAttacker->GetTeamNumber() )
+	{ 
+		CTakeDamageInfo info( this, pAttacker, m_hLauncher, vec3_origin, vecOrigin, GetDamage(), GetDamageType(), TF_DMG_CUSTOM_BURNING_FLARE );
+		pOther->TakeDamage( info );
+	}
 
 	// Remove the flare.
 	if ( m_bImpact )
@@ -414,9 +422,11 @@ void CTFProjectile_Flare::Explode_Air( trace_t *pTrace, int bitsDamageType, bool
 	CPVSFilter filter( vecOrigin );
 
 	CBaseEntity *pAttacker = GetOwnerEntity();
+	bool bAttackerIsWeaponMimic = dynamic_cast<CTFPointWeaponMimic*>( pAttacker );
+
 	int nDefID = -1;
 	WeaponSound_t nSound = SPECIAL1;
-	if ( pAttacker )
+	if ( pAttacker && !bAttackerIsWeaponMimic )
 	{
 		CTFFlareGun *pFlareGun = dynamic_cast<CTFFlareGun*>( ToTFPlayer( pAttacker )->GetActiveWeapon() );
 		if ( pFlareGun )
@@ -487,6 +497,9 @@ void CTFProjectile_Flare::SendDeathNotice( void )
 { 
 	CBaseEntity *pAttacker = GetOwnerEntity();
 	if ( !pAttacker )
+		return;
+
+	if ( !pAttacker->IsPlayer() )
 		return;
 
 	CTFFlareGun *pFlareGun = dynamic_cast<CTFFlareGun*>( ToTFPlayer( pAttacker )->GetActiveWeapon() );

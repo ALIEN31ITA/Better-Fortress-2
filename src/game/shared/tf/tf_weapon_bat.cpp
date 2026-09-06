@@ -26,6 +26,7 @@
 #include "particle_parse.h"
 #include "tf_projectile_base.h"
 #include "tf_gamerules.h"
+#include "player_vs_environment/tf_point_weapon_mimic.h"
 #endif
 extern ConVar friendlyfire;
 const float DEFAULT_ORNAMENT_EXPLODE_RADIUS = 50.0f;
@@ -720,8 +721,11 @@ void CTFStunBall::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 	if ( !pPlayer )
 		return;
 
-	CTFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
-	if ( !pOwner )
+	CBaseEntity* pOwner = GetOwnerEntity();
+	CTFPlayer *pAttacker = ToTFPlayer( pOwner );
+	CTFPointWeaponMimic *pWeaponMimic = dynamic_cast< CTFPointWeaponMimic* >( pOwner );
+
+	if ( !pAttacker && !pWeaponMimic)
 		return;
 
 	if ( m_bTouched )
@@ -755,6 +759,9 @@ void CTFStunBall::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 			flStunDuration += 1.0;
 		}
 
+		if ( pWeaponMimic )
+			flStunAmount = pWeaponMimic->GetProjectileTimer();
+
 		// MvM bots
 		if ( TFGameRules() && TFGameRules()->GameModeUsesUpgrades() && pPlayer->IsBot() )
 		{
@@ -768,19 +775,20 @@ void CTFStunBall::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 			}
 		}
 
-		CTF_GameStats.Event_PlayerStunBall( pOwner, ( bMax ) ? true : false );
+		if ( pAttacker )
+			CTF_GameStats.Event_PlayerStunBall( pAttacker, ( bMax ) ? true : false );
 
 		if ( pPlayer->GetWaterLevel() != WL_Eyes )
 		{
-			pPlayer->m_Shared.StunPlayer( flStunDuration, flStunAmount, iStunFlags, pOwner );
+			pPlayer->m_Shared.StunPlayer( flStunDuration, flStunAmount, iStunFlags, pAttacker ? pAttacker : NULL );
 
-			if ( pPlayer->GetUserID() == m_iOriginalOwnerID )
+			if ( pAttacker && pPlayer->GetUserID() == m_iOriginalOwnerID )
 			{
 				// We just stunned a scout with their own ball.
 				// Give the player an achievement for this.
-				if ( pOwner->IsPlayerClass( TF_CLASS_SCOUT ) )
+				if ( pAttacker->IsPlayerClass( TF_CLASS_SCOUT ) )
 				{
-					pOwner->AwardAchievement( ACHIEVEMENT_TF_SCOUT_STUN_SCOUT_WITH_THEIR_BALL );
+					pAttacker->AwardAchievement( ACHIEVEMENT_TF_SCOUT_STUN_SCOUT_WITH_THEIR_BALL );
 				}
 			}
 		}
@@ -848,7 +856,8 @@ void CTFStunBall::PipebombTouch( CBaseEntity *pOther )
 	if ( !ShouldBallTouch( pOther ) )
 		return;
 
-	CTFPlayer* pOwner = ToTFPlayer( GetOwnerEntity() );
+	CBaseEntity* pOwner = GetOwnerEntity();
+	CTFPlayer *pAttacker = ToTFPlayer( pOwner );
 	if ( !pOwner )
 		return;
 
@@ -873,9 +882,9 @@ void CTFStunBall::PipebombTouch( CBaseEntity *pOther )
 				// If this ball came from an enemy scout, remember who they were...
 				if ( pPlayer->GetTeamNumber() != GetTeamNumber() )
 				{
-					if ( pOwner )
+					if ( pAttacker )
 					{
-						pBat->m_iEnemyBallID = pOwner->GetUserID();
+						pBat->m_iEnemyBallID = pAttacker->GetUserID();
 					}
 				}
 
@@ -949,17 +958,24 @@ void CTFStunBall::RemoveBallTrail( void )
 //-----------------------------------------------------------------------------
 bool CTFStunBall::ShouldBallTouch( CBaseEntity *pOther )
 {
-	CTFPlayer* pOwner = ToTFPlayer( GetOwnerEntity() );
+
+	CBaseEntity* pOwner = GetOwnerEntity();
+	CTFPlayer *pAttacker = ToTFPlayer( pOwner );
+
 	if ( !pOwner )
 		return false;
+
+	bool bTeammate = pOther->GetTeamNumber() == GetTeamNumber();
 
 	Assert( pOther );
 	if ( !pOther ||
 		 !pOther->IsSolid() ||
 		 pOther->IsSolidFlagSet( FSOLID_VOLUME_CONTENTS ) ||
-		 pOther->GetCollisionGroup() == TFCOLLISION_GROUP_RESPAWNROOMS )
+		 pOther->GetCollisionGroup() == TFCOLLISION_GROUP_RESPAWNROOMS ||
+		 bTeammate )
 	{
-		pOwner->SpeakConceptIfAllowed( MP_CONCEPT_BALL_MISSED );
+		if ( pAttacker )
+			pAttacker->SpeakConceptIfAllowed( MP_CONCEPT_BALL_MISSED );
 		return false;
 	}
 
@@ -1172,8 +1188,11 @@ void CTFBall_Ornament::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 	if ( !pPlayer )
 		return;
 
-	CTFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
-	if ( !pOwner )
+	CBaseEntity* pOwner = GetOwnerEntity();
+	CTFPlayer *pAttacker = ToTFPlayer( pOwner );
+	CTFPointWeaponMimic *pWeaponMimic = dynamic_cast< CTFPointWeaponMimic* >( pOwner );
+
+	if ( !pAttacker && !pWeaponMimic )
 		return;
 
 	if ( m_bTouched )
@@ -1185,6 +1204,8 @@ void CTFBall_Ornament::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 
 	bool bIsCriticalHit = IsCritical();
 	float flBleedTime = 5.0f;
+	if ( pWeaponMimic )
+		flBleedTime = pWeaponMimic->GetProjectileTimer();
 
 	// long distance hit is always a crit
 	float flLifeTime = gpGlobals->curtime - m_flCreationTime;
@@ -1196,7 +1217,7 @@ void CTFBall_Ornament::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 
 	// just do the bleed effect directly since the bleed
 	// attribute comes from the inflictor, which is the bat.
-	pPlayer->m_Shared.MakeBleed( pOwner, (CTFBat_Giftwrap *)GetLauncher(), flBleedTime );
+	pPlayer->m_Shared.MakeBleed( pAttacker ? pAttacker : pPlayer, (CTFBat_Giftwrap *)GetLauncher(), flBleedTime );
 
 	// Apply particle effect to victim (the remaining effects happen inside Explode)
 	DispatchParticleEffect( "xms_ornament_glitter", PATTACH_POINT_FOLLOW, pPlayer, "head" );
@@ -1299,7 +1320,10 @@ void CTFBall_Ornament::VPhysicsCollisionThink( void )
 void CTFBall_Ornament::Explode( trace_t *pTrace, int bitsDamageType )
 {
 	// Create smashed glass particles when we explode
-	CTFPlayer* pOwner = ToTFPlayer( GetOwnerEntity() );
+	CBaseEntity* pOwner = GetOwnerEntity();
+	CTFPlayer* pPlayer = ToTFPlayer( GetOwnerEntity() );
+	//CTFPointWeaponMimic *pWeaponMimic = dynamic_cast< CTFPointWeaponMimic* >( GetOwnerEntity() );
+
 	if ( pOwner && pOwner->GetTeamNumber() == TF_TEAM_RED )
 	{
 		DispatchParticleEffect( "xms_ornament_smash_red", GetAbsOrigin(), GetAbsAngles() );
@@ -1321,10 +1345,18 @@ void CTFBall_Ornament::Explode( trace_t *pTrace, int bitsDamageType )
 	} else params.m_pSoundName = "BallBuster.OrnamentImpact";
 
 	CPASFilter filter( vecOrigin );
-	filter.RemoveRecipient( pOwner );
-	EmitSound( filter, entindex(), params );
-	CSingleUserRecipientFilter attackerFilter( pOwner );
-	EmitSound( attackerFilter, pOwner->entindex(), params );
+	if ( pPlayer )
+	{
+		filter.RemoveRecipient( pPlayer );
+		EmitSound( filter, entindex(), params );
+		CSingleUserRecipientFilter attackerFilter( pPlayer );
+		EmitSound( attackerFilter, pPlayer->entindex(), params );
+	} 
+	else
+	{
+		params.m_pSoundName = "BallBuster.OrnamentImpact";
+		EmitSound( filter, entindex(), params );
+	}
 
 	// Explosion damage is some fraction of our base damage
 	float flExplodeDamage = GetDamage() * DEFAULT_ORNAMENT_EXPLODE_DAMAGE_MULT;
