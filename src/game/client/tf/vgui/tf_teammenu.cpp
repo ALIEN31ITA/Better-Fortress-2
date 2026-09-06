@@ -666,6 +666,18 @@ void CTFTeamMenu::OnCommand( const char *command )
 
 void CTFTeamMenu::OnClose()
 {
+	// HACK: Custom Fortress - Mute the Static
+	if ( m_pSpecTeamButton )
+	{ 
+		CModelPanel *pModel = dynamic_cast< CModelPanel* >( FindChildByName( "spectate" ) );
+		if ( pModel )
+		{
+			KeyValues *kvParms = new KeyValues( "SetAnimation" );
+			kvParms->SetString( "animation", "idle_silence" );
+			pModel->PostMessage( pModel, kvParms );
+		}
+	}
+
 	C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
 	if ( pLocalPlayer )
 	{

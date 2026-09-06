@@ -36,6 +36,13 @@ void OpenVoiceMenu( int index )
 	if ( !pPlayer->IsAlive() || pPlayer->IsObserver() )
 		return;
 
+	//Check if we can even talk.
+	int bNoVoicemenu = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pPlayer, bNoVoicemenu, voicemenu_disabled );
+
+	if ( bNoVoicemenu )
+		return;
+
 #if defined ( TF_CLIENT_DLL )
 	if ( GTFGCClientSystem() && GTFGCClientSystem()->BHaveChatSuspensionInCurrentMatch() && tf_voice_command_suspension_mode.GetInt() == 1 )
 	{

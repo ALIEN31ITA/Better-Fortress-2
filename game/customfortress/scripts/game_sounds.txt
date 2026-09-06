@@ -930,7 +930,7 @@
 	"volume"		".15"
 	"pitch"		"100"
 	"soundlevel"  	"SNDLVL_NONE"
-	"wave"		"misc/null.wav"
+	"wave"		    "ui/tv_static.wav" 	//"wave"		"misc/null.wav"
 }
 
 "TV.Tune"
@@ -944,6 +944,17 @@
 		"wave"	"ui/tv_tune.mp3"
 		"wave"	"ui/tv_tune2.mp3"
 		"wave"	"ui/tv_tune3.mp3"
+		
+		// Custom Fortress 2 - Reuse the Contraker musics
+		"wave"  "ui/cyoa_musicdrunkenpipebomb_tv.mp3"
+		"wave"	"ui/cyoa_musicfasterthanaspeedingbullet_tv.mp3"
+		"wave"  "ui/cyoa_musicintruderalert_tv.mp3"
+		"wave"  "ui/cyoa_musicmedic_tv.mp3"
+		"wave"	"ui/cyoa_musicmoregun_tv.mp3"
+		"wave"	"ui/cyoa_musicmoregun2_tv.mp3"
+		"wave"	"ui/cyoa_musicplayingwithdanger_tv.mp3"
+		"wave"	"ui/cyoa_musicrightbehindyou_tv.mp3"
+		"wave"	"ui/cyoa_musicteamfortress2_tv.mp3"
 	}
 	
 	"rndwave"	[$X360]
