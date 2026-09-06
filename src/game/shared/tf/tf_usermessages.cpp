@@ -13,7 +13,7 @@
 #include "haptics/haptic_msgs.h"
 
 #ifdef CLIENT_DLL
-#include "tf/cf_workshop_manager.h"
+#include "cf/cf_workshop_manager.h"
 
 // Client-side handler for WorkshopMapID message
 void MsgFunc_WorkshopMapID( bf_read &msg )

@@ -24,7 +24,7 @@
 #include <vgui_controls/ProgressBar.h>
 #include <vgui_controls/ScrollableEditablePanel.h>
 #include <vgui_controls/Image.h>
-#include "tf/cf_workshop_manager.h"
+#include "cf/cf_workshop_manager.h"
 #include "steam/isteamhttp.h"
 
 namespace vgui

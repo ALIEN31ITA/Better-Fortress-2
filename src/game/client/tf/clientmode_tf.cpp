@@ -93,7 +93,7 @@
 
 #include "hud_vote.h"
 #include "c_tf_notification.h"
-#include "cf_workshop_manager.h"
+#include "../cf/cf_workshop_manager.h"
 
 #if !defined( _X360 ) && !defined( NO_STEAM )
 #include "steam/isteamtimeline.h"

@@ -11,6 +11,8 @@
 #include "tf_gamerules.h"
 #include "filesystem.h"
 #include "tf_matchmaking_shared.h"
+#include "../cf/cf_shareddefs.cpp"
+#include "../cf/cf_shareddefs.h"
 
 //-----------------------------------------------------------------------------
 // Teams.

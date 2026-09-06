@@ -59,8 +59,8 @@
 #include "tf_quest_map_utils.h"
 #include "tf_matchmaking_dashboard.h"
 #include "tf_pvp_rank_panel.h"
-#include "cf_workshop_manager.h"
-#include "cf_workshop_panel.h"
+#include "../cf/cf_workshop_manager.h"
+#include "../cf/cf_workshop_panel.h"
 
 #include "econ_paintkit.h"
 #include "ienginevgui.h"

@@ -98,7 +98,7 @@
 #include "tf/tf_gc_server.h"
 #include "tf_gamerules.h"
 #include "player_vs_environment/tf_population_manager.h"
-#include "tf/cf_workshop_manager.h"
+#include "cf/cf_workshop_manager.h"
 
 extern ConVar tf_mm_trusted;
 extern ConVar tf_mm_servermode;

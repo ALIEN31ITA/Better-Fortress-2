@@ -5,8 +5,8 @@
 //=============================================================================
 
 #include "cbase.h"
-#include "cf_workshop_weapon_tool.h"
-#include "cf_workshop_manager.h"
+#include "../cf/cf_workshop_weapon_tool.h"
+#include "../cf/cf_workshop_manager.h"
 #include <vgui/IVGui.h>
 #include <vgui/IScheme.h>
 #include <vgui/ISurface.h>

@@ -33,7 +33,7 @@
 #include "hud_controlpointicons.h"
 #include "tf_statsummary.h"
 #include "steam/steam_api.h"
-#include "cf_workshop_manager.h"
+#include "../cf/cf_workshop_manager.h"
 #include "workshop/ugc_utils.h"
 #include "utlbuffer.h"
 #include "imageutils.h"
