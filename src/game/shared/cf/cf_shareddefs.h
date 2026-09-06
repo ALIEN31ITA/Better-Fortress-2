@@ -1,8 +1,6 @@
 //========= Copyright Valve Corporation, All rights reserved. ============//
-//
-// NOTE: Inserting to most or all of the enums in this file will BREAK DEMOS -
-// please add to the end instead.
-//
+// Custom Fortress.
+// We add our stuff here.
 //=============================================================================
 #ifndef CF_SHAREDDEFS_H
 #define CF_SHAREDDEFS_H
@@ -11,6 +9,8 @@
 #endif
 #include "shareddefs.h"
 #include "mp_shareddefs.h"
+
+#define TF_VGUI_CLASSBG_MVM_MDL "models/vgui/UI_class01_mvm.mdl"
 
 #endif // CF_SHAREDDEFS_H
   

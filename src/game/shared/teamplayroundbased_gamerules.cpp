@@ -3472,7 +3472,7 @@ float CTeamplayRoundBasedRules::GetRespawnWaveMaxLength( int iTeam, bool bScaleW
 	if ( mp_disable_respawn_times.GetBool() == true )
 		return 0.0f;
 
-	if ( cf_instantrespawn.GetBool() == true )
+	if ( cf_instantrespawn.GetBool() == true && ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && iTeam != TF_TEAM_PVE_INVADERS ) )
 		return 0.0f;
 
 	//Let's just turn off respawn times while players are messing around waiting for the tournament to start

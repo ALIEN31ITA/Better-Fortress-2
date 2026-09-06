@@ -2808,6 +2808,17 @@ void CPopulationManager::GiveBombToRandomInvader( void )
 		if ( pPlayer->GetPlayerClass()->GetClassIndex() == TF_CLASS_UNDEFINED )
 			continue;
 
+		// MvM Versus - Some Robot controlled by players shouldn't pick up the flag
+		// Engineer, Sentry Buster, Support Classes.
+		int iRobotPlayerClass = pPlayer->GetPlayerClass()->GetClassIndex();
+		if ( !pPlayer->IsBot() && 
+			( iRobotPlayerClass == TF_CLASS_ENGINEER ||
+			  iRobotPlayerClass == TF_CLASS_MEDIC    ||
+			  iRobotPlayerClass == TF_CLASS_SNIPER   ||
+			  iRobotPlayerClass == TF_CLASS_SPY      || 
+			  iRobotPlayerClass == TF_CLASS_DEMOMAN && pPlayer->m_Shared.InCond( TF_COND_SENTRY_BUSTER ) ) )
+			return;
+
 		if ( !pPlayer->IsAlive() )
 			continue;
 
