@@ -139,6 +139,7 @@ extern ConVar mp_tournament;
 
 #ifdef GAME_DLL
 ConVar mp_tournament_whitelist( "mp_tournament_whitelist", "item_whitelist.txt", FCVAR_NONE, "Specifies the item whitelist file to use." );
+ConVar cf_item_whitelist( "cf_item_whitelist", "item_whitelist.txt", FCVAR_NONE, "Specifies the item whitelist file to use. (even for non-tournament servers)" );
 #endif
 
 //-----------------------------------------------------------------------------
@@ -146,27 +147,42 @@ ConVar mp_tournament_whitelist( "mp_tournament_whitelist", "item_whitelist.txt",
 //-----------------------------------------------------------------------------
 void CEconItemSystem::ReloadWhitelist( void )
 {
-	// Default state of items depends on whether we're in tourney mode, and whether there's a whitelist
-	bool bDefault = true;
-	bool bFoundWhitelist = false;
+    // Default state of items depends and whether there's a whitelist, either for tournament mode only or in general
+    bool bDefault = true;
+    bool bFoundWhitelist = false;
 
-	KeyValues *pWhitelistKV = new KeyValues( "item_whitelist" );
+    KeyValues *pWhitelistKV = new KeyValues( "item_whitelist" );
+
+	const char *pszWhitelistFile = cf_item_whitelist.GetString();
 
 #ifdef GAME_DLL
-	if ( mp_tournament.GetBool() && mp_tournament_whitelist.GetString() )
-	{
-		const char *pszWhitelistFile = mp_tournament_whitelist.GetString();
-		if ( pWhitelistKV->LoadFromFile( filesystem, pszWhitelistFile ) )
-		{
-			// Allow the whitelist to override the default, so they can turn it into a blacklist if they want to
-			bDefault = pWhitelistKV->GetBool( "unlisted_items_default_to" );
-			bFoundWhitelist = true;
-		}
-		else if ( pszWhitelistFile && pszWhitelistFile[0] )
-		{
-			Msg("Item Whitelist file '%s' could not be found. All items will be allowed.\n", pszWhitelistFile );
-		}
-	}
+    if ( mp_tournament.GetBool() && mp_tournament_whitelist.GetString() )
+    {
+        pszWhitelistFile = mp_tournament_whitelist.GetString();
+        if ( pWhitelistKV->LoadFromFile( filesystem, pszWhitelistFile ) )
+        {
+            // Allow the whitelist to override the default, so they can turn it into a blacklist if they want to
+            bDefault = pWhitelistKV->GetBool( "unlisted_items_default_to" );
+            bFoundWhitelist = true;
+        }
+        else if ( pszWhitelistFile && pszWhitelistFile[0] )
+        {
+            Msg("A tournament item file '%s' could not be found. Checking for general whitelist.\n", pszWhitelistFile );
+        }
+    }
+	else if ( pszWhitelistFile && pszWhitelistFile[0] != '\0' )
+    {
+        if ( pWhitelistKV->LoadFromFile( filesystem, pszWhitelistFile ) )
+        {
+            // Allow the whitelist to override the default, so they can turn it into a blacklist if they want to
+            bDefault = pWhitelistKV->GetBool( "unlisted_items_default_to" );
+            bFoundWhitelist = true;
+        }
+        else
+        {
+            Msg( "A general item whitelist file '%s' could not be found. All items will be allowed.\n", pszWhitelistFile );
+        }
+    } 
 #endif
 
 	const CEconItemSchema::ItemDefinitionMap_t& mapItemDefs = m_itemSchema.GetItemDefinitionMap();
