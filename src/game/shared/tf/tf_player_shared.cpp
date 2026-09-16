@@ -4108,7 +4108,7 @@ void CTFPlayerShared::OnAddTaunting( void )
 	// Unzoom if we are a sniper zoomed!
 	InstantlySniperUnzoom();
 
-	if ( ( m_pOuter->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) || m_pOuter->IsPlayerClass( TF_CLASS_SCOUT ) ) && GetTauntIndex() == TAUNT_BASE_WEAPON )
+	if ( ( m_pOuter->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) || m_pOuter->IsPlayerClass( TF_CLASS_SCOUT ) || m_pOuter->IsPlayerClass( TF_CLASS_DEMOMAN ) ) && GetTauntIndex() == TAUNT_BASE_WEAPON )
 	{
 		CTFLunchBox *pLunchBox = dynamic_cast <CTFLunchBox *> ( pWpn );
 		if ( pLunchBox )

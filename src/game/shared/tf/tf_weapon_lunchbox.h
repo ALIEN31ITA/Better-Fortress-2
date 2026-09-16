@@ -15,6 +15,7 @@
 #ifdef CLIENT_DLL
 #define CTFLunchBox C_TFLunchBox
 #define CTFLunchBox_Drink C_TFLunchBox_Drink
+#define CTFLunchBox_Scotch C_TFLunchBox_Scotch
 #endif
 
 enum lunchbox_weapontypes_t
@@ -27,6 +28,8 @@ enum lunchbox_weapontypes_t
 	LUNCHBOX_ADDS_AMMO,
 	LUNCHBOX_BANANA,
 	LUNCHBOX_FISHCAKE,
+	LUNCHBOX_SCOTCH_SPEED,
+	LUNCHBOX_SCOTCH_HEALTH,
 };
 
 #define TF_SANDWICH_REGENTIME	30
@@ -116,6 +119,21 @@ public:
 	virtual const char* ModifyEventParticles( const char* token );
 	virtual bool		Holster( CBaseCombatWeapon *pSwitchingTo = NULL );
 #endif
+};
+
+//=============================================================================
+// Scotch (Demoman Lunchbox)
+class CTFLunchBox_Scotch : public CTFLunchBox
+{
+public:
+	DECLARE_CLASS(CTFLunchBox_Scotch, CTFLunchBox);
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+	bool				AllowTaunts(void) { return false; }
+	virtual bool		DropAllowed(void) { return false; }
+	const char*			GetEffectLabelText( void )	{ return "#TF_SCOTCH"; }
+	float				GetProgress( void ) { return GetEffectBarProgress(); }
+	virtual float		InternalGetEffectBarRechargeTime( void ) { return TF_SANDWICH_REGENTIME; }
 };
 
 #endif // TF_WEAPON_LUNCHBOX_H

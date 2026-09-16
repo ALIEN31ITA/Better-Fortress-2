@@ -411,6 +411,7 @@ int CTFGrenadePipebombProjectile::DrawModel( int flags )
 #define TF_WEAPON_CANNONBALL_MODEL		"models/weapons/w_models/w_cannonball.mdl"
 #define TF_WEAPON_PIPEBOMB_MODEL		"models/weapons/w_models/w_stickybomb.mdl"
 #define TF_WEAPON_PIPEBOMB2_MODEL		"models/weapons/w_models/w_stickybomb2.mdl"
+#define TF_WEAPON_PIPEBOMB3_MODEL		"models/weapons/w_models/w_stickybomb3.mdl"
 #define TF_WEAPON_PIPEBOMBD_MODEL		"models/weapons/w_models/w_stickybomb_d.mdl"
 #define TF_WEAPON_PIPEBOMB_BOUNCE_SOUND	"Weapon_Grenade_Pipebomb.Bounce"
 #define TF_WEAPON_PIPEBOMB_DUD_SOUND	"Weapon_LocknLoad.Dud"
@@ -567,6 +568,9 @@ void CTFGrenadePipebombProjectile::Precache()
 
 	iModel = PrecacheModel( TF_WEAPON_PIPEBOMBD_MODEL );
 	PrecacheGibsForModel( iModel );
+
+	iModel = PrecacheModel(TF_WEAPON_PIPEBOMB3_MODEL);
+	PrecacheGibsForModel(iModel);
 
 	iModel = PrecacheModel( TF_WEAPON_PIPEGRENADE_MODEL );
 	PrecacheGibsForModel( iModel );

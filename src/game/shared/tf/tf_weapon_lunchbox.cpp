@@ -5,6 +5,7 @@
 #include "cbase.h"
 #include "tf_weapon_lunchbox.h"
 #include "tf_fx_shared.h"
+#include "tf_weaponbase_gun.h"
 
 // Client specific.
 #ifdef CLIENT_DLL
@@ -42,6 +43,8 @@ END_PREDICTION_DATA()
 
 LINK_ENTITY_TO_CLASS( tf_weapon_lunchbox, CTFLunchBox );
 PRECACHE_WEAPON_REGISTER( tf_weapon_lunchbox );
+
+CREATE_SIMPLE_WEAPON_TABLE(TFLunchBox_Scotch, tf_weapon_lunchbox_scotch )
 
 //=============================================================================
 
@@ -194,12 +197,16 @@ void CTFLunchBox::PrimaryAttack( void )
 //-----------------------------------------------------------------------------
 void CTFLunchBox::SecondaryAttack( void )
 {
-	if ( !DropAllowed() )
+	CTFPlayer* pPlayer = ToTFPlayer(GetPlayerOwner());
+
+	if (!pPlayer)
 		return;
 
-	CTFPlayer *pPlayer = ToTFPlayer( GetPlayerOwner() );
-	if ( !pPlayer )
+	if ( !DropAllowed() ) 
+	{
+		pPlayer->DoClassSpecialSkill();
 		return;
+	}
 
 	if ( !HasAmmo() )
 		return;
@@ -319,7 +326,7 @@ void CTFLunchBox::DrainAmmo( bool bForceCooldown )
 			return;
 		}
 	}
-	else if ( pOwner->IsPlayerClass( TF_CLASS_SCOUT ) )
+	else if ( pOwner->IsPlayerClass( TF_CLASS_SCOUT ) || pOwner->IsPlayerClass( TF_CLASS_DEMOMAN ) )
 	{
 		StartEffectBarRegen();
 	}
@@ -335,7 +342,7 @@ void CTFLunchBox::DrainAmmo( bool bForceCooldown )
 	
 	pOwner->RemoveAmmo( 1, m_iPrimaryAmmoType );
 
-	if ( pOwner->IsPlayerClass( TF_CLASS_SCOUT ) )
+	if ( pOwner->IsPlayerClass( TF_CLASS_SCOUT ) || pOwner->IsPlayerClass( TF_CLASS_DEMOMAN ) )
 	{
 		StartEffectBarRegen();
 	}
@@ -380,9 +387,12 @@ bool CTFLunchBox::Holster( CBaseCombatWeapon *pSwitchingTo /* = NULL */ )
 //-----------------------------------------------------------------------------
 void CTFLunchBox::ApplyBiteEffects( CTFPlayer *pPlayer )
 {
-	SetBroken( true );
-
 	int nLunchBoxType = GetLunchboxType();
+
+	if ( (nLunchBoxType != LUNCHBOX_SCOTCH_SPEED) && ( nLunchBoxType != LUNCHBOX_SCOTCH_HEALTH ) )
+	{
+		SetBroken(true);
+	}
 
 	const float DALOKOHS_MAXHEALTH_BUFF = 50.f;
 
@@ -402,7 +412,20 @@ void CTFLunchBox::ApplyBiteEffects( CTFPlayer *pPlayer )
 
 		return;
 	}
-	
+	else if ( nLunchBoxType == LUNCHBOX_SCOTCH_SPEED )
+	{
+		pPlayer->AddCustomAttribute( "hidden move speed bonus", 1.25, 20.f );
+		pPlayer->m_Shared.AddCond( TF_COND_MARKEDFORDEATH_SILENT, 20.f );
+		return;
+	} 
+	else if ( nLunchBoxType == LUNCHBOX_SCOTCH_HEALTH )
+	{
+		pPlayer->m_Shared.Heal( pPlayer, 20.f, 1.f, 1.f, true );
+		pPlayer->m_Shared.AddCond( TF_COND_HALLOWEEN_HELL_HEAL, 10.f );
+		pPlayer->m_Shared.AddCond( TF_COND_MARKEDFORDEATH_SILENT, 10.f );
+		return;
+	}
+
 	// Then heal the player
 	int iHeal = ( nLunchBoxType == LUNCHBOX_CHOCOLATE_BAR || nLunchBoxType == LUNCHBOX_FISHCAKE ) ? 25 : 75;
 	int iHealType = DMG_GENERIC;

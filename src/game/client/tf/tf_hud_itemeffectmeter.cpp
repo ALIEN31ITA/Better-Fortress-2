@@ -297,6 +297,7 @@ void CHudItemEffectMeter::CreateHudElementsForClass( C_TFPlayer* pPlayer, CUtlVe
 		break;
 	}
 	case TF_CLASS_DEMOMAN:
+		DECLARE_ITEM_EFFECT_METER( CTFLunchBox_Scotch, TF_WEAPON_LUNCHBOX, true, "resource/UI/HUDItemEffectMeter_DemomanScotch.res" );
 		DECLARE_ITEM_EFFECT_METER( CTFSword, TF_WEAPON_SWORD, false, "resource/UI/HudItemEffectMeter_Demoman.res" );
 		break;
 

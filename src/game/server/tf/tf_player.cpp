@@ -19837,6 +19837,14 @@ void CTFPlayer::Taunt( taunts_t iTauntIndex, int iTauntConcept )
 				}
 			}
 		}
+		else if ( IsPlayerClass( TF_CLASS_DEMOMAN )  )
+		{
+			if ( pActiveWeapon && pActiveWeapon->GetWeaponID() == TF_WEAPON_LUNCHBOX )
+			{
+					m_flTauntAttackTime = gpGlobals->curtime + ( 2.5f / flPlaybackRate );
+					m_iTauntAttack = TAUNTATK_DEMO_DRINK;
+			}
+		}
 	}
 	else if ( iTauntIndex == TAUNT_SPECIAL )
 	{
@@ -20609,6 +20617,16 @@ void CTFPlayer::DoTauntAttack( void )
 			}
 				
 			SpeakConceptIfAllowed( MP_CONCEPT_ATE_FOOD );
+		}
+	}
+	else if ( iTauntAttack == TAUNTATK_DEMO_DRINK )
+	{
+		CTFWeaponBase *pActiveWeapon = m_Shared.GetActiveTFWeapon();
+		if ( pActiveWeapon && pActiveWeapon->GetWeaponID() == TF_WEAPON_LUNCHBOX )
+		{
+			CTFLunchBox *pLunchbox = (CTFLunchBox*)pActiveWeapon;
+			pLunchbox->ApplyBiteEffects( this );
+			SelectLastItem();
 		}
 	}
 	else if ( iTauntAttack == TAUNTATK_HEAVY_RADIAL_BUFF )

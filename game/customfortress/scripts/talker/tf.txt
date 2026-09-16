@@ -1449,7 +1449,12 @@
 		criteria ConceptPlayerTaunt IsDemoman WeaponIsPainTrain
 		Response DemomanTauntSecondary
 	}
-
+	rule DemomanTauntPlayerScotch
+	{
+		criteria ConceptPlayerTaunt IsDemoman WeaponIsScotch
+		ApplyContext "NotSober:1:10" // Apply the drunk context here
+		response DemomanTauntMelee
+	}
 	Response PlayerExpressionIdleDemoman
 	{
 		scene "scenes/player/demoman/low/idleloop01.vcd"
