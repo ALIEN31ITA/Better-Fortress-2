@@ -1,0 +1,1 @@
+devtools\bin\vpc.exe /tf /define:SOURCESDK /define:HOTRELOADENABLED +game /mksln customfortress_hotreload.sln
